@@ -22,7 +22,6 @@
     "package-win": "npm run build && build --win --x64",
     "postinstall": "node -r babel-register internals/scripts/CheckNativeDep.js && npm run flow-typed && npm run build-dll && electron-builder install-app-deps && node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
     "postlint-fix": "prettier --ignore-path .eslintignore --single-quote --write '**/*.js'",
-    "precommit": "lint-staged",
     "prestart": "npm run build",
     "start": "cross-env NODE_ENV=production electron ./app/",
     "start-main-dev": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./app/main.dev.js",
@@ -200,10 +199,17 @@
     "webpack-merge": "^4.1.2"
   },
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "compression": "^1.7.2",
+    "connect-session-sequelize": "^5.2.1",
     "devtron": "^1.4.0",
     "electron-debug": "^1.5.0",
+    "express-session": "^1.15.6",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
+    "morgan": "^1.9.0",
+    "passport": "^0.4.0",
+    "path": "^0.12.7",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-hot-loader": "^4.2.0",
@@ -213,6 +219,7 @@
     "react-router-redux": "^5.0.0-alpha.6",
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
+    "sequelize": "^4.38.0",
     "source-map-support": "^0.5.6"
   },
   "devEngines": {
