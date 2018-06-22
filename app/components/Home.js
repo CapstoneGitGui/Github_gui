@@ -9,23 +9,48 @@ export default class Home extends Component<Props> {
   props: Props;
 
   state = {
-    data: []
+    data: [],
+    dataHash: {},
   };
 
-  renderCommits = () => {
-    fetch('https://api.github.com/repos/mmcdevi1/git_test/commits')
+  renderCommits = async () => {
+    const dataHash = {};
+    const commits = await fetch(
+      'https://api.github.com/repos/mmcdevi1/git_test/commits'
+    )
       .then(res => res.json())
-      .then(data => this.setState({ data }))
+      .then(data => {
+        this.setState({ data });
+        return data;
+      })
       .catch(err => console.log(err));
+
+    commits.forEach(el => {
+      dataHash[el.sha] = el;
+    });
+    await this.setState({ dataHash });
+  };
+
+  createChild = node => {
+    node.parents.forEach(el => {
+      return el;
+    });
   };
 
   render() {
-    console.log(this.state.data);
+    console.log('props', this.props);
+    console.log(this.state.dataHash);
     return (
       <div>
         <div className={styles.container} data-tid="container">
           <h2>Home</h2>
           <Link to="/counter">to Counter</Link>
+          <ul>
+            {this.state.data.map(commit => {
+              return <li>{commit.sha}</li>;
+            })}
+          </ul>
+          {}
           <button onClick={this.renderCommits}>Button</button>
         </div>
       </div>
