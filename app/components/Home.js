@@ -25,10 +25,19 @@ export default class Home extends Component<Props> {
       })
       .catch(err => console.log(err));
 
+    // commits.forEach(el => {
+    //   dataHash[el.sha] = el;
+    // });
+    // this.setState({ dataHash });
+    this.createHashTable(commits);
+  };
+
+  createHashTable = commits => {
+    const dataHash = {};
     commits.forEach(el => {
       dataHash[el.sha] = el;
     });
-    await this.setState({ dataHash });
+    this.setState({ dataHash });
   };
 
   createChild = node => {
@@ -38,8 +47,7 @@ export default class Home extends Component<Props> {
   };
 
   render() {
-    console.log('props', this.props);
-    console.log(this.state.dataHash);
+    console.log('dataHash', this.state.dataHash);
     return (
       <div>
         <div className={styles.container} data-tid="container">
