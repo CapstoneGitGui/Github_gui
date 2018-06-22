@@ -2,21 +2,22 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Home.css';
+import GitToken from '../../secrets';
 
 type Props = {};
-
+const token = `?access_token=${GitToken}`;
 export default class Home extends Component<Props> {
   props: Props;
 
   state = {
     data: [],
-    dataHash: {},
+    dataHash: {}
   };
 
   renderCommits = async () => {
     const dataHash = {};
     const commits = await fetch(
-      'https://api.github.com/repos/mmcdevi1/git_test/commits'
+      `https://api.github.com/repos/mmcdevi1/git_test/commits${token}`
     )
       .then(res => res.json())
       .then(data => {
