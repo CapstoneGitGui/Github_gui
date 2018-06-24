@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Hello Electron React!</title>
+    <title>Git Gui</title>
     <script>
       (function() {
         if (!process.env.HOT) {
@@ -61,7 +61,6 @@
 
         firebase.auth().signInAndRetrieveDataWithCredential(credential)
           .then(user => {
-            console.log(user)
             localStorage.setItem('token', token)
           })  
           .catch(function(error) {

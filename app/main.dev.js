@@ -93,7 +93,7 @@ process.env.GITHUB_CALLBACK = 'http://localhost:1212/auth/github/callback';
 const githubUrl = 'https://github.com/login/oauth/authorize?';
 let authUrl = githubUrl + 'client_id=' + process.env.GITHUB_CLIENT_ID + '&scope=' + process.env.GITHUB_CLIENT_SECRET;
 
-// Oauth Form Window
+// Github Oauth Form Window
 ipcMain.on('oauth:form', (data) => {
   authWindow = new BrowserWindow({
     width: 385,
