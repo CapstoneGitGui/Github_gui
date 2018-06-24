@@ -1,8 +1,11 @@
-const db = require('../models/index');
+const db = require('../db');
 const Sequelize = require('sequelize');
 
 const User = db.define('user', {
   name: {
+    type: Sequelize.STRING,
+  },
+  email: {
     type: Sequelize.STRING,
   },
   githubId: {

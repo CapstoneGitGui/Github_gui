@@ -2,11 +2,28 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Home.css';
+import { ipcRenderer } from 'electron';
 
 type Props = {};
 
-export default class Home extends Component<Props> {
+class Home extends Component<Props> {
   props: Props;
+
+  createWindow () {
+    ipcRenderer.send('oauth:form', 'hello world')
+  }
+
+  logout () {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => {
+        console.log('Logged Out')
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  }
 
   render() {
     return (
@@ -14,8 +31,12 @@ export default class Home extends Component<Props> {
         <div className={styles.container} data-tid="container">
           <h2>Home</h2>
           <Link to="/counter">to Counter</Link>
+          <button onClick={this.createWindow}>Login with Github</button>
+          <button onClick={this.logout}>Logout</button>
         </div>
       </div>
     );
   }
 }
+
+export default Home
