@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { fetchUserFromToken, fetchUser } from '../reducers/user'
 import { ipcRenderer } from 'electron'
+import Aside from '../components/Nav/Aside'
 
 type Props = {
   children: React.Node
@@ -23,7 +24,16 @@ class App extends React.Component<Props> {
   }
 
   render() {
-    return <div>{this.props.children}</div>;
+    return (
+      <div className="app">
+        <Aside />
+        <div className="content">
+          <main className="main-content">
+            {this.props.children}
+          </main>
+        </div>
+      </div>
+    );
   }
 }
 

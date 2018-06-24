@@ -1,0 +1,30 @@
+.aside {
+	flex-shrink: 0;
+	width: 200px;
+	background: rgb(246, 246, 246);
+	border-right: 1px solid #dcdcdc;
+	height: 100vh;
+	padding-top: 15px;
+}
+
+.aside div a {
+	display: block;
+	text-decoration: none;
+	padding: 4px 20px;
+  color: #000;
+  font-size: 13px;
+}
+
+.aside div a:hover {
+	background: #dcdcdc;
+}
+
+.aside .menu {
+  font-size: 11px;
+  color: #b9b9b9;
+  padding: 4px 20px;
+}
+
+.aside .menu_group {
+  margin-bottom: 15px;
+}
