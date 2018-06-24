@@ -62,7 +62,7 @@
         firebase.auth().signInAndRetrieveDataWithCredential(credential)
           .then(user => {
             console.log(user)
-            localStorage.setItem('user', JSON.stringify(user))
+            localStorage.setItem('token', token)
           })  
           .catch(function(error) {
             var errorCode = error.code;
