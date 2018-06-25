@@ -1,19 +1,19 @@
-/* eslint global-require: 0, flowtype-errors/show-errors: 0 */
-
-/**
- * This module executes inside of electron's main process. You can start
- * electron renderer process from here and communicate with the other processes
- * through IPC.
- *
- * When running `npm run build` or `npm run build-main`, this file is compiled to
- * `./app/main.prod.js` using webpack. This gives us some performance wins.
- *
- * @flow
- */
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import MenuBuilder from './menu';
+import axios from 'axios'
 
 let mainWindow = null;
+let authWindow;
+
+function parseQuery(queryString) {
+  var query = {};
+  var pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+  for (var i = 0; i < pairs.length; i++) {
+      var pair = pairs[i].split('=');
+      query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+  }
+  return query;
+}
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -85,3 +85,67 @@ app.on('ready', async () => {
   const menuBuilder = new MenuBuilder(mainWindow);
   menuBuilder.buildMenu();
 });
+
+process.env.GITHUB_CLIENT_ID = 'fb74e5d5d3978c4d6c87';
+process.env.GITHUB_CLIENT_SECRET = '9067dcb77f4aad174472cc1a62b2d3b16908f520';
+process.env.GITHUB_CALLBACK = 'http://localhost:1212/auth/github/callback';
+
+const githubUrl = 'https://github.com/login/oauth/authorize?';
+let authUrl = githubUrl + 'client_id=' + process.env.GITHUB_CLIENT_ID + '&scope=' + process.env.GITHUB_CLIENT_SECRET;
+
+// Github Oauth Form Window
+ipcMain.on('oauth:form', (data) => {
+  authWindow = new BrowserWindow({
+    width: 385,
+    height: 800,
+    'node-integration': false 
+  })
+  authWindow.loadURL(authUrl)
+
+  function requestGithubToken (code) {
+    axios
+      .post('https://github.com/login/oauth/access_token', {
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
+        code: code,
+      })
+      .then(res => {
+        console.log(res)
+        const token = parseQuery(res.data).access_token
+        mainWindow.webContents.send('token:send', token)
+ 
+      })
+      .catch(err => console.log(err))
+  }
+  
+
+  function handleCallback (url) {
+    var raw_code = /code=([^&]*)/.exec(url) || null;
+    var code = (raw_code && raw_code.length > 1) ? raw_code[1] : null;
+    var error = /\?error=(.+)$/.exec(url);
+  
+    if (code || error) {
+      // Close the browser if code found or error
+      authWindow.destroy();
+    }
+  
+    // If there is a code, proceed to get token from github
+    if (code) {
+      console.log('[CODE]: Success')
+      requestGithubToken(code);
+    } else if (error) {
+      console.log('[CODE]: Error')
+      alert('Oops! Something went wrong and we couldn\'t' +
+        'log you in using Github. Please try again.');
+    }
+  }
+  
+  
+  authWindow.webContents.on('will-navigate', (e, url) => {
+    handleCallback(url)
+  })
+
+  authWindow.webContents.on('did-get-redirect-request', (e, oldUrl, newUrl) => {
+    handleCallback(newUrl)
+  })
+})
