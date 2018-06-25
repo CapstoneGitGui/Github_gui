@@ -8,8 +8,8 @@ class Aside extends React.Component {
 			<aside className={styles.aside}>
         <div className={styles.menu_group}>
           <div className={styles.menu}>Workspace</div>
-          <NavItem path='/'         name='Working Copy' />
-          <NavItem path='/campuses' name='History' />
+          <NavItem path='/home'     name='Working Copy' />
+          <NavItem path='/' name='History' />
           <NavItem path='/students' name='Stashes' />
           <NavItem path='/students' name='Settings' />
         </div>

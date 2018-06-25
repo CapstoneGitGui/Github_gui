@@ -18,15 +18,24 @@ class App extends React.Component<Props> {
       this.props.fetchUserFromToken(token)
     }
 
+    // Fetch user from Github login
     ipcRenderer.on('token:send', (e, token) => {
       this.props.fetchUser(token)
     })
   }
 
+  renderAside () {
+    const { location } = this.props;
+    
+    if (location.pathname !== '/') {
+      return <Aside />
+    }
+  }
+
   render() {
     return (
       <div className="app">
-        <Aside />
+        { this.renderAside() }
         <div className="content">
           <main className="main-content">
             {this.props.children}
@@ -37,7 +46,15 @@ class App extends React.Component<Props> {
   }
 }
 
-export default connect(null, {
+function mapStateToProps (state) {
+  const { location } = state.router;
+
+  return {
+    location,
+  }
+}
+
+export default connect(mapStateToProps, {
   fetchUserFromToken,
   fetchUser,
 })(App)

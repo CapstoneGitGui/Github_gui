@@ -30,8 +30,6 @@ class Home extends Component<Props> {
     return (
       <div>
         <div className={styles.container} data-tid="container">
-          <Button color='blue' onClick={this.createWindow}>Login with Github</Button>
-          <Button color='blue' onClick={this.logout}>Logout</Button>
         </div>
       </div>
     );
