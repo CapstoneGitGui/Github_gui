@@ -26,7 +26,7 @@ class App extends React.Component<Props> {
 
   renderAside () {
     const { location } = this.props;
-    
+
     if (location.pathname !== '/') {
       return <Aside />
     }
