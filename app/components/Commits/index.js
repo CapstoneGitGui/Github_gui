@@ -5,7 +5,7 @@ import styles from '../Home.css';
 import GitToken from '../../../secrets';
 import { connect } from 'react-redux';
 import ReactArt from 'react-art';
-ç;
+import axios from 'axios';
 
 const token = localStorage.getItem('token');
 const tokenCommits = `?access_token=${token}`;
@@ -17,7 +17,14 @@ class Commits extends Component<Props> {
   state = {
     data: [],
     dataHash: {},
+    repo: '',
+    currentBranches: [],
+    closedBranches: [],
     repos: [],
+  };
+
+  componentDidMount = () => {
+    this.favoriteRepos();
   };
 
   renderCommits = async () => {
@@ -80,7 +87,7 @@ class Commits extends Component<Props> {
 
   isBranched = nodes => {
     nodes.forEach(node => {
-      if (node.child && node.child.length <= 2) {
+      if (node.child && node.child.length >= 2) {
         node.branched = true;
       } else {
         node.branched = false;
@@ -100,10 +107,16 @@ class Commits extends Component<Props> {
 
   closedBranches = async () => {
     const branches = await fetch(
-      `https://api.github.com/repos/theFuriousPonies/furiousPonyDrinks/pulls?state=closed`
+      `https://api.github.com/repos/${this.props.userName}/${
+        this.state.repo
+      }/pulls?state=closed${tokenBranches}`
     )
       .then(res => res.json())
-      .then(data => data)
+      .then(closedBranches => {
+        console.log('closedBrnahces', closedBranches);
+        this.setState({ closedBranches });
+        return closedBranches;
+      })
       .catch(err => console.log(err));
     return branches;
   };
@@ -131,11 +144,11 @@ class Commits extends Component<Props> {
   // Analytics for commits per user
 
   findUser = commits => {
-    const output = {};
+    const users = {};
     commits.forEach(commit => {
-      output[commit.commit.author.name] = 0;
+      users[commit.commit.author.name] = 0;
     });
-    return output;
+    return users;
   };
 
   findCommitsPerUser = commits => {
@@ -150,26 +163,63 @@ class Commits extends Component<Props> {
     return users;
   };
 
+  currentBranches = async commits => {
+    try {
+      const response = await fetch(
+        `https://api.github.com/repos/${this.props.userName}/${
+          this.state.repo
+        }/branches`
+      );
+
+      const currentBranches = await response.json();
+
+      this.setState({ closedBranches });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   handleSubmit = async event => {
     event.preventDefault();
-    console.log('localStorage', localStorage.getItem('token'));
     const search = event.target.children[0].value;
     // console.log(`https://api.github.com/search/repositories?q=${search}`);
 
     const commits = await fetch(
-      `https://api.github.com/repos/${this.props.userName}/${search}`
+      `https://api.github.com/repos/${
+        this.props.userName
+      }/${search}${tokenCommits}`
     )
       .then(res => res.json())
-      .then(repos => {
+      .then(repo => {
+        this.setState({ repo: repo.name });
+        return repo;
+      })
+      .catch(err => console.log(err));
+
+    axios
+      .post('https://gitgui-55ad0.firebaseio.com/repos.json', {
+        name: this.state.repo,
+      })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => console.log(err));
+  };
+
+  favoriteRepos = () => {
+    axios
+      .get('https://gitgui-55ad0.firebaseio.com/repos.json')
+      .then(response => {
+        const repos = [];
+        for (let k in response.data) {
+          repos.push(response.data[k].name);
+        }
         this.setState({ repos });
-        return repos;
       })
       .catch(err => console.log(err));
   };
 
   render() {
-    // console.log('dataHash', this.state.dataHash);
-    // console.log('commits', this.state.data);
     console.log('state', this.state);
     return (
       <div>
@@ -182,8 +232,16 @@ class Commits extends Component<Props> {
             {this.state.data.map(commit => {
               return <li style={{ color: 'black' }}>{commit.sha}</li>;
             })}
+            {this.state.currentBranches.map(branch => (
+              <li style={{ color: 'black' }}>{branch.name}</li>
+            ))}
+            {this.state.closedBranches.map(branch => (
+              <li style={{ color: 'black' }}>{branch.head.ref}</li>
+            ))}
           </ul>
           <button onClick={this.renderCommits}>Button</button>
+          <button onClick={this.currentBranches}>Current Branches</button>
+          <button onClick={this.closedBranches}>Closed Branches</button>
         </div>
       </div>
     );
