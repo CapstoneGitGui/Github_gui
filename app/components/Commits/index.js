@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 import styles from '../Home.css';
 import GitToken from '../../../secrets';
 import { connect } from 'react-redux';
+import ReactArt from 'react-art';
+ç;
 
-type Props = {};
 const token = localStorage.getItem('token');
 const tokenCommits = `?access_token=${token}`;
 const tokenBranches = `&access_token=${token}`;
