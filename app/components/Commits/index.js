@@ -3,17 +3,21 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../Home.css';
 import GitToken from '../../../secrets';
+import { connect } from 'react-redux';
+import ReactArt from 'react-art';
+ç;
 
-type Props = {};
-const tokenCommits = `?access_token=${GitToken}`;
-const tokenBranches = `&access_token=${GitToken}`;
+const token = localStorage.getItem('token');
+const tokenCommits = `?access_token=${token}`;
+const tokenBranches = `&access_token=${token}`;
 
-export default class Commits extends Component<Props> {
+class Commits extends Component<Props> {
   props: Props;
 
   state = {
     data: [],
     dataHash: {},
+    repos: [],
   };
 
   renderCommits = async () => {
@@ -146,15 +150,37 @@ export default class Commits extends Component<Props> {
     return users;
   };
 
+  handleSubmit = async event => {
+    event.preventDefault();
+    console.log('localStorage', localStorage.getItem('token'));
+    const search = event.target.children[0].value;
+    // console.log(`https://api.github.com/search/repositories?q=${search}`);
+
+    const commits = await fetch(
+      `https://api.github.com/repos/${this.props.userName}/${search}`
+    )
+      .then(res => res.json())
+      .then(repos => {
+        this.setState({ repos });
+        return repos;
+      })
+      .catch(err => console.log(err));
+  };
+
   render() {
     // console.log('dataHash', this.state.dataHash);
-    console.log('commits', this.state.data);
+    // console.log('commits', this.state.data);
+    console.log('state', this.state);
     return (
       <div>
         <div className={styles.container} data-tid="container">
+          <form onSubmit={this.handleSubmit}>
+            <input type="text" />
+            <button type="submit">Submit</button>
+          </form>
           <ul>
             {this.state.data.map(commit => {
-              return <li>{commit.sha}</li>;
+              return <li style={{ color: 'black' }}>{commit.sha}</li>;
             })}
           </ul>
           <button onClick={this.renderCommits}>Button</button>
@@ -163,3 +189,12 @@ export default class Commits extends Component<Props> {
     );
   }
 }
+
+const mapStateToProps = state => ({
+  userName: 'blakespencer',
+});
+
+export default connect(
+  mapStateToProps,
+  null
+)(Commits);
