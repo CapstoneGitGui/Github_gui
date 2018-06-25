@@ -32,7 +32,7 @@ export default class RenderedContent extends Component {
     super(props)
     this.state = {
       lineNumbers: true,
-      currentStyle: { name: 'tomorrow', style: tomorrow },
+      currentStyle: { name: 'solarizedlight', style: solarizedlight },
       styles: [
         { name: 'coy', style: coy },
         { name: 'dark', style: dark },

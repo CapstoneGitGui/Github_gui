@@ -12,6 +12,8 @@ import getFileType from './filename'
 // import Settings from '../UI/Settings'
 // import logo from '../../assets/gitviewerWhite.svg'
 
+const githubToken = 'ad1db8c5e2148b753ec61dd108bb1ce660151586'
+
 export default class Repo extends Component {
   constructor (props) {
     super(props)
@@ -44,7 +46,7 @@ export default class Repo extends Component {
     //     params: { owner, repo }
     //   }
     // } = this.props
-    let url = `https://api.github.com/repos/h-a-m-r-time/grace-shopper/git/trees/${sha}?recursive=1`
+    let url = `https://api.github.com/repos/h-a-m-r-time/grace-shopper/git/trees/${sha}?recursive=1&access_token=${githubToken}`
     // if (githubToken) url += `&access_token=${githubToken}`
     return axios
       .get(url)
@@ -71,6 +73,7 @@ export default class Repo extends Component {
       toggled: 'true',
       children: []
     }
+    console.log(commitTree.tree)
     // first place all folders in right spot
     commitTree.tree.filter(node => node.type === 'tree').forEach(node => {
       let splitpath = node.path.replace(/^\/|\/$/g, '').split('/')
@@ -157,12 +160,16 @@ export default class Repo extends Component {
     //     params: { owner, repo }
     //   }
     // } = this.props
-    let url = `https://api.github.com/repos/h-a-m-r-time/grace-shopper/commits/master`
+    let url = `https://api.github.com/repos/h-a-m-r-time/grace-shopper/commits/master?access_token=${githubToken}`
     // if (githubToken) url += `?access_token=${githubToken}`
-    return axios
+    const commits = axios
       .get(url)
       .then(res => res.data)
       .catch(console.error)
+
+      console.log(commits)
+
+      return commits
   }
 
   render () {
@@ -178,7 +185,7 @@ export default class Repo extends Component {
     return (
       <div className='Repo'>
         {/* <Settings /> */}
-        <SplitPane split='vertical' minSize={260}>
+        <SplitPane split='horizontal' minSize={260}>
           <Scrollbars style={{ width: '100%', height: '100%' }}>
             <div className='explorer'>
               {/* <div
@@ -214,7 +221,7 @@ export default class Repo extends Component {
             </div>
           </Scrollbars>
           <div className='fileviewer'>
-            <SplitPane split='vertical' minSize={900}>
+            <SplitPane split='horizontal' minSize={900}>
               <Scrollbars style={{ width: '100%', height: '100%' }}>
                 <RenderedContent
                   language={language}

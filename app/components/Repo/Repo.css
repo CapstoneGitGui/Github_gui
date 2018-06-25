@@ -1,16 +1,32 @@
 .Repo {
+  display: flex;
+  align-items: stretch;
   min-height: 100vh;
   background: rgb(34, 37, 43);
 }
 .Repo .contents {
-  display: flex;
+  align-self: center;
   background-color: rgb(33, 38, 43);
   min-height: 100%;
 }
 .Repo .explorer {
+  align-self: flex-end;
   padding: 15px;
   min-height: 100%;
 }
+
+.Repo .SplitPane .Pane1 .vertical    {
+  align-self: flex-end;
+  /* padding: 15px;
+  min-height: 100%; */
+}
+
+.Repo .Pane_2 {
+  align-self: center;
+  padding: 15px;
+  min-height: 100%;
+}
+
 .Repo .fileviewer {
   min-height: 100%;
 }
