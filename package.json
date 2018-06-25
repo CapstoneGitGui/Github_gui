@@ -200,6 +200,7 @@
     "webpack-merge": "^4.1.2"
   },
   "dependencies": {
+    "art": "^0.10.2",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "compression": "^1.7.2",
