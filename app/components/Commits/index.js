@@ -5,7 +5,7 @@ import styles from '../Home.css';
 import GitToken from '../../../secrets';
 import { connect } from 'react-redux';
 import ReactArt from 'react-art';
-ç;
+
 
 const token = localStorage.getItem('token');
 const tokenCommits = `?access_token=${token}`;
@@ -100,11 +100,12 @@ class Commits extends Component<Props> {
 
   closedBranches = async () => {
     const branches = await fetch(
-      `https://api.github.com/repos/theFuriousPonies/furiousPonyDrinks/pulls?state=closed`
+      `https://api.github.com/repos/theFuriousPonies/furiousPonyDrinks/pulls?state=closed${tokenBranches}`
     )
       .then(res => res.json())
       .then(data => data)
       .catch(err => console.log(err));
+      console.log(branches)
     return branches;
   };
 
