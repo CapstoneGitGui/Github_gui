@@ -12,7 +12,7 @@ import getFileType from './filename'
 // import Settings from '../UI/Settings'
 // import logo from '../../assets/gitviewerWhite.svg'
 
-const githubToken = 'ad1db8c5e2148b753ec61dd108bb1ce660151586'
+const githubToken = ''
 
 export default class Repo extends Component {
   constructor (props) {
