@@ -20,11 +20,6 @@ class Commits extends Component<Props> {
     repo: '',
     currentBranches: [],
     closedBranches: [],
-    repos: [],
-  };
-
-  componentDidMount = () => {
-    this.favoriteRepos();
   };
 
   renderCommits = async () => {
@@ -202,19 +197,6 @@ class Commits extends Component<Props> {
       })
       .then(res => {
         console.log(res);
-      })
-      .catch(err => console.log(err));
-  };
-
-  favoriteRepos = () => {
-    axios
-      .get('https://gitgui-55ad0.firebaseio.com/repos.json')
-      .then(response => {
-        const repos = [];
-        for (let k in response.data) {
-          repos.push(response.data[k].name);
-        }
-        this.setState({ repos });
       })
       .catch(err => console.log(err));
   };
