@@ -1,5 +1,6 @@
 // @flow
 import * as React from 'react';
+import { Redirect } from 'react-router'
 import { connect } from 'react-redux';
 import { fetchUserFromToken, fetchUser } from '../reducers/user'
 import { ipcRenderer } from 'electron'
@@ -9,11 +10,12 @@ type Props = {
   children: React.Node
 };
 
+const token = localStorage.getItem('token')
+
 class App extends React.Component<Props> {
   props: Props;
 
   componentDidMount () {
-    const token = localStorage.getItem('token')
     if (token) {
       this.props.fetchUserFromToken(token)
     }
@@ -33,6 +35,9 @@ class App extends React.Component<Props> {
   }
 
   render() {
+    if (token && this.props.location.pathname === '/') {
+      return <Redirect to='/home' />
+    } 
     return (
       <div className="app">
         { this.renderAside() }

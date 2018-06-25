@@ -1,5 +1,6 @@
 const FETCH_USER_FROM_TOKEN = 'FETCH_USER_FROM_TOKEN'
 const FETCH_USER_FROM_GITHUB = 'FETCH_USER_FROM_GITHUB'
+const LOGOUT_USER = 'LOGOUT_USER'
 
 export const fetchUserFromToken = (token) => {
   return dispatch => {
@@ -45,8 +46,17 @@ export const fetchUser = (token) => {
   }
 }
 
+export const logout = () => {
+  return dispatch => {
+    dispatch({
+      type: LOGOUT_USER
+    })
+  }
+}
+
 const initialState = {
-  currentUser: {}
+  currentUser: {},
+  authenticated: false,
 }
 
 const reducer = (state=initialState, action) => {
@@ -56,6 +66,13 @@ const reducer = (state=initialState, action) => {
       return {
         ...state,
         currentUser: action.payload,
+        authenticated: true,
+      }
+    case LOGOUT_USER:
+      return {
+        ...state,
+        currentUser: {},
+        authenticated: false,
       }
     default:
       return state;
