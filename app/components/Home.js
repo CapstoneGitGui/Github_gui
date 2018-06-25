@@ -6,26 +6,22 @@ import styles from './Home.css';
 
 import { ipcRenderer } from 'electron';
 import { Button } from 'react-desktop/macOs';
-import { logout } from '../reducers/user'
+import { logout } from '../reducers/user';
 
-type Props = {};
+// type Props = {};
 
 class Home extends Component<Props> {
   props: Props;
-  
+
   state = {
     data: [],
     dataHash: {}
   };
 
   onLogout = () => {
-    this.props.logout()
-    localStorage.removeItem('token')
-  }
-
-  type Props = {};
-
-  
+    this.props.logout();
+    localStorage.removeItem('token');
+  };
 
   renderCommits = async () => {
     const dataHash = {};
@@ -55,42 +51,38 @@ class Home extends Component<Props> {
   };
 
   createChild = node => {
-    node.parents.forEach(el => {
-      return el;
-    });
+    node.parents.forEach(el => el);
   };
 
   render() {
-    const {data} = this.state;
-    
+    const { data } = this.state;
+
     console.log('dataHash', this.state.dataHash);
     return (
       <div>
         <div className={styles.container} data-tid="container">
-          <Button color='blue' onClick={this.onLogout}>Logout</Button>
+          <Button color="blue" onClick={this.onLogout}>
+            Logout
+          </Button>
           <h2>Home</h2>
 
           <button onClick={this.createWindow}>Login with Github</button>
           <button onClick={this.logout}>Logout</button>
 
           <ul>
-            {
-              data.map(commit => {
-                return (
-                  <li>{commit.sha}</li>
-                );
-              })
-            }
+            {data.map(commit => <li>{commit.sha}</li>)}
           </ul>
           {}
           <button onClick={this.renderCommits}>Render Commits</button>
-
         </div>
       </div>
     );
   }
 }
 
-export default connect(null, {
-  logout,
-})(Home)
+export default connect(
+  null,
+  {
+    logout
+  }
+)(Home);
