@@ -44,6 +44,7 @@ class Aside extends React.Component {
         </div>
         <div className={styles.menu_group}>
           <div className={styles.menu}>Workspace</div>
+          <NavItem path="/" name="Login Page (Temp)" />
           <NavItem path="/home" name="Working Copy" />
           <NavItem path="/" name="History" />
           <NavItem path="/students" name="Stashes" />

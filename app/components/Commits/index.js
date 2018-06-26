@@ -104,7 +104,7 @@ class Commits extends Component<Props> {
   closedBranches = async () => {
     const branches = await fetch(
 
-      `https://api.github.com/repos/${this.props.userName}/${
+      `https://api.github.com/repos/${this.props.username}/${
         this.state.repo
       }/pulls?state=closed${tokenBranches}`
 
@@ -165,7 +165,7 @@ class Commits extends Component<Props> {
   currentBranches = async commits => {
     try {
       const response = await fetch(
-        `https://api.github.com/repos/${this.props.userName}/${
+        `https://api.github.com/repos/${this.props.username}/${
           this.state.repo
         }/branches`
       );
@@ -185,7 +185,7 @@ class Commits extends Component<Props> {
 
     const commits = await fetch(
       `https://api.github.com/repos/${
-        this.props.userName
+        this.props.username
       }/${search}${tokenCommits}`
     )
       .then(res => res.json())
@@ -198,6 +198,7 @@ class Commits extends Component<Props> {
     axios
       .post('https://gitgui-55ad0.firebaseio.com/repos.json', {
         name: this.state.repo,
+        username: this.props.username,
       })
       .then(res => {
         console.log(res);
@@ -234,7 +235,7 @@ class Commits extends Component<Props> {
 }
 
 const mapStateToProps = state => ({
-  userName: state.auth.currentUser.username,
+  username: state.auth.currentUser.username,
 });
 
 export default connect(
