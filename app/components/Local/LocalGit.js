@@ -8,13 +8,12 @@ const { dialog } = require('electron').remote;
 const shell = require('shelljs');
 const fs = require('fs');
 
-class LocalGit extends Component {
-  constructor() {
-    super();
-    this.state = {
-      folderPaths: []
-    };
-  }
+class LocalGit extends Component<Props> {
+  props: Props;
+
+  state = {
+    folderPath: []
+  };
 
   // async getBlobs() {
   //   await fs.readdir('.git/objects', (err, files) => {
@@ -25,7 +24,7 @@ class LocalGit extends Component {
   //   });
   // }
 
-  selectFolder() {
+  selectFolder = () => {
     dialog.showOpenDialog(
       {
         title: 'Select a folder',
@@ -36,14 +35,15 @@ class LocalGit extends Component {
         this.setState({
           folderPath
         });
-        console.log(folderPath);
+        console.log(this.state.folderPath);
       }
     );
-  }
+  };
 
   render() {
     return (
       <div>
+        <div className="text">{this.state.folderPath[0]}</div>
         <Button color="blue" onClick={this.getBlobs}>
           View Objects
         </Button>
