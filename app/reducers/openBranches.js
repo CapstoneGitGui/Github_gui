@@ -4,13 +4,15 @@ const FETCH_OPEN_BRANCHES = 'FETCH_OPEN_BRANCHES';
 
 export const fetchOpenBranches = (userName, repo, token) => {
   return dispatch => {
-    axios
-      .get(`https://api.github.com/repos/${userName}/${repo}/branches${token}`)
-      .then(branches => {
-        dispatch({ type: FETCH_OPEN_BRANCHES, branches: branches.data });
-      })
-      .catch(err => console.log(err));
-  };
+    if (userName) {
+      axios
+        .get(`https://api.github.com/repos/${userName}/${repo}/branches${token}`)
+        .then(branches => {
+          dispatch({ type: FETCH_OPEN_BRANCHES, branches: branches.data });
+        })
+        .catch(err => console.log(err));
+      };
+    }
 };
 
 const initialState = [];

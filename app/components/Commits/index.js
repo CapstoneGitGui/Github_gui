@@ -2,9 +2,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../Home.css';
-import GitToken from '../../../secrets';
 import { connect } from 'react-redux';
-import ReactArt from 'react-art';
+// import ReactArt from 'react-art';
 
 import axios from 'axios';
 
@@ -207,7 +206,6 @@ class Commits extends Component<Props> {
   };
 
   render() {
-    console.log('state', this.state);
     return (
       <div>
         <div className={styles.container} data-tid="container">
@@ -236,7 +234,7 @@ class Commits extends Component<Props> {
 }
 
 const mapStateToProps = state => ({
-  userName: 'blakespencer',
+  userName: state.auth.currentUser.username,
 });
 
 export default connect(

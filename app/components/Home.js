@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import axios from 'axios'
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styles from './Home.css';
@@ -12,18 +13,18 @@ type Props = {};
 
 class Home extends Component<Props> {
   props: Props;
-
+  // type Props = {};
+  
   state = {
     data: [],
     dataHash: {},
+    value: '',
   };
 
   onLogout = () => {
-    this.props.logout();
-    localStorage.removeItem('token');
-  };
-
-  // type Props = {};
+    this.props.logout()
+    localStorage.removeItem('token')
+  } 
 
   renderCommits = async () => {
     const dataHash = {};
@@ -58,21 +59,30 @@ class Home extends Component<Props> {
     });
   };
 
+  handleChange = (e) => {
+    this.setState({
+      value: e.target.value
+    })
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    axios
+      .post('https://gitgui-55ad0.firebaseio.com/repos.json', {
+        name: this.state.value
+      })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => console.log(err))
+  }
+
   render() {
     const { data } = this.state;
-
-    console.log('dataHash', this.state.dataHash);
     return (
       <div>
         <div className={styles.container} data-tid="container">
-          <Button color="blue" onClick={this.onLogout}>
-            Logout
-          </Button>
-          <h2>Home</h2>
-
-          <button onClick={this.createWindow}>Login with Github</button>
-          <button onClick={this.logout}>Logout</button>
-
+          <Button color='blue' onClick={this.onLogout}>Logout</Button>
           <ul>
             {data.map(commit => {
               return <li>{commit.sha}</li>;
@@ -80,6 +90,10 @@ class Home extends Component<Props> {
           </ul>
           {}
           <button onClick={this.renderCommits}>Render Commits</button>
+          <form onSubmit={this.handleSubmit}>
+            <input type='text' onChange={this.handleChange} />
+            <button type='submit'>Submit</button>
+          </form>
         </div>
       </div>
     );

@@ -2,10 +2,11 @@
 import * as React from 'react';
 import { Redirect } from 'react-router';
 import { connect } from 'react-redux';
-import { fetchUserFromToken, fetchUser } from '../reducers/user';
+import { fetchUserFromToken, fetchUser, requestUser } from '../reducers/user';
 import { ipcRenderer } from 'electron';
 import Aside from '../components/Nav/Aside';
 import { setSelectedRepo } from '../reducers/selectedRepo';
+import { fetchRepos } from '../reducers/repos';
 
 type Props = {
   children: React.Node,
@@ -17,21 +18,28 @@ class App extends React.Component<Props> {
   props: Props;
 
   componentDidMount() {
-    if (token) {
-      this.props.fetchUserFromToken(token);
-    }
+    const { 
+      location: { pathname }
+     } = this.props
+
+    if (token) { this.props.fetchUserFromToken(token); }
 
     // Fetch user from Github login
     ipcRenderer.on('token:send', (e, token) => {
       this.props.fetchUser(token);
     });
 
-    const pathname = this.props.location.pathname;
     if (pathname.split('/').includes('repos')) {
       const { setSelectedRepo } = this.props;
       const pathArray = pathname.split('/');
 
       setSelectedRepo(pathArray[2]);
+    }
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.currentUser !== this.props.currentUser) {
+      this.props.fetchRepos(nextProps.currentUser)
     }
   }
 
@@ -60,9 +68,12 @@ class App extends React.Component<Props> {
 
 function mapStateToProps(state) {
   const { location } = state.router;
+  const { isLoading, currentUser } = state.auth
 
   return {
     location,
+    userLoading: isLoading,
+    currentUser: currentUser.username
   };
 }
 
@@ -72,5 +83,7 @@ export default connect(
     fetchUserFromToken,
     fetchUser,
     setSelectedRepo,
+    fetchRepos,
+    requestUser,
   }
 )(App);
