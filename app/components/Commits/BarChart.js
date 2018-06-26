@@ -14,6 +14,7 @@ const userCommits = {
   dick: 20,
   james: 10,
   steven: 200,
+  chicken: 800,
 };
 
 const names = [];
@@ -116,3 +117,11 @@ svg
   .attr('class', 'axis')
   .attr('transform', `translate(${axisPadding}, ${h - padding})`)
   .call(xAxis);
+
+import React, { Component } from 'react';
+
+class BarChartCommits extends Component {
+  render() {
+    return <svg width="500" height="200" className="barchart-commits" />;
+  }
+}

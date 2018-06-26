@@ -5,6 +5,7 @@ import auth from './user';
 import repos from './repos';
 import selectedRepo from './selectedRepo';
 import openBranches from './openBranches';
+import closedBranches from './closedBranches';
 
 const rootReducer = combineReducers({
   router,
@@ -12,6 +13,7 @@ const rootReducer = combineReducers({
   repos,
   selectedRepo,
   openBranches,
+  closedBranches,
 });
 
 export default rootReducer;
