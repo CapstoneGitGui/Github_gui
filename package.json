@@ -202,6 +202,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
+    "chokidar": "^2.0.4",
     "compression": "^1.7.2",
     "connect-session-sequelize": "^5.2.1",
     "devtron": "^1.4.0",

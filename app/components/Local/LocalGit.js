@@ -7,12 +7,13 @@ import { Button } from 'react-desktop/macOs';
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
 const fs = require('fs');
+const zlib = require('zlib');
 
 class LocalGit extends Component<Props> {
   props: Props;
 
   state = {
-    folderPath: [],
+    folderPath: '',
     branches: []
   };
 
@@ -31,6 +32,34 @@ class LocalGit extends Component<Props> {
           });
           this.setState({ branches });
         });
+        this.setState({ folderPath });
+      }
+    );
+  };
+
+  showCommits = async (evt, branch) => {
+    console.log(branch);
+    await fs.readFile(
+      `${this.state.folderPath}/.git/refs/heads/${branch}`,
+      async (err, file) => {
+        if (err) throw err;
+        const fileSHA = file.toString().slice(2, -1);
+        const fileSUB = file.toString().slice(0, 2);
+        console.log(fileSHA, fileSUB);
+        await fs.readFile(
+          `${this.state.folderPath}/.git/objects/${fileSUB}/${fileSHA}`,
+          (err, file) => {
+            if (err) throw err;
+            const buffer = Buffer.from(file, 'base64');
+            zlib.unzip(buffer, (err, buffer) => {
+              if (!err) {
+                console.log(buffer.toString());
+              } else {
+                console.log(err);
+              }
+            });
+          }
+        );
       }
     );
   };
@@ -43,7 +72,11 @@ class LocalGit extends Component<Props> {
         </Button>
         <ul>
           {this.state.branches.map(branch => (
-            <li className="text">{branch}</li>
+            <li className="text">
+              <Button onClick={evt => this.showCommits(evt, branch)}>
+                {branch}
+              </Button>
+            </li>
           ))}
         </ul>
       </div>
