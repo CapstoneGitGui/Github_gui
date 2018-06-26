@@ -22,6 +22,7 @@ class Commits extends Component<Props> {
     repo: '',
     currentBranches: [],
     closedBranches: [],
+    value: ''
   };
 
   renderCommits = async () => {
@@ -179,15 +180,22 @@ class Commits extends Component<Props> {
     }
   };
 
-  handleSubmit = async event => {
-    event.preventDefault();
-    const search = event.target.children[0].value;
-    // console.log(`https://api.github.com/search/repositories?q=${search}`);
+  handleInputChange = (e) => {
+    this.setState({
+      value: e.target.value
+    })
+  }
+
+  handleSubmit = async e => {
+    e.preventDefault();
+
+    const { username } = this.props;
+    const { value } = this.state;    
 
     const commits = await fetch(
       `https://api.github.com/repos/${
-        this.props.username
-      }/${search}${tokenCommits}`
+        username
+      }/${value}${tokenCommits}`
     )
       .then(res => res.json())
       .then(repo => {
@@ -196,7 +204,7 @@ class Commits extends Component<Props> {
       })
       .catch(err => console.log(err));
 
-    this.props.addRepo(search, this.props.username)
+    this.props.addRepo(value, username)
   };
 
   render() {
@@ -204,7 +212,7 @@ class Commits extends Component<Props> {
       <div>
         <div className={styles.container} data-tid="container">
           <form onSubmit={this.handleSubmit}>
-            <input type="text" />
+            <input type="text" onChange={this.handleInputChange} />
             <button type="submit">Submit</button>
           </form>
           <ul>
