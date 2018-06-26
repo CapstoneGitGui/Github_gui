@@ -13,7 +13,7 @@ class LocalGit extends Component<Props> {
 
   state = {
     folderPath: [],
-    objects: []
+    branches: []
   };
 
   selectFolder = () => {
@@ -24,11 +24,12 @@ class LocalGit extends Component<Props> {
       },
       async folderPath => {
         // folderPaths is an array that contains all the selected paths
-        await fs.readdir(`${folderPath}/.git/objects`, (err, files) => {
+        await fs.readdir(`${folderPath}/.git/refs/heads`, (err, files) => {
+          const branches = [];
           files.forEach(file => {
-            console.log(file);
+            branches.push(file);
           });
-          // });
+          this.setState({ branches });
         });
       }
     );
@@ -40,7 +41,11 @@ class LocalGit extends Component<Props> {
         <Button color="blue" onClick={this.selectFolder}>
           Select folder
         </Button>
-        <div className="text">{this.state.objects}</div>
+        <ul>
+          {this.state.branches.map(branch => (
+            <li className="text">{branch}</li>
+          ))}
+        </ul>
       </div>
     );
   }
