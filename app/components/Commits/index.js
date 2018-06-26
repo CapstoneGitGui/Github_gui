@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../Home.css';
 import { connect } from 'react-redux';
+import { addRepo } from '../../reducers/repos'
 // import ReactArt from 'react-art';
 
 import axios from 'axios';
@@ -195,15 +196,7 @@ class Commits extends Component<Props> {
       })
       .catch(err => console.log(err));
 
-    axios
-      .post('https://gitgui-55ad0.firebaseio.com/repos.json', {
-        name: this.state.repo,
-        username: this.props.username,
-      })
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => console.log(err));
+    this.props.addRepo(search, this.props.username)
   };
 
   render() {
@@ -240,5 +233,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  null
+  { addRepo }
 )(Commits);
