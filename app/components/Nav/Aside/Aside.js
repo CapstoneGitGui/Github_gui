@@ -70,14 +70,22 @@ class Aside extends React.Component {
           <NavItem path="/students" name="Settings" />
           <NavItem path="/commits" name="Commits" />
         </div>
-        <div className={styles.menu_group}>
-          <div className={styles.menu}>Open Branches</div>
-          {this.renderBranches()}
-        </div>
-        <div className={styles.menu_group}>
-          <div className={styles.menu}>Closed Branches</div>
-          {this.renderClosedBranches()}
-        </div>
+        {this.props.currentBranches.length ? (
+          <div className={styles.menu_group}>
+            <div className={styles.menu}>Open Branches</div>
+            {this.renderBranches()}
+          </div>
+        ) : (
+          <div />
+        )}
+        {this.props.closedBranches.length ? (
+          <div className={styles.menu_group}>
+            <div className={styles.menu}>Closed Branches</div>
+            {this.renderClosedBranches()}
+          </div>
+        ) : (
+          <div />
+        )}
       </aside>
     );
   }
