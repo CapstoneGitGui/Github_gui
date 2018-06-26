@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { fetchUserFromToken, fetchUser, requestUser } from '../reducers/user';
 import { ipcRenderer } from 'electron';
 import Aside from '../components/Nav/Aside';
-import { setSelectedRepo } from '../reducers/selectedRepo';
+import ReposSidebar from '../components/Nav/Aside/ReposSidebar';
 import { fetchRepos } from '../reducers/repos';
 import Breadcrumb from '../components/Nav/Breadcrumb/Breadcrumb';
 import { configureStore } from '../store/configureStore';
@@ -34,15 +34,8 @@ class App extends React.Component<Props> {
     // Fetch user from Github login
     ipcRenderer.on('token:send', (e, token) => {
       this.props.fetchUser(token);
-      store.dispatch(push('/home'))
+      store.dispatch(push('/repos'))
     });
-
-    if (pathname.split('/').includes('repos')) {
-      const { setSelectedRepo } = this.props;
-      const pathArray = pathname.split('/');
-
-      setSelectedRepo(pathArray[2]);
-    }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -54,8 +47,11 @@ class App extends React.Component<Props> {
   renderAside() {
     const { location } = this.props;
 
-    if (location.pathname !== '/') {
-      return <Aside />;
+    switch (location.pathname) {
+      case '/repos':
+        return <ReposSidebar />
+      default:
+        return <Aside />
     }
   }
 
@@ -93,7 +89,6 @@ export default connect(
   {
     fetchUserFromToken,
     fetchUser,
-    setSelectedRepo,
     fetchRepos,
     requestUser,
   }
