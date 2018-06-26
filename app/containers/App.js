@@ -7,7 +7,6 @@ import { ipcRenderer } from 'electron';
 import Aside from '../components/Nav/Aside';
 import { setSelectedRepo } from '../reducers/selectedRepo';
 import { fetchRepos } from '../reducers/repos';
-// import currentUser from '../utils/currentUser'
 
 type Props = {
   children: React.Node,

@@ -29,10 +29,13 @@ class Aside extends React.Component {
     })
   }
 
+  renderBranches () {
+    return this.props.currentBranches.map(branch => {
+      return <NavItem key={branch.commit.sha} path="/" name={branch.name} />
+    })
+  }
+
   render() {
-    // if (!this.props.selectedRepo) {
-    //   return <div>Loading</div>;
-    // }
     return (
       <aside className={styles.aside}>
         <div className={styles.menu_group}>
@@ -49,7 +52,7 @@ class Aside extends React.Component {
         </div>
         <div className={styles.menu_group}>
           <div className={styles.menu}>Branches</div>
-          <NavItem path="/" name="master" />
+          { this.renderBranches() }
         </div>
       </aside>
     );
@@ -60,6 +63,7 @@ const mapStateToProps = state => ({
   repos: state.repos,
   selectedRepo: state.selectedRepo,
   currentUser: state.auth.currentUser.username,
+  currentBranches: state.openBranches
 });
 
 export default connect(
