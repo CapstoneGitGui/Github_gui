@@ -32,7 +32,7 @@ export const addRepo = (repo, currentUser) => {
       .then(res => {
         dispatch({
           type: ADD_REPO,
-          payload: res
+          payload: JSON.parse(res.config.data).repoName
         })
       })
       .catch(err => console.log(err));
