@@ -3,36 +3,58 @@ import NavItem from './NavItem';
 import styles from './Aside.css';
 import { connect } from 'react-redux';
 import { fetchOpenBranches } from '../../../reducers/openBranches';
+import { fetchClosedBranches } from '../../../reducers/closedBranches';
 
 class Aside extends React.Component {
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (nextProps.selectedRepo !== this.props.selectedRepo || nextProps.currentUser !== this.props.currentUser) {
+    if (
+      nextProps.selectedRepo !== this.props.selectedRepo ||
+      nextProps.currentUser !== this.props.currentUser
+    ) {
       const { currentUser, selectedRepo } = this.props;
-      let token = `?access_token=${localStorage.getItem('token')}`;
-      
-      this.props.fetchOpenBranches(nextProps.currentUser, nextProps.selectedRepo, token);
+      let token = `${localStorage.getItem('token')}`;
+
+      this.props.fetchOpenBranches(
+        nextProps.currentUser,
+        nextProps.selectedRepo,
+        token
+      );
+
+      this.props.fetchClosedBranches(
+        nextProps.currentUser,
+        nextProps.selectedRepo,
+        token
+      );
     }
   }
 
-  renderRepos () {
+  renderRepos() {
     const { repos } = this.props;
 
     return repos.map(repo => {
       return (
-        <NavItem 
-          key={repo} 
-          path={`/repos/${repo}`} 
-          name={`${repo}`} 
-          isRepo={true} 
+        <NavItem
+          key={repo}
+          path={`/repos/${repo}`}
+          name={`${repo}`}
+          isRepo={true}
         />
       );
-    })
+    });
   }
 
-  renderBranches () {
+  renderBranches() {
     return this.props.currentBranches.map(branch => {
-      return <NavItem key={branch.commit.sha} path="/" name={branch.name} />
-    })
+      return <NavItem key={branch.commit.sha} path="/" name={branch.name} />;
+    });
+  }
+
+  renderClosedBranches() {
+    return this.props.closedBranches.map(branch => {
+      return (
+        <NavItem key={branch.commit.sha} path="/" name={branch.head.ref} />
+      );
+    });
   }
 
   render() {
@@ -40,7 +62,7 @@ class Aside extends React.Component {
       <aside className={styles.aside}>
         <div className={styles.menu_group}>
           <div className={styles.menu}>Repos</div>
-          { this.renderRepos() }
+          {this.renderRepos()}
         </div>
         <div className={styles.menu_group}>
           <div className={styles.menu}>Workspace</div>
@@ -51,8 +73,12 @@ class Aside extends React.Component {
           <NavItem path="/commits" name="Commits" />
         </div>
         <div className={styles.menu_group}>
-          <div className={styles.menu}>Branches</div>
-          { this.renderBranches() }
+          <div className={styles.menu}>Open Branches</div>
+          {this.renderBranches()}
+        </div>
+        <div className={styles.menu_group}>
+          <div className={styles.menu}>Closed Branches</div>
+          {this.renderClosedBranches()}
         </div>
       </aside>
     );
@@ -63,10 +89,11 @@ const mapStateToProps = state => ({
   repos: state.repos,
   selectedRepo: state.selectedRepo,
   currentUser: state.auth.currentUser.username,
-  currentBranches: state.openBranches
+  currentBranches: state.openBranches,
+  closedBranches: state.closedBranches,
 });
 
 export default connect(
   mapStateToProps,
-  { fetchOpenBranches }
+  { fetchOpenBranches, fetchClosedBranches }
 )(Aside);
