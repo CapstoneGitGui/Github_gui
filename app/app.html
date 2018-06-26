@@ -1,75 +1,79 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Git Gui</title>
-    <script>
-      (function() {
-        if (!process.env.HOT) {
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = './dist/style.css';
-          // HACK: Writing the script path should be done with webpack
-          document.getElementsByTagName('head')[0].appendChild(link);
-        }
-      }());
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script>
-      {
-        const scripts = [];
 
-        // Dynamically insert the DLL script in development env in the
-        // renderer process
-        if (process.env.NODE_ENV === 'development') {
-          scripts.push('../dll/renderer.dev.dll.js');
-        }
-
-        // Dynamically insert the bundled app script in the renderer process
-        const port = process.env.PORT || 1212;
-        scripts.push(
-          (process.env.HOT)
-            ? 'http://localhost:' + port + '/dist/renderer.dev.js'
-            : './dist/renderer.prod.js'
-        );
-
-        document.write(
-          scripts
-            .map(script => `<script defer src="${script}"><\/script>`)
-            .join('')
-        );
+<head>
+  <meta charset="utf-8">
+  <title>Git Gui</title>
+  <script>
+    (function () {
+      if (!process.env.HOT) {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = './dist/style.css';
+        // HACK: Writing the script path should be done with webpack
+        document.getElementsByTagName('head')[0].appendChild(link);
       }
-    </script>
-    <script>
-      firebase.initializeApp({
-        apiKey: "AIzaSyAl-hidLJP3VFkBL6sYYuPj38gPOYcgfq4",
-        authDomain: "gitgui-55ad0.firebaseapp.com",
-        databaseURL: "https://gitgui-55ad0.firebaseio.com",
-        projectId: "gitgui-55ad0",
-        storageBucket: "gitgui-55ad0.appspot.com",
-        messagingSenderId: "882448645446"
-      })
+    }());
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
+  <script src="https://d3js.org/d3.v5.js"></script>
+</head>
 
-      const { ipcRenderer } = require('electron')
-      ipcRenderer.on('token:send', (e, token) => {
-        console.log('[TOKEN]', token)
+<body>
+  <div id="root"></div>
+  <script>
+    {
+      const scripts = [];
 
-        const credential = firebase.auth.GithubAuthProvider.credential(token);
+      // Dynamically insert the DLL script in development env in the
+      // renderer process
+      if (process.env.NODE_ENV === 'development') {
+        scripts.push('../dll/renderer.dev.dll.js');
+      }
 
-        firebase.auth().signInAndRetrieveDataWithCredential(credential)
-          .then(user => {
-            localStorage.setItem('token', token)
-          })  
-          .catch(function(error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            var email = error.email;
-            var credential = error.credential;
-          });
-      })
-    </script>
-  </body>
+      // Dynamically insert the bundled app script in the renderer process
+      const port = process.env.PORT || 1212;
+      scripts.push(
+        (process.env.HOT)
+          ? 'http://localhost:' + port + '/dist/renderer.dev.js'
+          : './dist/renderer.prod.js'
+      );
+
+      document.write(
+        scripts
+          .map(script => `<script defer src="${script}"><\/script>`)
+          .join('')
+      );
+    }
+  </script>
+  <script>
+    firebase.initializeApp({
+      apiKey: "AIzaSyAl-hidLJP3VFkBL6sYYuPj38gPOYcgfq4",
+      authDomain: "gitgui-55ad0.firebaseapp.com",
+      databaseURL: "https://gitgui-55ad0.firebaseio.com",
+      projectId: "gitgui-55ad0",
+      storageBucket: "gitgui-55ad0.appspot.com",
+      messagingSenderId: "882448645446"
+    })
+
+    const { ipcRenderer } = require('electron')
+    ipcRenderer.on('token:send', (e, token) => {
+      console.log('[TOKEN]', token)
+
+      const credential = firebase.auth.GithubAuthProvider.credential(token);
+
+      firebase.auth().signInAndRetrieveDataWithCredential(credential)
+        .then(user => {
+          localStorage.setItem('token', token)
+        })
+        .catch(function (error) {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          var email = error.email;
+          var credential = error.credential;
+        });
+    })
+  </script>
+</body>
+
 </html>
