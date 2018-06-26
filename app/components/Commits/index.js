@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 
 import axios from 'axios';
 
-
 const token = localStorage.getItem('token');
 const tokenCommits = `?access_token=${token}`;
 const tokenBranches = `&access_token=${token}`;
@@ -103,11 +102,9 @@ class Commits extends Component<Props> {
 
   closedBranches = async () => {
     const branches = await fetch(
-
       `https://api.github.com/repos/${this.props.userName}/${
         this.state.repo
       }/pulls?state=closed${tokenBranches}`
-
     )
       .then(res => res.json())
       .then(closedBranches => {
@@ -116,7 +113,7 @@ class Commits extends Component<Props> {
         return closedBranches;
       })
       .catch(err => console.log(err));
-      console.log(branches)
+    console.log(branches);
     return branches;
   };
 

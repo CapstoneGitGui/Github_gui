@@ -1,11 +1,23 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { setSelectedRepo } from '../../../reducers/selectedRepo';
+import { setSelectedBranch } from '../../../reducers/selectedBranch';
+import { fetchBranchCommits } from '../../../reducers/branchCommits';
 import { connect } from 'react-redux';
 
 class NavItem extends React.Component {
   handleClick = () => {
-    this.props.isRepo && this.props.setSelectedRepo(this.props.name);
+    if (this.props.isRepo) {
+      this.props.setSelectedRepo(this.props.name);
+    } else if (this.props.isBranch) {
+      const token = localStorage.getItem('token');
+      this.props.setSelectedBranch(this.props.branch);
+      this.props.fetchBranchCommits(
+        this.props.name,
+        this.props.currentUser,
+        token
+      );
+    }
   };
 
   render() {
@@ -17,7 +29,11 @@ class NavItem extends React.Component {
   }
 }
 
+const mapStateToProps = state => ({
+  currentUser: state.auth.currentUser.userName,
+});
+
 export default connect(
   null,
-  { setSelectedRepo }
+  { setSelectedRepo, setSelectedBranch, fetchBranchCommits }
 )(NavItem);
