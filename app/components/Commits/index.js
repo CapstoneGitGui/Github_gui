@@ -5,7 +5,9 @@ import styles from '../Home.css';
 import GitToken from '../../../secrets';
 import { connect } from 'react-redux';
 import ReactArt from 'react-art';
+
 import axios from 'axios';
+
 
 const token = localStorage.getItem('token');
 const tokenCommits = `?access_token=${token}`;
@@ -102,9 +104,11 @@ class Commits extends Component<Props> {
 
   closedBranches = async () => {
     const branches = await fetch(
+
       `https://api.github.com/repos/${this.props.userName}/${
         this.state.repo
       }/pulls?state=closed${tokenBranches}`
+
     )
       .then(res => res.json())
       .then(closedBranches => {
@@ -113,6 +117,7 @@ class Commits extends Component<Props> {
         return closedBranches;
       })
       .catch(err => console.log(err));
+      console.log(branches)
     return branches;
   };
 
