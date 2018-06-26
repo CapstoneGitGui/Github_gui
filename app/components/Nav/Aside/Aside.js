@@ -45,13 +45,29 @@ class Aside extends React.Component {
 
   renderBranches() {
     return this.props.currentBranches.map(branch => {
-      return <NavItem key={branch.commit.sha} path="/" name={branch.name} />;
+      return (
+        <NavItem
+          key={branch.commit.sha}
+          path="/"
+          name={branch.name}
+          isBranch={true}
+          branch={branch}
+        />
+      );
     });
   }
 
   renderClosedBranches() {
     return this.props.closedBranches.map(branch => {
-      return <NavItem key={branch.number} path="/" name={branch.head.ref} />;
+      return (
+        <NavItem
+          key={branch.number}
+          path="/"
+          name={branch.head.ref}
+          isBranch={true}
+          branch={branch}
+        />
+      );
     });
   }
 
@@ -86,6 +102,14 @@ class Aside extends React.Component {
         ) : (
           <div />
         )}
+        {this.props.branchCommits.length ? (
+          <div className={styles.menu_group}>
+            <div className={styles.menu}>Closed Branches</div>
+            {this.renderClosedBranches()}
+          </div>
+        ) : (
+          <div />
+        )}
       </aside>
     );
   }
@@ -97,6 +121,7 @@ const mapStateToProps = state => ({
   currentUser: state.auth.currentUser.username,
   currentBranches: state.openBranches,
   closedBranches: state.closedBranches,
+  branchCommits: state.branchCommits,
 });
 
 export default connect(
