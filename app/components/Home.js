@@ -7,7 +7,7 @@ import styles from './Home.css';
 
 import { ipcRenderer } from 'electron';
 import { Button } from 'react-desktop/macOs';
-import { logout } from '../reducers/user'
+import { logout } from '../reducers/user';
 
 type Props = {};
 
@@ -78,21 +78,15 @@ class Home extends Component<Props> {
   }
 
   render() {
-    const {data} = this.state;
-    
-    console.log('dataHash', this.state.dataHash);
+    const { data } = this.state;
     return (
       <div>
         <div className={styles.container} data-tid="container">
           <Button color='blue' onClick={this.onLogout}>Logout</Button>
           <ul>
-            {
-              data.map(commit => {
-                return (
-                  <li>{commit.sha}</li>
-                );
-              })
-            }
+            {data.map(commit => {
+              return <li>{commit.sha}</li>;
+            })}
           </ul>
           {}
           <button onClick={this.renderCommits}>Render Commits</button>
@@ -106,6 +100,9 @@ class Home extends Component<Props> {
   }
 }
 
-export default connect(null, {
-  logout,
-})(Home)
+export default connect(
+  null,
+  {
+    logout,
+  }
+)(Home);
