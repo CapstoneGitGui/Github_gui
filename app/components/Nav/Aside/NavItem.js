@@ -13,9 +13,9 @@ class NavItem extends React.Component {
       const token = localStorage.getItem('token');
       this.props.setSelectedBranch(this.props.branch);
       this.props.fetchBranchCommits(
-        this.props.name,
+        token,
+        this.props.branch,
         this.props.currentUser,
-        token
       );
     }
   };
@@ -30,10 +30,10 @@ class NavItem extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  currentUser: state.auth.currentUser.userName,
+  currentUser: state.auth.currentUser.username,
 });
 
 export default connect(
-  null,
+  mapStateToProps,
   { setSelectedRepo, setSelectedBranch, fetchBranchCommits }
 )(NavItem);

@@ -48,7 +48,7 @@ class Aside extends React.Component {
       return (
         <NavItem
           key={branch.commit.sha}
-          path="/"
+          path="/home"
           name={branch.name}
           isBranch={true}
           branch={branch}
@@ -62,7 +62,7 @@ class Aside extends React.Component {
       return (
         <NavItem
           key={branch.number}
-          path="/"
+          path="/home"
           name={branch.head.ref}
           isBranch={true}
           branch={branch}
@@ -80,6 +80,7 @@ class Aside extends React.Component {
         </div>
         <div className={styles.menu_group}>
           <div className={styles.menu}>Workspace</div>
+          <NavItem path="/" name="Login Page (Temp)" />
           <NavItem path="/home" name="Working Copy" />
           <NavItem path="/" name="History" />
           <NavItem path="/students" name="Stashes" />
@@ -104,7 +105,7 @@ class Aside extends React.Component {
         )}
         {this.props.branchCommits.length ? (
           <div className={styles.menu_group}>
-            <div className={styles.menu}>Closed Branches</div>
+            <div className={styles.menu}>Commits</div>
             {this.renderClosedBranches()}
           </div>
         ) : (

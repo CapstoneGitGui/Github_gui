@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../Home.css';
 import { connect } from 'react-redux';
+import { addRepo } from '../../reducers/repos'
 // import ReactArt from 'react-art';
 
 import axios from 'axios';
@@ -20,6 +21,7 @@ class Commits extends Component<Props> {
     repo: '',
     currentBranches: [],
     closedBranches: [],
+    value: ''
   };
 
   renderCommits = async () => {
@@ -162,7 +164,7 @@ class Commits extends Component<Props> {
   currentBranches = async commits => {
     try {
       const response = await fetch(
-        `https://api.github.com/repos/${this.props.userName}/${
+        `https://api.github.com/repos/${this.props.username}/${
           this.state.repo
         }/branches`
       );
@@ -175,15 +177,22 @@ class Commits extends Component<Props> {
     }
   };
 
-  handleSubmit = async event => {
-    event.preventDefault();
-    const search = event.target.children[0].value;
-    // console.log(`https://api.github.com/search/repositories?q=${search}`);
+  handleInputChange = (e) => {
+    this.setState({
+      value: e.target.value
+    })
+  }
+
+  handleSubmit = async e => {
+    e.preventDefault();
+
+    const { username } = this.props;
+    const { value } = this.state;    
 
     const commits = await fetch(
       `https://api.github.com/repos/${
-        this.props.userName
-      }/${search}${tokenCommits}`
+        username
+      }/${value}${tokenCommits}`
     )
       .then(res => res.json())
       .then(repo => {
@@ -192,14 +201,7 @@ class Commits extends Component<Props> {
       })
       .catch(err => console.log(err));
 
-    axios
-      .post('https://gitgui-55ad0.firebaseio.com/repos.json', {
-        name: this.state.repo,
-      })
-      .then(res => {
-        console.log(res);
-      })
-      .catch(err => console.log(err));
+    this.props.addRepo(value, username)
   };
 
   render() {
@@ -207,7 +209,7 @@ class Commits extends Component<Props> {
       <div>
         <div className={styles.container} data-tid="container">
           <form onSubmit={this.handleSubmit}>
-            <input type="text" />
+            <input type="text" onChange={this.handleInputChange} />
             <button type="submit">Submit</button>
           </form>
           <ul>
@@ -231,10 +233,10 @@ class Commits extends Component<Props> {
 }
 
 const mapStateToProps = state => ({
-  userName: state.auth.currentUser.username,
+  username: state.auth.currentUser.username,
 });
 
 export default connect(
   mapStateToProps,
-  null
+  { addRepo }
 )(Commits);
