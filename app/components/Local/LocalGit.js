@@ -11,17 +11,19 @@ const fs = require('fs');
 class LocalGit extends Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      folderPaths: []
+    };
   }
 
-  async getBlobs() {
-    await fs.readdir('.git/objects', (err, files) => {
-      files.forEach(file => {
-        console.log(file);
-      });
-      // });
-    });
-  }
+  // async getBlobs() {
+  //   await fs.readdir('.git/objects', (err, files) => {
+  //     files.forEach(file => {
+  //       console.log(file);
+  //     });
+  //     // });
+  //   });
+  // }
 
   selectFolder() {
     dialog.showOpenDialog(
@@ -29,13 +31,12 @@ class LocalGit extends Component {
         title: 'Select a folder',
         properties: ['openDirectory']
       },
-      folderPaths => {
+      folderPath => {
         // folderPaths is an array that contains all the selected paths
-        if (fileNames === undefined) {
-          console.log('No destination folder selected');
-        } else {
-          console.log(folderPaths);
-        }
+        this.setState({
+          folderPath
+        });
+        console.log(folderPath);
       }
     );
   }
