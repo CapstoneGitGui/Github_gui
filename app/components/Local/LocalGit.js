@@ -16,31 +16,20 @@ class LocalGit extends Component<Props> {
     objects: []
   };
 
-  getBlobs = async () => {
-    const objects = [];
-    await fs.readdir(`${this.state.folderPath}/.git/objects`, (err, files) => {
-      files.forEach(file => {
-        objects.push(file);
-      });
-      // });
-    });
-    this.setState({
-      objects
-    });
-  };
-
   selectFolder = () => {
     dialog.showOpenDialog(
       {
         title: 'Select a folder',
         properties: ['openDirectory']
       },
-      folderPath => {
+      async folderPath => {
         // folderPaths is an array that contains all the selected paths
-        this.setState({
-          folderPath
+        await fs.readdir(`${folderPath}/.git/objects`, (err, files) => {
+          files.forEach(file => {
+            console.log(file);
+          });
+          // });
         });
-        console.log(folderPath);
       }
     );
   };
@@ -48,17 +37,9 @@ class LocalGit extends Component<Props> {
   render() {
     return (
       <div>
-        <Button color="blue" onClick={this.getBlobs}>
-          View Objects
-        </Button>
         <Button color="blue" onClick={this.selectFolder}>
           Select folder
         </Button>
-        {this.state.folderPath.length > 0 ? (
-          <div>
-            <Button onClick={this.getBlobs}>View Tree</Button>
-          </div>
-        ) : null}
         <div className="text">{this.state.objects}</div>
       </div>
     );
