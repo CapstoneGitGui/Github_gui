@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import SplitPane from 'react-split-pane'
 import { Scrollbars } from 'react-custom-scrollbars'
+import { connect } from 'react-redux';
 
 import './Repo.css'
 import Tree from '../Tree/Tree'
@@ -10,7 +11,7 @@ import getFileType from './filename'
 
 const githubToken = localStorage.getItem('token')
 
-export default class CommitRepo extends Component {
+class CommitRepo extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -41,7 +42,7 @@ export default class CommitRepo extends Component {
     //     params: { owner, repo }
     //   }
     // } = this.props
-    let url = `https://api.github.com/repos/h-a-m-r-time/grace-shopper/git/trees/${sha}?recursive=1&access_token=${githubToken}`
+    let url = `https://api.github.com/repos/${this.state.userName}/${this.state.repo}/git/trees/${sha}?recursive=1&access_token=${githubToken}`
     // if (githubToken) url += `&access_token=${githubToken}`
     return axios
       .get(url)
@@ -168,3 +169,12 @@ export default class CommitRepo extends Component {
     )
   }
 }
+
+const mapStateToProps = state => ({
+  userName: state.auth.currentUser.username,
+});
+
+export default connect(
+  mapStateToProps,
+  null
+)(CommitRepo);

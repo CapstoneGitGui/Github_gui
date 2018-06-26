@@ -1,5 +1,6 @@
 // @flow
 import React, { Component } from 'react';
+import axios from 'axios'
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styles from './Home.css';
@@ -8,26 +9,24 @@ import Repo from './Repo/Repo';
 
 import { ipcRenderer } from 'electron';
 import { Button } from 'react-desktop/macOs';
-import { logout } from '../reducers/user'
+import { logout } from '../reducers/user';
 
 type Props = {};
 
 class Home extends Component<Props> {
   props: Props;
+  // type Props = {};
 
   state = {
     data: [],
-    dataHash: {}
+    dataHash: {},
+    value: '',
   };
 
   onLogout = () => {
     this.props.logout()
     localStorage.removeItem('token')
   }
-
-  // type Props = {};
-
-
 
   renderCommits = async () => {
     const dataHash = {};
@@ -62,37 +61,50 @@ class Home extends Component<Props> {
     });
   };
 
-  render() {
-    const {data} = this.state;
+  handleChange = (e) => {
+    this.setState({
+      value: e.target.value
+    })
+  }
 
-    console.log('dataHash', this.state.dataHash);
+  handleSubmit = (e) => {
+    e.preventDefault()
+    axios
+      .post('https://gitgui-55ad0.firebaseio.com/repos.json', {
+        name: this.state.value
+      })
+      .then(res => {
+        console.log(res)
+      })
+      .catch(err => console.log(err))
+  }
+
+  render() {
+    const { data } = this.state;
     return (
       <div>
         <div className={styles.container} data-tid="container">
           <Button color='blue' onClick={this.onLogout}>Logout</Button>
-          <h2>Home</h2>
-
-          <button onClick={this.createWindow}>Login with Github</button>
-          <button onClick={this.logout}>Logout</button>
-
           <ul>
-            {
-              data.map(commit => {
-                return (
-                  <li>{commit.sha}</li>
-                );
-              })
-            }
+            {data.map(commit => {
+              return <li>{commit.sha}</li>;
+            })}
           </ul>
           {}
           <button onClick={this.renderCommits}>Render Commits</button>
-
+          <form onSubmit={this.handleSubmit}>
+            <input type='text' onChange={this.handleChange} />
+            <button type='submit'>Submit</button>
+          </form>
         </div>
       </div>
 );
   }
 }
 
-export default connect(null, {
-  logout,
-})(Home)
+export default connect(
+  null,
+  {
+    logout,
+  }
+)(Home);

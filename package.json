@@ -200,10 +200,12 @@
     "webpack-merge": "^4.1.2"
   },
   "dependencies": {
+    "art": "^0.10.2",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "compression": "^1.7.2",
     "connect-session-sequelize": "^5.2.1",
+    "d3": "^5.5.0",
     "devtron": "^1.4.0",
     "electron-debug": "^1.5.0",
     "electron-oauth": "^2.4.3",
@@ -219,6 +221,7 @@
     "pg-hstore": "^2.3.2",
     "react": "^16.4.0",
     "react-custom-scrollbars": "^4.2.1",
+    "react-art": "^16.4.1",
     "react-desktop": "^0.3.5",
     "react-dom": "^16.4.0",
     "react-hot-loader": "^4.2.0",
