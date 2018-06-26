@@ -4,10 +4,15 @@ import axios from 'axios'
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styles from './Home.css';
+import { push } from 'react-router-redux'
 
 import { ipcRenderer } from 'electron';
 import { Button } from 'react-desktop/macOs';
 import { logout } from '../reducers/user';
+
+import { configureStore } from '../store/configureStore';
+
+const store = configureStore();
 
 type Props = {};
 
@@ -24,6 +29,8 @@ class Home extends Component<Props> {
   onLogout = () => {
     this.props.logout()
     localStorage.removeItem('token')
+    localStorage.removeItem('username')
+    store.dispatch(push('/'))
   } 
 
   renderCommits = async () => {

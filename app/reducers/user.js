@@ -1,3 +1,5 @@
+import { push } from 'react-router-redux'
+
 export const FETCH_USER_FROM_TOKEN = 'FETCH_USER_FROM_TOKEN'
 const FETCH_USER_FROM_GITHUB = 'FETCH_USER_FROM_GITHUB'
 const FETCH_USER_FROM_FIREBASE = 'FETCH_USER_FROM_FIREBASE'

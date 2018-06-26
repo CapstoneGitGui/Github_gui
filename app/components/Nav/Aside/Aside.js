@@ -50,7 +50,6 @@ class Aside extends React.Component {
   }
 
   renderClosedBranches() {
-    console.log(this.props.closedBranches)
     return this.props.closedBranches.map(branch => {
       return (
         <NavItem key={branch.number} path="/" name={branch.head.ref} />

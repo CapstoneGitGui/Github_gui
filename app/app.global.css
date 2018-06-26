@@ -6,11 +6,11 @@
 
 body {
   position: relative;
-  color: white;
   height: 100vh;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   overflow-y: hidden;
-  margin: 0
+  margin: 0;
+  font-size: 12px;
 }
 
 h2 {

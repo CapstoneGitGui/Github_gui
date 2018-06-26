@@ -7,6 +7,11 @@ import { ipcRenderer } from 'electron';
 import Aside from '../components/Nav/Aside';
 import { setSelectedRepo } from '../reducers/selectedRepo';
 import { fetchRepos } from '../reducers/repos';
+import Breadcrumb from '../components/Nav/Breadcrumb/Breadcrumb';
+import { configureStore } from '../store/configureStore';
+import { push } from 'react-router-redux'
+
+const store = configureStore();
 
 type Props = {
   children: React.Node,
@@ -29,6 +34,7 @@ class App extends React.Component<Props> {
     // Fetch user from Github login
     ipcRenderer.on('token:send', (e, token) => {
       this.props.fetchUser(token);
+      store.dispatch(push('/home'))
     });
 
     if (pathname.split('/').includes('repos')) {
@@ -54,14 +60,17 @@ class App extends React.Component<Props> {
   }
 
   render() {
-    if (token && this.props.location.pathname === '/') {
-      return <Redirect to="/home" />;
-    }
+    // if (token && this.props.location.pathname === '/') {
+    //   return <Redirect to="/home" />;
+    // }
     return (
-      <div className="app">
-        {this.renderAside()}
-        <div className="content">
-          <main className="main-content">{this.props.children}</main>
+      <div>
+        <Breadcrumb />
+        <div className="app">
+          {this.renderAside()}
+          <div className="content">
+            <main className="main-content">{this.props.children}</main>
+          </div>
         </div>
       </div>
     );
