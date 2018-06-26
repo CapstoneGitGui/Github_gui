@@ -51,9 +51,7 @@ class Aside extends React.Component {
 
   renderClosedBranches() {
     return this.props.closedBranches.map(branch => {
-      return (
-        <NavItem key={branch.commit.sha} path="/" name={branch.head.ref} />
-      );
+      return <NavItem key={branch.number} path="/" name={branch.head.ref} />;
     });
   }
 
