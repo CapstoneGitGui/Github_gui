@@ -7,19 +7,10 @@ import './Repo.css'
 import Tree from '../Tree/Tree'
 import RenderedContent from './RenderedContent'
 import getFileType from './filename'
-// import SearchInput from './SearchInput'
-// import LoadingScreen from '../UI/LoadingScreen'
-// import Settings from '../UI/Settings'
-// import logo from '../../assets/gitviewerWhite.svg'
 
 const githubToken = localStorage.getItem('token')
 
-
-// const githubToken = process.env.GITHUB_ACCESS_TOKEN
-
-
-
-export default class Repo extends Component {
+export default class CommitRepo extends Component {
   constructor (props) {
     super(props)
     this.state = {
@@ -33,14 +24,13 @@ export default class Repo extends Component {
     this.getTree = this.getTree.bind(this)
     this.parseTree = this.parseTree.bind(this)
     // this.handleSubmit = this.handleSubmit.bind(this)
-    this.getLatestCommit = this.getLatestCommit.bind(this)
+    // this.getLatestCommit = this.getLatestCommit.bind(this)
     this.getFileContents = this.getFileContents.bind(this)
     this.handleFileSelect = this.handleFileSelect.bind(this)
   }
 
   componentDidMount () {
-    this.getLatestCommit()
-      .then(commit => this.getTree(commit.sha))
+    this.getTree(this.props.sha)
       .then(commitTree => this.parseTree(commitTree))
   }
 
@@ -70,7 +60,6 @@ export default class Repo extends Component {
       .catch(console.error)
   }
 
-
   parseTree (commitTree) {
     // Initialize tree structure for repo
     let tree = {
@@ -81,7 +70,7 @@ export default class Repo extends Component {
     console.log(commitTree.tree)
     // first place all folders in right spot
     commitTree.tree.filter(node => node.type === 'tree').forEach(node => {
-      let splitpath = node.path.split('/')
+      let splitpath = node.path.replace(/^\/|\/$/g, '').split('/')
       let newTreeNode = {
         ...node,
         name: splitpath[splitpath.length - 1],
@@ -102,7 +91,7 @@ export default class Repo extends Component {
     })
     // then place all files in correct folders
     commitTree.tree.filter(node => node.type === 'blob').forEach(node => {
-      let splitpath = node.path.split('/')
+      let splitpath = node.path.replace(/^\/|\/$/g, '').split('/')
       let newFileNode = {
         ...node,
         name: splitpath[splitpath.length - 1]
@@ -135,25 +124,6 @@ export default class Repo extends Component {
     })
   }
 
-  getLatestCommit () {
-    // const {
-    //   user: { githubToken },
-    //   match: {
-    //     params: { owner, repo }
-    //   }
-    // } = this.props
-    let url = `https://api.github.com/repos/h-a-m-r-time/grace-shopper/commits/master?access_token=${githubToken}`
-    // if (githubToken) url += `?access_token=${githubToken}`
-    const commits = axios
-      .get(url)
-      .then(res => res.data)
-      .catch(console.error)
-
-      console.log(commits)
-
-      return commits
-  }
-
   render () {
     const { language } = this.state
     // const {
@@ -163,39 +133,19 @@ export default class Repo extends Component {
     //   }
     // } = this.props
     // if (this.state.loading) return <LoadingScreen owner={owner} repo={repo} />
-     console.log(this.state)
+    console.log(this.state)
     return (
       <div className='Repo'>
         {/* <Settings /> */}
         <SplitPane split='horizontal' minSize={260}>
           <Scrollbars style={{ width: '100%', height: '100%' }}>
             <div className='explorer'>
-              {/* <div
-                onClick={() => this.props.history.push('/')}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  padding: '5px',
-                  cursor: 'pointer'
-                }}
-              > */}
-                {/* <img
-                  src={logo}
-                  alt='gitviewer logo'
-                  style={{
-                    height: '50px',
-                    width: '50px',
-                    paddingRight: '10px'
-                  }}
-                /> */}
-                <h1
+                <h2
                   className='subtitle is-3'
                   style={{ color: 'rgba(255, 255, 255, 0.8)' }}
                 >
-                  GithubGUI
-                </h1>
-              {/* </div> */}
-              {/* <SearchInput user={user} handleSubmit={this.handleSubmit} /> */}
+                  Commit Directory
+                </h2>
               <Tree
                 data={this.state.tree}
                 handleFileSelect={this.handleFileSelect}
