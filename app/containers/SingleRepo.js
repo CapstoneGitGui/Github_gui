@@ -10,6 +10,7 @@ class SingleRepoPage extends Component {
       setSelectedRepo,
       match: { params },
     } = this.props;
+    const token = localStorage.getItem('token');
     setSelectedRepo(params.id);
   }
 
