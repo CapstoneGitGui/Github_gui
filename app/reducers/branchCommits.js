@@ -5,7 +5,6 @@ const FETCH_BRANCH_COMMITS = 'FETCH_BRANCH_COMMITS';
 export const fetchBranchCommits = (token, branch, userName, repoName) => {
   return dispatch => {
     if (branch.commits_url) {
-      console.log(branch.commits_url);
       axios
         .get(`${branch.commits_url}?access_token=${token}`)
         .then(branches => {
@@ -20,7 +19,6 @@ export const fetchBranchCommits = (token, branch, userName, repoName) => {
           }&access_token=${token}`
         )
         .then(commits => {
-          console.log(commits.data);
           dispatch({ type: FETCH_BRANCH_COMMITS, branches: commits.data });
         });
     }

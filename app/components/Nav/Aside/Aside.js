@@ -71,18 +71,86 @@ class Aside extends React.Component {
     });
   }
 
-  renderCommits() {
-    return this.props.branchCommits.map(commit => {
-      return (
-        <NavItem
-          key={commit.sha}
-          path="/home"
-          name={commit.commit.message}
-          isCommit={true}
-          sha={commit.sha}
-        />
-      );
+  renderCommits(closedBranch) {
+    let isMaster = false;
+    let output = [];
+    const { masterCommits, branchCommits } = this.props;
+
+    const masterShas = masterCommits.map(commit => {
+      return commit.sha;
     });
+    for (let i = 0; i < branchCommits.length; i++) {
+      if (!masterShas.includes(branchCommits[i].sha)) {
+        output.push(branchCommits[i]);
+      }
+    }
+    if (this.props.selectedBranch.name === 'master') {
+      output = masterCommits;
+      isMaster = true;
+    }
+    if (this.isClosedBranch()) {
+      output = branchCommits;
+    }
+
+    return (
+      <div>
+        {output.map(commit => {
+          return (
+            <NavItem
+              key={commit.sha}
+              path="/home"
+              name={commit.commit.message}
+              isCommit={true}
+              sha={commit.sha}
+            />
+          );
+        })}
+        {isMaster || this.isClosedBranch() ? null : this.renderMasterCommits()}
+      </div>
+    );
+  }
+
+  renderMasterCommits() {
+    return (
+      <div>
+        <div className={styles.menu}>Master</div>
+        {this.props.masterCommits.map(commit => {
+          return (
+            <NavItem
+              key={commit.sha}
+              path="/home"
+              name={commit.commit.message}
+              isCommit={true}
+              sha={commit.sha}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
+  isClosedBranch() {
+    for (let i = 0; i < this.props.closedBranches.length; i++) {
+      if (
+        this.props.selectedBranch.head &&
+        this.props.selectedBranch.head.ref ===
+          this.props.closedBranches[i].head.ref
+      ) {
+        return true;
+      }
+    }
+    // this.props.closedBranches.forEach(branch => {
+    // console.log(
+    //   this.props.selectedBranch.head &&
+    //     this.props.selectedBranch.head.ref === branch.head.ref
+    // );
+    // console.log(branch.head.ref);
+    // console.log(
+    //   this.props.selectedBranch.head && this.props.selectedBranch.head.ref
+    // );
+    // });
+
+    return false;
   }
 
   render() {
@@ -135,6 +203,8 @@ const mapStateToProps = state => ({
   currentBranches: state.openBranches,
   closedBranches: state.closedBranches,
   branchCommits: state.branchCommits,
+  masterCommits: state.masterCommits,
+  selectedBranch: state.selectedBranch,
 });
 
 export default connect(
