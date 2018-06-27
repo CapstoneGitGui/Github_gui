@@ -6,7 +6,7 @@ import SingleRepo from './SingleRepo'
 class RepoRoutes extends React.Component {
 	render () {
 		const { path } = this.props.match
-    console.log(this.props)
+
 		return (
 			<Switch>
 				<Route path={`${path}`} exact component={ReposPage} />
@@ -16,7 +16,4 @@ class RepoRoutes extends React.Component {
 	}
 }
 
-export default RepoRoutes;
-
-{/* <Route path={`${path}/new`}             component={NewCampusForm} />
-<Route path={`${path}/:id/edit`}        component={EditCampusForm} /> */}
+export default RepoRoutes
