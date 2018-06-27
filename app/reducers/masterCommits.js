@@ -22,6 +22,8 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_MASTER_COMMITS:
       return action.commits;
+    case 'SET_REPO':
+      return initialState;
     default:
       return state;
   }

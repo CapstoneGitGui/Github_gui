@@ -5,9 +5,8 @@ import App from './containers/App';
 import HomePage from './containers/HomePage';
 import LoginPage from './containers/LoginPage';
 import CommitsPage from './containers/CommitsPage';
-import CommitTreePage from './containers/CommitTreePage'
-import RepoRoutes from './containers/RepoRoutes'
-
+import CommitTreePage from './containers/CommitTreePage';
+import RepoRoutes from './containers/RepoRoutes';
 
 export default () => (
   <App>

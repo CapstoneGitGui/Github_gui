@@ -44,7 +44,7 @@ class Aside extends React.Component {
   }
 
   renderBranches() {
-    const {selectedRepo} =  this.props
+    const { selectedRepo } = this.props;
 
     return this.props.currentBranches.map(branch => {
       return (
@@ -156,7 +156,7 @@ class Aside extends React.Component {
   }
 
   render() {
-    const {selectedRepo} =  this.props
+    const { selectedRepo } = this.props;
 
     return (
       <aside className={styles.aside}>
@@ -164,10 +164,14 @@ class Aside extends React.Component {
           <div className={styles.menu}>Workspace</div>
           <NavItem path="/" name="Login Page (Temp)" />
           <NavItem path="/repos" name="Repositories" />
-          <NavItem path={`/repos/${selectedRepo}/working-copy`} name="Working Copy" />
+          <NavItem
+            path={`/repos/${selectedRepo}/working-copy`}
+            name="Working Copy"
+          />
           <NavItem path={`/repos/${selectedRepo}/history`} name="History" />
           <NavItem path={`/repos/${selectedRepo}/stashes`} name="Stashes" />
           <NavItem path={`/repos/${selectedRepo}/settings`} name="Settings" />
+          <NavItem path={`/repos/new`} name="Add Repo" />
         </div>
         {this.props.currentBranches.length ? (
           <div className={styles.menu_group}>
