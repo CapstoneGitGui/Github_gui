@@ -64,7 +64,7 @@ class Aside extends React.Component {
       return (
         <NavItem
           key={branch.number}
-          path={`/repos/${selectedRepo}/branches/${branch.name}`}
+          path={`/repos/${this.props.selectedRepo}/branches/${branch.name}`}
           name={branch.head.ref}
           isBranch={true}
           branch={branch}
@@ -157,7 +157,7 @@ class Aside extends React.Component {
 
   render() {
     const {selectedRepo} =  this.props
-    
+
     return (
       <aside className={styles.aside}>
         <div className={styles.menu_group}>
