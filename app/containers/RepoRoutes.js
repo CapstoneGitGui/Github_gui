@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
-import ReposPage from './ReposPage'
-import SingleRepo from './SingleRepo'
+import ReposPage from './ReposPage';
+import SingleRepo from './SingleRepo';
 
 class RepoRoutes extends React.Component {
 	render () {

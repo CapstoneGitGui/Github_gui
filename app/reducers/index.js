@@ -8,6 +8,7 @@ import openBranches from './openBranches';
 import closedBranches from './closedBranches';
 import selectedBranch from './selectedBranch';
 import branchCommits from './branchCommits';
+import masterCommits from './masterCommits';
 
 const rootReducer = combineReducers({
   router,
@@ -18,6 +19,7 @@ const rootReducer = combineReducers({
   closedBranches,
   selectedBranch,
   branchCommits,
+  masterCommits,
 });
 
 export default rootReducer;

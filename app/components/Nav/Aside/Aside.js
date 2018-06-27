@@ -73,6 +73,88 @@ class Aside extends React.Component {
     });
   }
 
+  renderCommits(closedBranch) {
+    let isMaster = false;
+    let output = [];
+    const { masterCommits, branchCommits } = this.props;
+
+    const masterShas = masterCommits.map(commit => {
+      return commit.sha;
+    });
+    for (let i = 0; i < branchCommits.length; i++) {
+      if (!masterShas.includes(branchCommits[i].sha)) {
+        output.push(branchCommits[i]);
+      }
+    }
+    if (this.props.selectedBranch.name === 'master') {
+      output = masterCommits;
+      isMaster = true;
+    }
+    if (this.isClosedBranch()) {
+      output = branchCommits;
+    }
+
+    return (
+      <div>
+        {output.map(commit => {
+          return (
+            <NavItem
+              key={commit.sha}
+              path="/home"
+              name={commit.commit.message}
+              isCommit={true}
+              sha={commit.sha}
+            />
+          );
+        })}
+        {isMaster || this.isClosedBranch() ? null : this.renderMasterCommits()}
+      </div>
+    );
+  }
+
+  renderMasterCommits() {
+    return (
+      <div>
+        <div className={styles.menu}>Master</div>
+        {this.props.masterCommits.map(commit => {
+          return (
+            <NavItem
+              key={commit.sha}
+              path="/home"
+              name={commit.commit.message}
+              isCommit={true}
+              sha={commit.sha}
+            />
+          );
+        })}
+      </div>
+    );
+  }
+
+  isClosedBranch() {
+    for (let i = 0; i < this.props.closedBranches.length; i++) {
+      if (
+        this.props.selectedBranch.head &&
+        this.props.selectedBranch.head.ref ===
+          this.props.closedBranches[i].head.ref
+      ) {
+        return true;
+      }
+    }
+    // this.props.closedBranches.forEach(branch => {
+    // console.log(
+    //   this.props.selectedBranch.head &&
+    //     this.props.selectedBranch.head.ref === branch.head.ref
+    // );
+    // console.log(branch.head.ref);
+    // console.log(
+    //   this.props.selectedBranch.head && this.props.selectedBranch.head.ref
+    // );
+    // });
+
+    return false;
+  }
+
   render() {
     const {selectedRepo} =  this.props
     
@@ -92,25 +174,26 @@ class Aside extends React.Component {
             <div className={styles.menu}>Open Branches</div>
             {this.renderBranches()}
           </div>
-        ) : (
-          <div />
-        )}
+        ) : null}
         {this.props.closedBranches.length ? (
           <div className={styles.menu_group}>
             <div className={styles.menu}>Closed Branches</div>
             {this.renderClosedBranches()}
           </div>
-        ) : (
-          <div />
-        )}
+        ) : null}
         {this.props.branchCommits.length ? (
           <div className={styles.menu_group}>
             <div className={styles.menu}>Commits</div>
-            {this.renderClosedBranches()}
+            <div
+              style={{
+                overflow: 'scroll',
+                height: '300px',
+              }}
+            >
+              {this.renderCommits()}
+            </div>
           </div>
-        ) : (
-          <div />
-        )}
+        ) : null}
       </aside>
     );
   }
@@ -123,6 +206,8 @@ const mapStateToProps = state => ({
   currentBranches: state.openBranches,
   closedBranches: state.closedBranches,
   branchCommits: state.branchCommits,
+  masterCommits: state.masterCommits,
+  selectedBranch: state.selectedBranch,
 });
 
 export default connect(

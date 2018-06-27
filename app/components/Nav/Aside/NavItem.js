@@ -4,6 +4,7 @@ import { setSelectedRepo } from '../../../reducers/selectedRepo';
 import { setSelectedBranch } from '../../../reducers/selectedBranch';
 import { fetchBranchCommits } from '../../../reducers/branchCommits';
 import { connect } from 'react-redux';
+import { fetchMasterCommits } from '../../../reducers/masterCommits';
 
 class NavItem extends React.Component {
   handleClick = () => {
@@ -16,11 +17,28 @@ class NavItem extends React.Component {
         token,
         this.props.branch,
         this.props.currentUser,
+        this.props.selectedRepo
       );
+      if (!this.props.masterCommits.length && this.props.openBranches.length) {
+        const master = this.props.openBranches.filter(branch => {
+          return branch.name === 'master';
+        })[0];
+        this.props.fetchMasterCommits(
+          token,
+          this.props.currentUser,
+          master,
+          this.props.selectedRepo
+        );
+      }
     }
   };
 
   render() {
+    if (this.props.isCommit) {
+      return (
+        <NavLink to={`/commit/${this.props.sha}`}>{this.props.name}</NavLink>
+      );
+    }
     return (
       <NavLink to={this.props.path} onClick={this.handleClick}>
         {this.props.name}
@@ -31,9 +49,12 @@ class NavItem extends React.Component {
 
 const mapStateToProps = state => ({
   currentUser: state.auth.currentUser.username,
+  selectedRepo: state.selectedRepo,
+  openBranches: state.openBranches,
+  masterCommits: state.masterCommits,
 });
 
 export default connect(
   mapStateToProps,
-  { setSelectedRepo, setSelectedBranch, fetchBranchCommits }
+  { setSelectedRepo, setSelectedBranch, fetchBranchCommits, fetchMasterCommits }
 )(NavItem);

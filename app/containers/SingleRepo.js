@@ -5,13 +5,17 @@ import SingleRepo from '../components/Repos/SingleRepo';
 import { setSelectedRepo, resetSelectedRepo } from '../reducers/selectedRepo';
 
 class SingleRepoPage extends Component {
-  componentDidMount () {
-    const { setSelectedRepo, match: { params } } = this.props;
+  componentDidMount() {
+    const {
+      setSelectedRepo,
+      match: { params },
+    } = this.props;
+    const token = localStorage.getItem('token');
     setSelectedRepo(params.id);
   }
 
-  componentWillUnmount () {
-    this.props.resetSelectedRepo()
+  componentWillUnmount() {
+    // this.props.resetSelectedRepo()
   }
 
   render() {
