@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 class NavItem extends React.Component {
   handleClick = () => {
     if (this.props.isRepo) {
-      this.props.setSelectedRepo(this.props.name);
+      // this.props.setSelectedRepo(this.props.name);
     } else if (this.props.isBranch) {
       const token = localStorage.getItem('token');
       this.props.setSelectedBranch(this.props.branch);

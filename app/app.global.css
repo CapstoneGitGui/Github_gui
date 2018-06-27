@@ -54,3 +54,9 @@ a:hover {
 .main-content {
 	padding: 30px;
 }
+
+header {
+  padding:5px;
+  background: rgb(246, 246, 246);
+  border-bottom: 1px solid #dcdcdc;
+}

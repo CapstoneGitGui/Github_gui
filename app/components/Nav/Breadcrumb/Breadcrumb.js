@@ -1,13 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { TitleBar, Toolbar, ToolbarNav, ToolbarNavItem } from 'react-desktop/macOs'
 
 class Breadcrumb extends React.Component {
   render () {
     return (
-      <TitleBar>
+      <header>
         {this.props.location.pathname}
-      </TitleBar>
+      </header>
     )
   }
 }
