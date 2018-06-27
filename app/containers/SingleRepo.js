@@ -19,15 +19,24 @@ class SingleRepoPage extends Component {
   }
 
   render() {
-    const { params } = this.props.match;
-    return <SingleRepo name={params.id} />;
+    const { openBranches, match: {params} } = this.props
+    return (
+      <SingleRepo 
+        match={this.props.match}
+        name={params.id} 
+        openBranches={openBranches}
+      />
+    );
   }
 }
 
-export default connect(
-  null,
-  {
-    setSelectedRepo,
-    resetSelectedRepo,
+function mapStateToProps (state) {
+  return {
+    openBranches: state.openBranches
   }
-)(SingleRepoPage);
+}
+
+export default connect(mapStateToProps, { 
+  setSelectedRepo, 
+  resetSelectedRepo 
+})(SingleRepoPage)
