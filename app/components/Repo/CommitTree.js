@@ -21,7 +21,7 @@ class CommitTree extends Component {
       searchResults: [],
       selectedFilePath: '',
       selectedFileContents: '',
-      sha: '',
+      sha: ''
     };
     this.getTree = this.getTree.bind(this);
     this.parseTree = this.parseTree.bind(this);
@@ -31,14 +31,13 @@ class CommitTree extends Component {
     this.handleFileSelect = this.handleFileSelect.bind(this);
   }
 
-  componentDidMount() {
-    this.getTree(this.props.match.params.sha).then(commitTree =>
-      this.parseTree(commitTree)
-    );
+  componentDidMount () {
+    this.getTree(this.props.match.params.sha)
+    .then(commitTree => this.parseTree(commitTree))
 
     this.setState({
-      sha: this.props.match.params.sha,
-    });
+      sha: this.props.match.params.sha
+    })
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
@@ -158,33 +157,29 @@ class CommitTree extends Component {
     return (
       <div className="Repo">
         {/* <Settings /> */}
-        <SplitPane split="horizontal" minSize={260}>
-          <Scrollbars style={{ width: '100%', height: '100%' }}>
-            <div className="explorer">
-              <h2
-                className="subtitle is-3"
-                style={{ color: 'rgba(255, 255, 255, 0.8)' }}
-              >
-                .
-              </h2>
+        {/* <SplitPane split='horizontal' minSize={260}> */}
+          {/* <Scrollbars style={{ width: '100%', height: '100%' }}> */}
+            <div className='explorer'>
+                <h2
+                  className='subtitle is-3'
+                  style={{ color: 'rgba(255, 255, 255, 0.8)' }}
+                >
+                  .
+                </h2>
               <Tree
                 data={this.state.tree}
                 handleFileSelect={this.handleFileSelect}
               />
             </div>
-          </Scrollbars>
-          <div className="fileviewer">
-            <SplitPane split="horizontal" minSize={900}>
-              <Scrollbars style={{ width: '100%', height: '100%' }}>
+          {/* </Scrollbars> */}
+          <div className='fileviewer'>
                 <RenderedContent
                   language={language}
                   contents={this.state.selectedFileContents}
                 />
-              </Scrollbars>
               <div />
-            </SplitPane>
           </div>
-        </SplitPane>
+        {/* </SplitPane> */}
       </div>
     );
   }
