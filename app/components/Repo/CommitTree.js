@@ -20,7 +20,8 @@ class CommitTree extends Component {
       language: 'javascript',
       searchResults: [],
       selectedFilePath: '',
-      selectedFileContents: ''
+      selectedFileContents: '',
+      sha: ''
     }
     this.getTree = this.getTree.bind(this)
     this.parseTree = this.parseTree.bind(this)
@@ -32,7 +33,22 @@ class CommitTree extends Component {
 
   componentDidMount () {
     this.getTree(this.props.match.params.sha)
+    .then(commitTree => this.parseTree(commitTree))
+
+    this.setState({
+      sha: this.props.match.params.sha
+    })
+  }
+
+  UNSAFE_componentWillReceiveProps (nextProps) {
+    if (nextProps.match.params.sha !== this.state.sha) {
+      this.getTree(this.props.match.params.sha)
       .then(commitTree => this.parseTree(commitTree))
+
+      this.setState({
+        sha: nextProps.match.params.sha
+      })
+    }
   }
 
   getTree (sha) {
@@ -54,7 +70,7 @@ class CommitTree extends Component {
     // const {
     //   user: { githubToken }
     // } = this.props
-    // if (githubToken) url += `?access_token=${githubToken}`
+    if (githubToken) url += `?access_token=${githubToken}`
     return axios
       .get(url)
       .then(res => res.data.content)
@@ -110,6 +126,7 @@ class CommitTree extends Component {
       }
     })
     // then set final tree in state
+    console.log(tree)
     this.setState({ tree: tree, loading: false })
   }
 
@@ -137,8 +154,8 @@ class CommitTree extends Component {
     return (
       <div className='Repo'>
         {/* <Settings /> */}
-        <SplitPane split='horizontal' minSize={260}>
-          <Scrollbars style={{ width: '100%', height: '100%' }}>
+        {/* <SplitPane split='horizontal' minSize={260}> */}
+          {/* <Scrollbars style={{ width: '100%', height: '100%' }}> */}
             <div className='explorer'>
                 <h2
                   className='subtitle is-3'
@@ -151,19 +168,15 @@ class CommitTree extends Component {
                 handleFileSelect={this.handleFileSelect}
               />
             </div>
-          </Scrollbars>
+          {/* </Scrollbars> */}
           <div className='fileviewer'>
-            <SplitPane split='horizontal' minSize={900}>
-              <Scrollbars style={{ width: '100%', height: '100%' }}>
                 <RenderedContent
                   language={language}
                   contents={this.state.selectedFileContents}
                 />
-              </Scrollbars>
               <div />
-            </SplitPane>
           </div>
-        </SplitPane>
+        {/* </SplitPane> */}
       </div>
     )
   }

@@ -11,7 +11,7 @@ class SingleRepoPage extends Component {
   }
 
   componentWillUnmount () {
-    this.props.resetSelectedRepo()
+    // this.props.resetSelectedRepo()
   }
 
   render() {
@@ -20,7 +20,7 @@ class SingleRepoPage extends Component {
   }
 }
 
-export default connect(null, { 
-  setSelectedRepo, 
-  resetSelectedRepo 
+export default connect(null, {
+  setSelectedRepo,
+  resetSelectedRepo
 })(SingleRepoPage)
