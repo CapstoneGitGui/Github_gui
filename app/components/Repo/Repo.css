@@ -1,0 +1,49 @@
+.Repo {
+  display: flex;
+  align-items: stretch;
+  min-height: 100vh;
+  background: rgb(34, 37, 43);
+}
+.Repo .contents {
+  align-self: center;
+  background-color: rgb(33, 38, 43);
+  min-height: 100%;
+}
+.Repo .explorer {
+  align-self: flex-end;
+  padding: 15px;
+  min-height: 100%;
+}
+
+.Repo .SplitPane .Pane1 .vertical    {
+  align-self: flex-end;
+  /* padding: 15px;
+  min-height: 100%; */
+}
+
+.Repo .Pane_2 {
+  align-self: center;
+  padding: 15px;
+  min-height: 100%;
+}
+
+.Repo .fileviewer {
+  min-height: 100%;
+}
+.Repo .markdown-body {
+  padding: 3em;
+  background-color: white;
+  min-height: 90%;
+}
+
+.Settings {
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  right: 15px;
+  height: 50px;
+  width: 50px;
+  border-radius: 50%;
+  background-color: grey;
+  box-shadow: 0 19px 38px rgba(0, 0, 0, 0.3), 0 15px 12px rgba(0, 0, 0, 0.22);
+}

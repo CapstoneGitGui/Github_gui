@@ -71,6 +71,20 @@ class Aside extends React.Component {
     });
   }
 
+  renderCommits() {
+    return this.props.branchCommits.map(commit => {
+      return (
+        <NavItem
+          key={commit.sha}
+          path="/home"
+          name={commit.commit.message}
+          isCommit={true}
+          sha={commit.sha}
+        />
+      );
+    });
+  }
+
   render() {
     return (
       <aside className={styles.aside}>
@@ -106,7 +120,7 @@ class Aside extends React.Component {
         {this.props.branchCommits.length ? (
           <div className={styles.menu_group}>
             <div className={styles.menu}>Commits</div>
-            {this.renderClosedBranches()}
+            {this.renderCommits()}
           </div>
         ) : (
           <div />
