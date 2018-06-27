@@ -16,6 +16,7 @@ class NavItem extends React.Component {
         token,
         this.props.branch,
         this.props.currentUser,
+        this.props.selectedRepo
       );
     }
   };
@@ -38,6 +39,7 @@ class NavItem extends React.Component {
 
 const mapStateToProps = state => ({
   currentUser: state.auth.currentUser.username,
+  selectedRepo: state.selectedRepo,
 });
 
 export default connect(
