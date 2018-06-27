@@ -21,6 +21,13 @@ class NavItem extends React.Component {
   };
 
   render() {
+    if(this.props.isCommit) {
+      return (
+        <NavLink to={`/commit/${this.props.sha}`} >
+          {this.props.name}
+        </NavLink>
+      )
+    }
     return (
       <NavLink to={this.props.path} onClick={this.handleClick}>
         {this.props.name}
