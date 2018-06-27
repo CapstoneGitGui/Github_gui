@@ -1,19 +1,19 @@
-import React, { Component } from 'react'
-import axios from 'axios'
-import SplitPane from 'react-split-pane'
-import { Scrollbars } from 'react-custom-scrollbars'
+import React, { Component } from 'react';
+import axios from 'axios';
+import SplitPane from 'react-split-pane';
+import { Scrollbars } from 'react-custom-scrollbars';
 import { connect } from 'react-redux';
 
-import './Repo.css'
-import Tree from '../Tree/Tree'
-import RenderedContent from './RenderedContent'
-import getFileType from './filename'
+import './Repo.css';
+import Tree from '../Tree/Tree';
+import RenderedContent from './RenderedContent';
+import getFileType from './filename';
 
-const githubToken = localStorage.getItem('token')
+const githubToken = localStorage.getItem('token');
 
 class CommitTree extends Component {
-  constructor (props) {
-    super(props)
+  constructor(props) {
+    super(props);
     this.state = {
       loading: true,
       tree: {},
@@ -22,13 +22,13 @@ class CommitTree extends Component {
       selectedFilePath: '',
       selectedFileContents: '',
       sha: ''
-    }
-    this.getTree = this.getTree.bind(this)
-    this.parseTree = this.parseTree.bind(this)
+    };
+    this.getTree = this.getTree.bind(this);
+    this.parseTree = this.parseTree.bind(this);
     // this.handleSubmit = this.handleSubmit.bind(this)
     // this.getLatestCommit = this.getLatestCommit.bind(this)
-    this.getFileContents = this.getFileContents.bind(this)
-    this.handleFileSelect = this.handleFileSelect.bind(this)
+    this.getFileContents = this.getFileContents.bind(this);
+    this.handleFileSelect = this.handleFileSelect.bind(this);
   }
 
   componentDidMount () {
@@ -40,110 +40,113 @@ class CommitTree extends Component {
     })
   }
 
-  UNSAFE_componentWillReceiveProps (nextProps) {
-    if (nextProps.match.params.sha !== this.state.sha) {
-      this.getTree(this.props.match.params.sha)
-      .then(commitTree => this.parseTree(commitTree))
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.state.sha !== nextProps.match.params.sha) {
+      this.getTree(nextProps.match.params.sha).then(commitTree =>
+        this.parseTree(commitTree)
+      );
 
       this.setState({
-        sha: nextProps.match.params.sha
-      })
+        sha: nextProps.match.params.sha,
+      });
     }
   }
 
-  getTree (sha) {
+  getTree(sha) {
     // const {
     //   user: { githubToken },
     //   match: {
     //     params: { owner, repo }
     //   }
     // } = this.props
-    let url = `https://api.github.com/repos/${this.props.userName}/${this.props.repo}/git/trees/${sha}?recursive=1&access_token=${githubToken}`
+    let url = `https://api.github.com/repos/${this.props.userName}/${
+      this.props.repo
+    }/git/trees/${sha}?recursive=1&access_token=${githubToken}`;
     // if (githubToken) url += `&access_token=${githubToken}`
     return axios
       .get(url)
       .then(res => res.data)
-      .catch(console.error)
+      .catch(console.error);
   }
 
-  getFileContents (url) {
+  getFileContents(url) {
     // const {
     //   user: { githubToken }
     // } = this.props
-    if (githubToken) url += `?access_token=${githubToken}`
+    if (githubToken) url += `?access_token=${githubToken}`;
     return axios
       .get(url)
       .then(res => res.data.content)
-      .catch(console.error)
+      .catch(console.error);
   }
 
-  parseTree (commitTree) {
+  parseTree(commitTree) {
     // Initialize tree structure for repo
     let tree = {
       name: `${this.props.repo}`,
       toggled: 'true',
-      children: []
-    }
-    console.log(commitTree.tree)
+      children: [],
+    };
+    console.log(commitTree.tree);
     // first place all folders in right spot
     commitTree.tree.filter(node => node.type === 'tree').forEach(node => {
-      let splitpath = node.path.replace(/^\/|\/$/g, '').split('/')
+      let splitpath = node.path.replace(/^\/|\/$/g, '').split('/');
       let newTreeNode = {
         ...node,
         name: splitpath[splitpath.length - 1],
         toggled: false,
-        children: []
-      }
+        children: [],
+      };
       if (splitpath.length === 1) {
-        tree.children.push(newTreeNode)
+        tree.children.push(newTreeNode);
       } else {
-        let workingTree = tree
+        let workingTree = tree;
         while (splitpath.length > 1) {
-          let name = splitpath.shift()
-          let index = workingTree.children.findIndex(el => el.name === name)
-          workingTree = workingTree.children[index]
+          let name = splitpath.shift();
+          let index = workingTree.children.findIndex(el => el.name === name);
+          workingTree = workingTree.children[index];
         }
-        workingTree.children.push(newTreeNode)
+        workingTree.children.push(newTreeNode);
       }
-    })
+    });
     // then place all files in correct folders
     commitTree.tree.filter(node => node.type === 'blob').forEach(node => {
-      let splitpath = node.path.replace(/^\/|\/$/g, '').split('/')
+      let splitpath = node.path.replace(/^\/|\/$/g, '').split('/');
       let newFileNode = {
         ...node,
-        name: splitpath[splitpath.length - 1]
-      }
+        name: splitpath[splitpath.length - 1],
+      };
       if (splitpath.length === 1) {
-        tree.children.push(newFileNode)
+        tree.children.push(newFileNode);
       } else {
-        let workingTree = tree
+        let workingTree = tree;
         while (splitpath.length > 1) {
-          let name = splitpath.shift()
-          let index = workingTree.children.findIndex(el => el.name === name)
-          workingTree = workingTree.children[index]
+          let name = splitpath.shift();
+          let index = workingTree.children.findIndex(el => el.name === name);
+          workingTree = workingTree.children[index];
         }
-        workingTree.children.push(newFileNode)
+        workingTree.children.push(newFileNode);
       }
-    })
+    });
     // then set final tree in state
-    console.log(tree)
-    this.setState({ tree: tree, loading: false })
+    this.setState({ tree: tree, loading: false });
   }
 
-  async handleFileSelect (node) {
-    if (node.type !== 'blob') return
-    const fileLanguage = getFileType(node.name)
-    let fileContents = await this.getFileContents(node.url)
-    if (fileLanguage !== 'image') fileContents = window.atob(fileContents)
+  async handleFileSelect(node) {
+    if (node.type !== 'blob') return;
+    const fileLanguage = getFileType(node.name);
+    let fileContents = await this.getFileContents(node.url);
+    if (fileLanguage !== 'image') fileContents = window.atob(fileContents);
     this.setState({
       selectedFileContents: fileContents,
       selectedFilePath: node.path,
-      language: fileLanguage
-    })
+      language: fileLanguage,
+    });
   }
 
-  render () {
-    const { language } = this.state
+  render() {
+    const { language } = this.state;
+    console.log(this.state.sha);
     // const {
     //   user,
     //   match: {
@@ -152,7 +155,7 @@ class CommitTree extends Component {
     // } = this.props
     // if (this.state.loading) return <LoadingScreen owner={owner} repo={repo} />
     return (
-      <div className='Repo'>
+      <div className="Repo">
         {/* <Settings /> */}
         {/* <SplitPane split='horizontal' minSize={260}> */}
           {/* <Scrollbars style={{ width: '100%', height: '100%' }}> */}
@@ -178,13 +181,13 @@ class CommitTree extends Component {
           </div>
         {/* </SplitPane> */}
       </div>
-    )
+    );
   }
 }
 
 const mapStateToProps = state => ({
   userName: state.auth.currentUser.username,
-  repo: state.selectedRepo
+  repo: state.selectedRepo,
 });
 
 export default connect(

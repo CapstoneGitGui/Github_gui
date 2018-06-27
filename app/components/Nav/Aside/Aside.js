@@ -96,32 +96,33 @@ class Aside extends React.Component {
           <NavItem path="/" name="History" />
           <NavItem path="/students" name="Stashes" />
           <NavItem path="/students" name="Settings" />
-          <NavItem path="/commits" name="Commits" />
+          <NavItem path="/commits" name="Add Repo" />
         </div>
         {this.props.currentBranches.length ? (
           <div className={styles.menu_group}>
             <div className={styles.menu}>Open Branches</div>
             {this.renderBranches()}
           </div>
-        ) : (
-          <div />
-        )}
+        ) : null}
         {this.props.closedBranches.length ? (
           <div className={styles.menu_group}>
             <div className={styles.menu}>Closed Branches</div>
             {this.renderClosedBranches()}
           </div>
-        ) : (
-          <div />
-        )}
+        ) : null}
         {this.props.branchCommits.length ? (
           <div className={styles.menu_group}>
             <div className={styles.menu}>Commits</div>
-            {this.renderCommits()}
+            <div
+              style={{
+                overflow: 'scroll',
+                height: '300px',
+              }}
+            >
+              {this.renderCommits()}
+            </div>
           </div>
-        ) : (
-          <div />
-        )}
+        ) : null}
       </aside>
     );
   }

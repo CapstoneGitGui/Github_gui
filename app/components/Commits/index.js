@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import styles from '../Home.css';
 import { connect } from 'react-redux';
-import { addRepo } from '../../reducers/repos'
+import { addRepo } from '../../reducers/repos';
 // import ReactArt from 'react-art';
 
 import axios from 'axios';
@@ -21,7 +21,8 @@ class Commits extends Component<Props> {
     repo: '',
     currentBranches: [],
     closedBranches: [],
-    value: ''
+    value: '',
+    repos: [],
   };
 
   renderCommits = async () => {
@@ -177,22 +178,20 @@ class Commits extends Component<Props> {
     }
   };
 
-  handleInputChange = (e) => {
+  handleInputChange = e => {
     this.setState({
-      value: e.target.value
-    })
-  }
+      value: e.target.value,
+    });
+  };
 
   handleSubmit = async e => {
     e.preventDefault();
 
     const { username } = this.props;
-    const { value } = this.state;    
+    const { value } = this.state;
 
     const commits = await fetch(
-      `https://api.github.com/repos/${
-        username
-      }/${value}${tokenCommits}`
+      `https://api.github.com/repos/${username}/${value}${tokenCommits}`
     )
       .then(res => res.json())
       .then(repo => {
@@ -201,7 +200,19 @@ class Commits extends Component<Props> {
       })
       .catch(err => console.log(err));
 
-    this.props.addRepo(value, username)
+    this.props.addRepo(value, username);
+  };
+
+  fetchRepoNames = () => {
+    fetch(
+      `https://api.github.com/users/${this.props.username}/repos${tokenCommits}`
+    )
+      .then(res => res.json())
+      .then(repos => {
+        this.setState({ repos });
+        return repos;
+      })
+      .catch(err => console.log(err));
   };
 
   render() {
@@ -226,6 +237,14 @@ class Commits extends Component<Props> {
           <button onClick={this.renderCommits}>Button</button>
           <button onClick={this.currentBranches}>Current Branches</button>
           <button onClick={this.closedBranches}>Closed Branches</button>
+          <div>Repositories</div>
+          <ul>
+            {this.state.repos.length
+              ? this.state.repos.map(repo => {
+                  return <div>{repo.name}</div>;
+                })
+              : this.fetchRepoNames()}
+          </ul>
         </div>
       </div>
     );
