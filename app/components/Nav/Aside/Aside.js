@@ -103,25 +103,26 @@ class Aside extends React.Component {
             <div className={styles.menu}>Open Branches</div>
             {this.renderBranches()}
           </div>
-        ) : (
-          <div />
-        )}
+        ) : null}
         {this.props.closedBranches.length ? (
           <div className={styles.menu_group}>
             <div className={styles.menu}>Closed Branches</div>
             {this.renderClosedBranches()}
           </div>
-        ) : (
-          <div />
-        )}
+        ) : null}
         {this.props.branchCommits.length ? (
           <div className={styles.menu_group}>
             <div className={styles.menu}>Commits</div>
-            {this.renderCommits()}
+            <div
+              style={{
+                overflow: 'scroll',
+                height: '300px',
+              }}
+            >
+              {this.renderCommits()}
+            </div>
           </div>
-        ) : (
-          <div />
-        )}
+        ) : null}
       </aside>
     );
   }
