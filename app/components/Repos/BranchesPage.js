@@ -5,12 +5,12 @@ import Header from '../UI/Header';
 import CommitsList from '../Commits/CommitsList'
 
 class BranchesPage extends React.Component {
-	render () {
+  render() {
     const {
       match: { params }
     } = this.props
-
-		return (
+    
+    return (
       <ContentWrapper>
         <Column className='right'>
           <Header>
@@ -19,11 +19,11 @@ class BranchesPage extends React.Component {
           <CommitsList />
         </Column>
         <Column className='left'>
-          hello 
+          Hello world
         </Column>
       </ContentWrapper>
-    )
-	}
+    );
+  }
 }
 
-export default BranchesPage;
+export default BranchesPage
