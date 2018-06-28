@@ -1,11 +1,18 @@
 import React from 'react';
+import Column from '../UI/Column'
+import ContentWrapper from '../UI/ContentWrapper';
 
 class BranchesPage extends React.Component {
 	render () {
 		return (
-      <div>
-        Branches
-      </div>
+      <ContentWrapper>
+        <Column className='right'>
+          Branches
+        </Column>
+        <Column className='left'>
+          hello 
+        </Column>
+      </ContentWrapper>
     )
 	}
 }
