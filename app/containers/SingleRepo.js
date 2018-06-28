@@ -21,11 +21,13 @@ class SingleRepoPage extends Component {
   render() {
     const { openBranches, match: {params} } = this.props
     return (
-      <SingleRepo 
-        match={this.props.match}
-        name={params.id} 
-        openBranches={openBranches}
-      />
+      <div className="app">
+        <SingleRepo 
+          match={this.props.match}
+          name={params.id} 
+          openBranches={openBranches}
+        />
+      </div>
     );
   }
 }
