@@ -7,10 +7,12 @@ import LoginPage from './containers/LoginPage';
 import CommitsPage from './containers/CommitsPage';
 import CommitTreePage from './containers/CommitTreePage';
 import RepoRoutes from './containers/RepoRoutes';
+import LocalGitPage from './containers/LocalGit';
 
 export default () => (
   <App>
     <Switch>
+      <Route path="/localGit" component={LocalGitPage} />
       <Route path="/repos" component={RepoRoutes} />
       <Route path="/home" component={HomePage} />
       <Route path="/commits" component={CommitsPage} />

@@ -12,7 +12,7 @@ class Aside extends React.Component {
       nextProps.currentUser !== this.props.currentUser
     ) {
       const { currentUser, selectedRepo } = this.props;
-      let token = `${localStorage.getItem('token')}`;
+      const token = `${localStorage.getItem('token')}`;
 
       this.props.fetchOpenBranches(
         nextProps.currentUser,
@@ -31,46 +31,35 @@ class Aside extends React.Component {
   renderRepos() {
     const { repos } = this.props;
 
-    return repos.map(repo => {
-      return (
-        <NavItem
-          key={repo}
-          path={`/repos/${repo}`}
-          name={`${repo}`}
-          isRepo={true}
-        />
-      );
-    });
+    return repos.map(repo => (
+      <NavItem key={repo} path={`/repos/${repo}`} name={`${repo}`} isRepo />
+    ));
   }
 
   renderBranches() {
     const { selectedRepo } = this.props;
 
-    return this.props.currentBranches.map(branch => {
-      return (
-        <NavItem
-          key={branch.commit.sha}
-          path={`/repos/${selectedRepo}/branches/${branch.name}`}
-          name={branch.name}
-          isBranch={true}
-          branch={branch}
-        />
-      );
-    });
+    return this.props.currentBranches.map(branch => (
+      <NavItem
+        key={branch.commit.sha}
+        path={`/repos/${selectedRepo}/branches/${branch.name}`}
+        name={branch.name}
+        isBranch
+        branch={branch}
+      />
+    ));
   }
 
   renderClosedBranches() {
-    return this.props.closedBranches.map(branch => {
-      return (
-        <NavItem
-          key={branch.number}
-          path={`/repos/${this.props.selectedRepo}/branches/${branch.name}`}
-          name={branch.head.ref}
-          isBranch={true}
-          branch={branch}
-        />
-      );
-    });
+    return this.props.closedBranches.map(branch => (
+      <NavItem
+        key={branch.number}
+        path={`/repos/${this.props.selectedRepo}/branches/${branch.name}`}
+        name={branch.head.ref}
+        isBranch
+        branch={branch}
+      />
+    ));
   }
 
   renderCommits(closedBranch) {
@@ -78,9 +67,7 @@ class Aside extends React.Component {
     let output = [];
     const { masterCommits, branchCommits } = this.props;
 
-    const masterShas = masterCommits.map(commit => {
-      return commit.sha;
-    });
+    const masterShas = masterCommits.map(commit => commit.sha);
     for (let i = 0; i < branchCommits.length; i++) {
       if (!masterShas.includes(branchCommits[i].sha)) {
         output.push(branchCommits[i]);
@@ -96,17 +83,15 @@ class Aside extends React.Component {
 
     return (
       <div>
-        {output.map(commit => {
-          return (
-            <NavItem
-              key={commit.sha}
-              path="/home"
-              name={commit.commit.message}
-              isCommit={true}
-              sha={commit.sha}
-            />
-          );
-        })}
+        {output.map(commit => (
+          <NavItem
+            key={commit.sha}
+            path="/home"
+            name={commit.commit.message}
+            isCommit
+            sha={commit.sha}
+          />
+        ))}
         {isMaster || this.isClosedBranch() ? null : this.renderMasterCommits()}
       </div>
     );
@@ -116,17 +101,15 @@ class Aside extends React.Component {
     return (
       <div>
         <div className={styles.menu}>Master</div>
-        {this.props.masterCommits.map(commit => {
-          return (
-            <NavItem
-              key={commit.sha}
-              path="/home"
-              name={commit.commit.message}
-              isCommit={true}
-              sha={commit.sha}
-            />
-          );
-        })}
+        {this.props.masterCommits.map(commit => (
+          <NavItem
+            key={commit.sha}
+            path="/home"
+            name={commit.commit.message}
+            isCommit
+            sha={commit.sha}
+          />
+        ))}
       </div>
     );
   }
@@ -171,7 +154,8 @@ class Aside extends React.Component {
           <NavItem path={`/repos/${selectedRepo}/history`} name="History" />
           <NavItem path={`/repos/${selectedRepo}/stashes`} name="Stashes" />
           <NavItem path={`/repos/${selectedRepo}/settings`} name="Settings" />
-          <NavItem path={`/repos/new`} name="Add Repo" />
+          <NavItem path="/LocalGit" name="LocalGit" />
+          <NavItem path="/repos/new" name="Add Repo" />
         </div>
         {this.props.currentBranches.length ? (
           <div className={styles.menu_group}>
@@ -191,7 +175,7 @@ class Aside extends React.Component {
             <div
               style={{
                 overflow: 'scroll',
-                height: '300px',
+                height: '300px'
               }}
             >
               {this.renderCommits()}
@@ -203,9 +187,6 @@ class Aside extends React.Component {
   }
 }
 
-<<<<<<< HEAD
-export default Aside;
-=======
 const mapStateToProps = state => ({
   repos: state.repos,
   selectedRepo: state.selectedRepo,
@@ -214,11 +195,10 @@ const mapStateToProps = state => ({
   closedBranches: state.closedBranches,
   branchCommits: state.branchCommits,
   masterCommits: state.masterCommits,
-  selectedBranch: state.selectedBranch,
+  selectedBranch: state.selectedBranch
 });
 
 export default connect(
   mapStateToProps,
   { fetchOpenBranches, fetchClosedBranches }
 )(Aside);
->>>>>>> 0a64df7dab57473cc4a3f9e034442b3fee002b5c
