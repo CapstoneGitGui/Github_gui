@@ -83,13 +83,18 @@ header {
   border-bottom: 1px solid #dcdcdc;
 }
 
+.commits {
+  overflow: scroll;
+  height: 90vh;
+}
+
 .commit-header {
   display: flex;
-  justify-content: space-between
+  justify-content: space-between;
 }
 
 .commit-id,
 .commit-header-committer,
 .commit-header-date {
-  color: rgb(168, 168, 168)
+  color: rgb(168, 168, 168);
 }
