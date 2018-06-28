@@ -90,6 +90,7 @@ class Aside extends React.Component {
           <NavItem path={`/repos/${selectedRepo}/stashes`} name="Stashes" />
           <NavItem path={`/repos/${selectedRepo}/settings`} name="Settings" />
           <NavItem path={`/repos/new`} name="Add Repo" />
+          <NavItem path="/barchart" name="BarChart" />
         </div>
         {this.props.currentBranches.length ? (
           <div className={styles.menu_group}>
