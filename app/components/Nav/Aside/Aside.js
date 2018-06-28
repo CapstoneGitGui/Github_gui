@@ -146,6 +146,7 @@ class Aside extends React.Component {
         <div className={styles.menu_group}>
           <div className={styles.menu}>Workspace</div>
           <NavItem path="/" name="Login Page (Temp)" />
+          <NavItem path="/LocalGit" name="Local Workspace" />
           <NavItem path="/repos" name="Repositories" />
           <NavItem
             path={`/repos/${selectedRepo}/working-copy`}
@@ -154,7 +155,6 @@ class Aside extends React.Component {
           <NavItem path={`/repos/${selectedRepo}/history`} name="History" />
           <NavItem path={`/repos/${selectedRepo}/stashes`} name="Stashes" />
           <NavItem path={`/repos/${selectedRepo}/settings`} name="Settings" />
-          <NavItem path="/LocalGit" name="LocalGit" />
           <NavItem path="/repos/new" name="Add Repo" />
         </div>
         {this.props.currentBranches.length ? (
