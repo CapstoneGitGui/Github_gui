@@ -74,3 +74,16 @@ header {
   display: flex;
   flex-direction: column;
 }
+
+.commit {
+  padding: 10px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.commit-header {
+  display: flex;
+}
+
+.commit-id {
+  color: grey
+}

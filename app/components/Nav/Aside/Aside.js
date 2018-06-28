@@ -97,7 +97,7 @@ class Aside extends React.Component {
     return (
       <div>
         {output.map(commit => {
-          console.log(`/repos/${this.props.selectedRepo}/commits/${commit.sha}`)
+          // console.log(`/repos/${this.props.selectedRepo}/commits/${commit.sha}`)
           return (
             <NavItem
               key={commit.sha}
@@ -163,17 +163,14 @@ class Aside extends React.Component {
       <aside className={styles.aside}>
         <div className={styles.menu_group}>
           <div className={styles.menu}>Workspace</div>
-          <NavItem path="/" name="Login Page (Temp)" />
-          <NavItem path="/repos" name="Repositories" />
-          <NavItem
-            path={`/repos/${selectedRepo}/working-copy`}
-            name="Working Copy"
-          />
-          <NavItem path={`/repos/${selectedRepo}/history`} name="History" />
-          <NavItem path={`/repos/${selectedRepo}/stashes`} name="Stashes" />
-          <NavItem path={`/repos/${selectedRepo}/settings`} name="Settings" />
-          <NavItem path={`/repos/new`} name="Add Repo" />
-        </div>
+            <NavItem path="/" name="Login Page (Temp)" />
+            <NavItem path="/repos" name="Repositories" />
+            <NavItem path={`/repos/${selectedRepo}/working-copy`} name="Working Copy" />
+            <NavItem path={`/repos/${selectedRepo}/history`} name="History" />
+            <NavItem path={`/repos/${selectedRepo}/stashes`} name="Stashes" />
+            <NavItem path={`/repos/${selectedRepo}/settings`} name="Settings" />
+            <NavItem path={`/repos/new`} name="Add Repo" />
+          </div>
         {this.props.currentBranches.length ? (
           <div className={styles.menu_group}>
             <div className={styles.menu}>Open Branches</div>
