@@ -213,6 +213,7 @@
     "electron-oauth-helper": "^2.0.3",
     "express-session": "^1.15.6",
     "font-awesome": "^4.7.0",
+    "gitlog": "^3.1.2",
     "history": "^4.7.2",
     "marked": "^0.4.0",
     "morgan": "^1.9.0",

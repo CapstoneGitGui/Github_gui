@@ -8,6 +8,7 @@ const { dialog } = require('electron').remote;
 const shell = require('shelljs');
 const fs = require('fs');
 const zlib = require('zlib');
+const gitlog = require('gitlog');
 
 // https://www.npmjs.com/package/simple-git
 // https://www.npmjs.com/package/js-git
@@ -40,39 +41,23 @@ class LocalGit extends Component<Props> {
           this.setState({ branches });
         });
         this.setState({ folderPath });
+        console.log(folderPath);
       }
     );
   };
 
-  chooseBranch = async (evt, branch) => {
-    await fs.readFile(
-      `${this.state.folderPath}/.git/refs/heads/${branch}`,
-      async (err, file) => {
-        if (err) throw err;
-        const fileSHA = file.toString().slice(2, -1);
-        const fileSUB = file.toString().slice(0, 2);
-        await fs.readFile(
-          `${this.state.folderPath}/.git/objects/${fileSUB}/${fileSHA}`,
-          (err, file) => {
-            if (err) throw err;
-            const buffer = Buffer.from(file, 'base64');
-            zlib.unzip(buffer, (err, buffer) => {
-              if (!err) {
-                const leadCommit = buffer.toString().split(' ');
-                console.log(leadCommit);
-                this.viewCommits(leadCommit);
-              } else {
-                console.log(err);
-              }
-            });
-          }
-        );
-      }
-    );
-  };
-
-  viewCommits = leadCommit => {
-    this.setState({ commits: leadCommit });
+  viewCommits = async (evt, branch) => {
+    const options = {
+      repo: `${this.state.folderPath}`,
+      number: 30,
+      branch,
+      fields: ['hash', 'abbrevHash', 'subject', 'authorName', 'authorDateRel']
+    };
+    console.log(options.repo);
+    gitlog(options, async (error, commits) => {
+      console.log(commits);
+      this.setState({ commits });
+    });
   };
 
   render() {
@@ -84,19 +69,46 @@ class LocalGit extends Component<Props> {
         <ul>
           {this.state.branches.map(branch => (
             <li className="text">
-              <Button onClick={evt => this.chooseBranch(evt, branch)}>
+              <Button onClick={evt => this.viewCommits(evt, branch)}>
                 {branch}
               </Button>
             </li>
           ))}
         </ul>
         <div className="text">
-          {this.state.commits.map(com => <div className="text">{com}</div>)}
+          {this.state.commits.map(commit => (
+            <div className="text">{commit.subject}</div>
+          ))}
         </div>
       </div>
     );
   }
 }
+
+// await fs.readFile(
+//   `${this.state.folderPath}/.git/refs/heads/${branch}`,
+//   async (err, file) => {
+//     if (err) throw err;
+//     const fileSHA = file.toString().slice(2, -1);
+//     const fileSUB = file.toString().slice(0, 2);
+//     await fs.readFile(
+//       `${this.state.folderPath}/.git/objects/${fileSUB}/${fileSHA}`,
+//       (err, file) => {
+//         if (err) throw err;
+//         const buffer = Buffer.from(file, 'base64');
+//         zlib.unzip(buffer, (err, buffer) => {
+//           if (!err) {
+//             const leadCommit = buffer.toString().split(' ');
+//             console.log(leadCommit);
+//             this.viewCommits(leadCommit);
+//           } else {
+//             console.log(err);
+//           }
+//         });
+//       }
+//     );
+//   }
+// );
 
 // dialog.showOpenDialog(
 //   {
