@@ -93,14 +93,15 @@ class Aside extends React.Component {
     if (this.isClosedBranch()) {
       output = branchCommits;
     }
-
+    
     return (
       <div>
         {output.map(commit => {
+          console.log(`/repos/${this.props.selectedRepo}/commits/${commit.sha}`)
           return (
             <NavItem
               key={commit.sha}
-              path="/home"
+              path={`/repos/${this.props.selectedRepo}/commits/${commit.sha}`}
               name={commit.commit.message}
               isCommit={true}
               sha={commit.sha}
@@ -120,7 +121,7 @@ class Aside extends React.Component {
           return (
             <NavItem
               key={commit.sha}
-              path="/home"
+              path={`/repos/${this.props.selectedRepo}/commits/${commit.sha}`}
               name={commit.commit.message}
               isCommit={true}
               sha={commit.sha}

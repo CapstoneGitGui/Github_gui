@@ -5,6 +5,7 @@ import axios from 'axios'
 import HistoryPage from './HistoryPage'
 import StashesPage from './StashesPage'
 import SettingsPage from './SettingsPage'
+import BranchesPage from './BranchesPage'
 import Column from '../UI/Column'
 
 const token = localStorage.getItem('token')
@@ -23,6 +24,7 @@ class SingleRepo extends Component {
             <Route path={`${url}/history`} component={HistoryPage} />
             <Route path={`${url}/stashes`} component={StashesPage} />
             <Route path={`${url}/settings`} component={SettingsPage} />
+            <Route path={`${url}/branches/:id`} component={BranchesPage} />
           </Switch>
         </Column>
         <Column className='left'>
