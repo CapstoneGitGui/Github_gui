@@ -9,12 +9,19 @@ const shell = require('shelljs');
 const fs = require('fs');
 const zlib = require('zlib');
 
+// https://www.npmjs.com/package/simple-git
+// https://www.npmjs.com/package/js-git
+// chokidar
+// https://www.npmjs.com/package/nodegit
+// https://www.npmjs.com/package/git-utils
+
 class LocalGit extends Component<Props> {
   props: Props;
 
   state = {
     folderPath: '',
-    branches: []
+    branches: [],
+    commits: []
   };
 
   selectFolder = () => {
@@ -37,15 +44,13 @@ class LocalGit extends Component<Props> {
     );
   };
 
-  showCommits = async (evt, branch) => {
-    console.log(branch);
+  chooseBranch = async (evt, branch) => {
     await fs.readFile(
       `${this.state.folderPath}/.git/refs/heads/${branch}`,
       async (err, file) => {
         if (err) throw err;
         const fileSHA = file.toString().slice(2, -1);
         const fileSUB = file.toString().slice(0, 2);
-        console.log(fileSHA, fileSUB);
         await fs.readFile(
           `${this.state.folderPath}/.git/objects/${fileSUB}/${fileSHA}`,
           (err, file) => {
@@ -53,7 +58,9 @@ class LocalGit extends Component<Props> {
             const buffer = Buffer.from(file, 'base64');
             zlib.unzip(buffer, (err, buffer) => {
               if (!err) {
-                console.log(buffer.toString());
+                const leadCommit = buffer.toString().split(' ');
+                console.log(leadCommit);
+                this.viewCommits(leadCommit);
               } else {
                 console.log(err);
               }
@@ -62,6 +69,10 @@ class LocalGit extends Component<Props> {
         );
       }
     );
+  };
+
+  viewCommits = leadCommit => {
+    this.setState({ commits: leadCommit });
   };
 
   render() {
@@ -73,12 +84,15 @@ class LocalGit extends Component<Props> {
         <ul>
           {this.state.branches.map(branch => (
             <li className="text">
-              <Button onClick={evt => this.showCommits(evt, branch)}>
+              <Button onClick={evt => this.chooseBranch(evt, branch)}>
                 {branch}
               </Button>
             </li>
           ))}
         </ul>
+        <div className="text">
+          {this.state.commits.map(com => <div className="text">{com}</div>)}
+        </div>
       </div>
     );
   }

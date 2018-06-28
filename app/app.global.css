@@ -6,11 +6,11 @@
 
 body {
   position: relative;
-  color: white;
   height: 100vh;
   font-family: Arial, Helvetica, Helvetica Neue, serif;
   overflow-y: hidden;
   margin: 0;
+  font-size: 12px;
 }
 
 h2 {
@@ -54,6 +54,9 @@ a:hover {
 .main-content {
   padding: 30px;
 }
-.text {
-  color: black;
+
+header {
+  padding: 5px;
+  background: rgb(246, 246, 246);
+  border-bottom: 1px solid #dcdcdc;
 }
