@@ -77,3 +77,19 @@ header {
   display: flex;
   flex-direction: column;
 }
+
+.commit {
+  padding: 10px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.commit-header {
+  display: flex;
+  justify-content: space-between
+}
+
+.commit-id,
+.commit-header-committer,
+.commit-header-date {
+  color: rgb(168, 168, 168)
+}
