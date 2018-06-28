@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 
-import RenderedContent from './RenderedContent';
+import RenderedCode from './RenderedCode';
 
 const githubToken = localStorage.getItem('token');
 
@@ -13,31 +13,49 @@ class Patches extends Component {
       loading: true,
       tree: {},
       language: 'javascript',
-      searchResults: [],
-      selectedFilePath: '',
-      selectedFileContents: '',
+      filesArray: [],
+      sha: ''
 
     };
-    this.getTree = this.getTree.bind(this);
-    this.parseTree = this.parseTree.bind(this);
-    // this.handleSubmit = this.handleSubmit.bind(this)
-    // this.getLatestCommit = this.getLatestCommit.bind(this)
-    this.getFileContents = this.getFileContents.bind(this);
-    this.handleFileSelect = this.handleFileSelect.bind(this);
+    // this.getFileContents = this.getFileContents.bind(this);
+    // this.handleFileSelect = this.handleFileSelect.bind(this);
+    this.getChangedFiles = this.getChangedFiles.bind(this);
   }
 
   componentDidMount () {
-    this.getTree(this.props.match.params.sha)
+    this.getChangedFiles(this.props.match.params.sha)
     .then(commitTree => this.parseTree(commitTree))
+  }
 
+  async getChangedFiles (sha) {
+    let url = `https://api.github.com/repos/${this.props.userName}/${
+      this.props.repo}/commits/${sha}`
+    if (githubToken) url += `?access_token=${githubToken}`;
+    const filesArray = await axios.get(url)
     this.setState({
-      sha: this.props.match.params.sha
+      filesArray: filesArray.data.files
     })
   }
 
   render () {
+    const { language } = this.state;
     return (
-
+      <div>
+        {
+          this.state.filesArray.map(file => {
+              return (
+                <div className=''>
+                  <div>{file.filename}</div>
+                  <RenderedCode
+                    language={language}
+                    contents={file.patch}
+                  />
+                </div>
+              )
+            }
+          )
+        }
+      </div>
     )
   }
 }
@@ -50,4 +68,4 @@ const mapStateToProps = state => ({
 export default connect(
   mapStateToProps,
   null
-)(CommitTree);
+)(Patches);

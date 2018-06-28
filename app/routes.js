@@ -7,6 +7,7 @@ import LoginPage from './containers/LoginPage';
 import CommitsPage from './containers/CommitsPage';
 import CommitTreePage from './containers/CommitTreePage';
 import RepoRoutes from './containers/RepoRoutes';
+import PatchPage from './containers/PatchPage';
 
 export default () => (
   <App>
@@ -14,7 +15,8 @@ export default () => (
       <Route path="/repos" component={RepoRoutes} />
       <Route path="/home" component={HomePage} />
       <Route path="/commits" component={CommitsPage} />
-      <Route path="/commit/:sha" component={CommitTreePage} />
+      {/* <Route path="/commit/:sha" component={CommitTreePage} /> */}
+      <Route path="/commit/:sha" component={PatchPage} />
       <Route path="/" component={LoginPage} />
     </Switch>
   </App>
