@@ -13,6 +13,10 @@ body {
   font-size: 12px;
 }
 
+.svg {
+  overflow: visible;
+}
+
 h2 {
   margin: 0;
   font-size: 2.25rem;
@@ -30,7 +34,7 @@ li {
 }
 
 a {
-  color: white;
+  color: black;
   opacity: 0.75;
   text-decoration: none;
 }
@@ -43,6 +47,10 @@ a:hover {
 
 .app {
   display: flex;
+<<<<<<< HEAD
+=======
+  background: #fff;
+>>>>>>> 3d5f345c39c01686eeabf7542133bda833b9eda4
 }
 
 .content {
@@ -52,7 +60,10 @@ a:hover {
 }
 
 .main-content {
+<<<<<<< HEAD
   padding: 30px;
+=======
+>>>>>>> 3d5f345c39c01686eeabf7542133bda833b9eda4
 }
 
 header {
@@ -69,4 +80,53 @@ header {
   text-align: center;
   vertical-align: middle;
   line-height: 100px;
+}
+
+.column.left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 2;
+}
+
+.commit {
+  padding: 10px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.commits {
+  overflow: scroll;
+  height: 90vh;
+}
+
+.commit-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.commit-id,
+.commit-header-committer,
+.commit-header-date {
+  color: rgb(168, 168, 168);
+}
+
+.commit-meta-data {
+  padding: 15px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.commit-info {
+  padding: 15px;
+}
+
+.draggable {
+  -webkit-app-region: drag;
+}
+
+.code {
+  font-family: Consolas;
+}
+
+.muted {
+  color: rgb(168, 168, 168)
 }

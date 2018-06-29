@@ -10,6 +10,7 @@ import { fetchRepos } from '../reducers/repos';
 import Breadcrumb from '../components/Nav/Breadcrumb/Breadcrumb';
 import { configureStore } from '../store/configureStore';
 import { push } from 'react-router-redux'
+import HeaderBar from '../components/UI/HeaderBar'
 
 const store = configureStore();
 
@@ -61,6 +62,7 @@ class App extends React.Component<Props> {
     // }
     return (
       <div>
+        <HeaderBar />
         <Breadcrumb />
         <div className="app">
           {this.renderAside()}
