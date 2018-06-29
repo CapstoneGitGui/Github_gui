@@ -6,11 +6,8 @@ import HomePage from './containers/HomePage';
 import LoginPage from './containers/LoginPage';
 import CommitTreePage from './containers/CommitTreePage';
 import RepoRoutes from './containers/RepoRoutes';
-<<<<<<< HEAD
-import LocalGitPage from './containers/LocalGit';
-=======
 import BarChart from './components/Commits/BarChart';
->>>>>>> 3d5f345c39c01686eeabf7542133bda833b9eda4
+import LocalGitPage from './containers/LocalGit';
 
 export default () => (
   <App>
