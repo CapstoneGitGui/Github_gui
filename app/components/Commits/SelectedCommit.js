@@ -5,18 +5,14 @@ import Header from '../UI/Header';
 // import {setSelectedCommit} from '../../reducers/selectedCommit'
 
 class SelectedCommit extends React.Component {
-  // handleClick = (commit) => {
-  //   this.props.setSelectedCommit(commit)
-  // }
-
   render () {
     const { commit } = this.props;
     console.log(commit)
     return (
       <div className="commit-single-content">
-        <div className="commit-header">
+        <div className="commit-info-header">
           <Header>
-            {commit.sha.substr(0,8)}
+            <div className="code muted">{commit.sha.substr(0,8)}</div>
           </Header>
         </div>
         <div className="commit-meta-data">

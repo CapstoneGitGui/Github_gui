@@ -32,7 +32,7 @@ class Commit extends React.Component {
           </div>
         </div>
         <div className="commit-content">
-          <span className="commit-id">{sha.substr(0,8)}</span> {message}
+          <span className="commit-id code">{sha.substr(0,8)}</span> {message}
         </div>
       </div>
     )
