@@ -98,3 +98,12 @@ header {
 .commit-header-date {
   color: rgb(168, 168, 168);
 }
+
+.commit-meta-data {
+  padding: 15px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.commit-info {
+  padding: 15px;
+}

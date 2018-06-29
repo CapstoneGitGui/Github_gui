@@ -49,6 +49,7 @@ class CommitsList extends React.Component {
               message={commit.commit.message}
               date={commit.commit.committer.date}
               avatar={commit.author.avatar_url}
+              commit={commit}
             />
           );
         })}
@@ -77,6 +78,7 @@ class CommitsList extends React.Component {
               message={commit.commit.message}
               date={commit.commit.committer.date}
               avatar={commit.author.avatar_url}
+              commit={commit}
             />
           );
         })}
