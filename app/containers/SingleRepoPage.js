@@ -15,7 +15,7 @@ class SingleRepoPage extends Component {
   }
 
   componentWillUnmount() {
-    // this.props.resetSelectedRepo()
+    this.props.resetSelectedRepo()
   }
 
   render() {

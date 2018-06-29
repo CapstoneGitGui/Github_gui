@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import Highlight from 'react-highlight';
-
+import SmoothCollapse from 'react-smooth-collapse'
 import RenderedCode from './RenderedCode';
+import Collapse from './SmoothCollapse';
 
 const githubToken = localStorage.getItem('token');
 
@@ -15,21 +16,26 @@ class Patches extends Component {
       tree: {},
       language: 'javascript',
       filesArray: [],
-      sha: ''
+      sha: '',
+      expanded: false,
+      selectedFile: {
+        expanded: false,
+        sha: ''
+      }
     };
     this.getChangedFiles = this.getChangedFiles.bind(this);
   }
 
   componentDidMount () {
-    this.getChangedFiles(this.props.match.params.sha)
+    this.getChangedFiles(this.props.sha)
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.state.sha !== nextProps.match.params.sha) {
-      this.getChangedFiles(nextProps.match.params.sha)
+    if (this.state.sha !== nextProps.sha) {
+      this.getChangedFiles(nextProps.sha)
 
       this.setState({
-        sha: nextProps.match.params.sha,
+        sha: nextProps.sha,
       });
     }
   }
@@ -46,16 +52,14 @@ class Patches extends Component {
 
   render () {
     // const { language } = this.state;
+    console.log(this.state)
     return (
       <div>
         {
           this.state.filesArray.map(file => {
               return (
                 <div className='patches'>
-                  <h4>{file.filename}</h4>
-                  <Highlight className='diff'>
-                      {file.patch}
-                  </Highlight>
+                      <Collapse filename={file.filename} sha={file.sha} patch={file.patch} />
                 </div>
               )
             }

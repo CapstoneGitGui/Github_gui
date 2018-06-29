@@ -4,17 +4,17 @@ import { Switch, Route } from 'react-router';
 import App from './containers/App';
 import HomePage from './containers/HomePage';
 import LoginPage from './containers/LoginPage';
-import CommitsPage from './containers/CommitsPage';
 import CommitTreePage from './containers/CommitTreePage';
 import RepoRoutes from './containers/RepoRoutes';
 import PatchPage from './containers/PatchPage';
+import BarChart from './components/Commits/BarChart';
 
 export default () => (
   <App>
     <Switch>
+      <Route path="/barChart" component={BarChart} />
       <Route path="/repos" component={RepoRoutes} />
       <Route path="/home" component={HomePage} />
-      <Route path="/commits" component={CommitsPage} />
       {/* <Route path="/commit/:sha" component={CommitTreePage} /> */}
       <Route path="/commit/:sha" component={PatchPage} />
       <Route path="/" component={LoginPage} />
