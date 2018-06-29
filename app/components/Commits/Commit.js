@@ -1,7 +1,13 @@
 import React from 'react'
+import {connect} from 'react-redux'
 import Moment from 'react-moment'
+import {setSelectedCommit} from '../../reducers/selectedCommit'
 
 class Commit extends React.Component {
+  handleClick = (commit) => {
+    this.props.setSelectedCommit(commit)
+  }
+
   render () {
     const {
       name,
@@ -9,10 +15,11 @@ class Commit extends React.Component {
       sha,
       date,
       avatar,
+      commit,
     } = this.props;
 
     return (
-      <div className="commit">
+      <div className="commit" onClick={() => this.handleClick(commit)}>
         <img src={avatar} height="29" style={{float: 'left', marginRight: '8px'}} />
         <div className="commit-header">
           <div className="commit-header-committer">
@@ -25,11 +32,13 @@ class Commit extends React.Component {
           </div>
         </div>
         <div className="commit-content">
-          <span className="commit-id">{sha.substr(0,8)}</span> {message}
+          <span className="commit-id code">{sha.substr(0,8)}</span> {message}
         </div>
       </div>
     )
   }
 }
 
-export default Commit
+export default connect(null, {
+  setSelectedCommit,
+})(Commit)
