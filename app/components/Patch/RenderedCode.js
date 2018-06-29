@@ -116,3 +116,21 @@ export default class RenderedCode extends Component {
     }
   }
 }
+
+// copied xcode
+// .hljs-addition {
+//   background-color: #baeeba;
+// }
+
+// .hljs-deletion {
+//   background-color: #ffc8bd;
+// }
+
+// autilier ligh og
+// .hljs-deletion {
+//   background-color: #ca4949;
+// }
+
+// .hljs-addition {
+//   background-color: #4b8b8b;
+// }

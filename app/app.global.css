@@ -51,12 +51,9 @@ a:hover {
   flex-direction: column;
 }
 
-.main-content div {
+.main-content {
+  height: 90vh;
   overflow: scroll;
-}
-
-pre {
-  height: 80vh;
 }
 
 header {

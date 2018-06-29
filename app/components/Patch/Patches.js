@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import Highlight from 'react-highlight';
 
 import RenderedCode from './RenderedCode';
 
@@ -15,16 +16,22 @@ class Patches extends Component {
       language: 'javascript',
       filesArray: [],
       sha: ''
-
     };
-    // this.getFileContents = this.getFileContents.bind(this);
-    // this.handleFileSelect = this.handleFileSelect.bind(this);
     this.getChangedFiles = this.getChangedFiles.bind(this);
   }
 
   componentDidMount () {
     this.getChangedFiles(this.props.match.params.sha)
-    .then(commitTree => this.parseTree(commitTree))
+  }
+
+  UNSAFE_componentWillReceiveProps(nextProps) {
+    if (this.state.sha !== nextProps.match.params.sha) {
+      this.getChangedFiles(nextProps.match.params.sha)
+
+      this.setState({
+        sha: nextProps.match.params.sha,
+      });
+    }
   }
 
   async getChangedFiles (sha) {
@@ -38,18 +45,17 @@ class Patches extends Component {
   }
 
   render () {
-    const { language } = this.state;
+    // const { language } = this.state;
     return (
       <div>
         {
           this.state.filesArray.map(file => {
               return (
-                <div className=''>
-                  <div>{file.filename}</div>
-                  <RenderedCode
-                    language={language}
-                    contents={file.patch}
-                  />
+                <div className='patches'>
+                  <h4>{file.filename}</h4>
+                  <Highlight className='diff'>
+                      {file.patch}
+                  </Highlight>
                 </div>
               )
             }
