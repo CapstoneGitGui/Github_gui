@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 class BarChart extends Component {
   componentDidMount() {
-    // Data
+    // DUMMY DATA
     // const userCommits = {
     //   blake: 10,
     //   michael: 20,
@@ -24,7 +24,7 @@ class BarChart extends Component {
       const w = 500;
       const h = 100;
       const axisPadding = 30;
-      var padding = 1;
+      const padding = 1;
 
       const faux = this.props.connectFauxDOM('div', 'chart');
       d3.select(faux).append('div');
@@ -42,8 +42,8 @@ class BarChart extends Component {
 
       const colourScale = d3
         .scaleLinear()
-        .domain([0, d3.max(data.commits, d => d) * 2])
-        .range([0, 255]);
+        .domain([0, d3.max(data.commits, d => d)])
+        .range([50, 255]);
 
       const xAxis = d3
         .axisBottom()
@@ -69,40 +69,36 @@ class BarChart extends Component {
         .data(data.commits)
         .enter()
         .append('rect')
-        .attr('x', function(d, i) {
-          return i * ((w - 30) / data.commits.length) + axisPadding;
-        })
-        .attr('y', function(d) {
-          return yScale(d);
-        })
+        .attr('x', (d, i) => i * ((w - 30) / data.commits.length) + axisPadding)
+        .attr('y', d => yScale(d))
         .attr('width', (w - 30) / data.commits.length - padding)
         .attr('height', d => h - yScale(d))
-        .attr('fill', function(d) {
-          return `rgb(0, ${colourScale((d * 3) / 2)}, ${colourScale(d)})`;
-        })
+        .attr('fill', d =>
+          `rgb(0, 0, ${Math.round(colourScale(d))})`;
+        )
         .attr('position', 'absolute');
+
+      console.log('HEY HEY COLOUR SCALE', colourScale(1));
 
       svg
         .selectAll('text')
         .data(data.commits)
         .enter()
         .append('text')
-        .text(function(d) {
+        .text(d => {
           if (h - yScale(d) > 15) {
             return d;
           }
         })
         .attr('text-anchor', 'middle')
-        .attr('x', function(d, i) {
-          return (
+        .attr(
+          'x',
+          (d, i) =>
             i * ((w - 30) / data.commits.length) +
             30 +
             ((w - 30) / data.commits.length - padding) / 2
-          );
-        })
-        .attr('y', function(d) {
-          return yScale(d) + 14;
-        })
+        )
+        .attr('y', d => yScale(d) + 14)
         .attr('font-family', 'sans-serif')
         .attr('font-size', '11px')
         .attr('fill', 'white');
@@ -159,7 +155,8 @@ class BarChart extends Component {
   render() {
     return (
       <div>
-        <h2>Here is some fancy data:</h2>
+        <div style={{ color: 'black' }}>Commits / Person</div>
+        <br />
         <div className="renderedD3">{this.props.chart}</div>
       </div>
     );
