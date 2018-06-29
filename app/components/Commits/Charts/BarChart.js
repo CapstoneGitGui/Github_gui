@@ -73,12 +73,17 @@ class BarChart extends Component {
         .attr('y', d => yScale(d))
         .attr('width', (w - 30) / data.commits.length - padding)
         .attr('height', d => h - yScale(d))
-        .attr('fill', d =>
-          `rgb(0, 0, ${Math.round(colourScale(d))})`;
-        )
+        .attr('fill', d => `rgba(0, 0, ${Math.round(colourScale(d))}, 1)`)
         .attr('position', 'absolute');
-
-      console.log('HEY HEY COLOUR SCALE', colourScale(1));
+      // .on('mouseover', function(d) {
+      //   console.log('this', this);
+      //   return d3.select(this).attr('fill', `rgba(0, 0, 0, 0.5)`);
+      // })
+      // .on('mouseout', function(d) {
+      //   return d3
+      //     .select(this)
+      //     .attr('fill', `rgb(0, 0, ${Math.round(colourScale(d))})`);
+      // });
 
       svg
         .selectAll('text')
