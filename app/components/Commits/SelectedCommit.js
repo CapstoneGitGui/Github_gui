@@ -15,10 +15,16 @@ class SelectedCommit extends React.Component {
     this.state = { isTree: false }
   }
 
-  handleButton = () => {
-    this.setState(prevState => ({
-      isTree: !prevState.isTree
-    }))
+  handleButtonTrue = () => {
+    this.setState({
+      isTree: true
+    })
+  }
+
+  handleButtonFalse = () => {
+    this.setState({
+      isTree: false
+    })
   }
 
   render () {
@@ -29,8 +35,8 @@ class SelectedCommit extends React.Component {
         <div className="commit-info-header">
           <Header>
             <div className="code muted">{commit.sha.substr(0,8)}</div>
-            <button type='button' onClick={this.handleButton}>Changeset</button>
-            <button type='button' onClick={this.handleButton} >Tree</button>
+            <button type='button' onClick={this.handleButtonFalse}>Changeset</button>
+            <button type='button' onClick={this.handleButtonTrue} >Tree</button>
           </Header>
           {
             this.state.isTree?
