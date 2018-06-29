@@ -7,12 +7,12 @@ import LoginPage from './containers/LoginPage';
 import CommitTreePage from './containers/CommitTreePage';
 import RepoRoutes from './containers/RepoRoutes';
 import PatchPage from './containers/PatchPage';
-import BarChart from './components/Commits/BarChart';
+import Charts from './components/Commits/Charts';
 
 export default () => (
   <App>
     <Switch>
-      <Route path="/barChart" component={BarChart} />
+      <Route path="/barChart" component={Charts} />
       <Route path="/repos" component={RepoRoutes} />
       <Route path="/home" component={HomePage} />
       {/* <Route path="/commit/:sha" component={CommitTreePage} /> */}
