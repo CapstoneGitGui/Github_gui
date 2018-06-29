@@ -18,34 +18,39 @@
   <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
   <script src="https://d3js.org/d3.v5.js"></script>
   <script>
-      firebase.initializeApp({
-        apiKey: "AIzaSyAl-hidLJP3VFkBL6sYYuPj38gPOYcgfq4",
-        authDomain: "gitgui-55ad0.firebaseapp.com",
-        databaseURL: "https://gitgui-55ad0.firebaseio.com",
-        projectId: "gitgui-55ad0",
-        storageBucket: "gitgui-55ad0.appspot.com",
-        messagingSenderId: "882448645446"
-      })
-  
-      const { ipcRenderer } = require('electron')
-      ipcRenderer.on('token:send', (e, token) => {
-        console.log('[TOKEN]:', token)
-  
-        const credential = firebase.auth.GithubAuthProvider.credential(token);
+    firebase.initializeApp({
+      apiKey: "AIzaSyAl-hidLJP3VFkBL6sYYuPj38gPOYcgfq4",
+      authDomain: "gitgui-55ad0.firebaseapp.com",
+      databaseURL: "https://gitgui-55ad0.firebaseio.com",
+      projectId: "gitgui-55ad0",
+      storageBucket: "gitgui-55ad0.appspot.com",
+      messagingSenderId: "882448645446"
+    })
 
-        firebase.auth().signInAndRetrieveDataWithCredential(credential)
-          .then(user => {
-            localStorage.setItem('token', token)
-            localStorage.setItem('username', JSON.stringify(user.additionalUserInfo))
-          })
-          .catch(function (error) {
-            var errorCode = error.code;
-            var errorMessage = error.message;
-            var email = error.email;
-            var credential = error.credential;
-          });
-      })
-    </script>
+    const { ipcRenderer } = require('electron')
+    ipcRenderer.on('token:send', (e, token) => {
+      console.log('[TOKEN]:', token)
+
+      const credential = firebase.auth.GithubAuthProvider.credential(token);
+
+      firebase.auth().signInAndRetrieveDataWithCredential(credential)
+        .then(user => {
+          localStorage.setItem('token', token)
+          localStorage.setItem('username', JSON.stringify(user.additionalUserInfo))
+        })
+        .catch(function (error) {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          var email = error.email;
+          var credential = error.credential;
+        });
+    })
+    document.getElementById('drag').ondragstart = (event) => {
+      event.preventDefault()
+      ipcRenderer.send('ondragstart', '/path/to/item')
+    }
+  </script>
+
 </head>
 
 <body>
@@ -75,6 +80,7 @@
       );
     }
   </script>
+
 </body>
 
 </html>

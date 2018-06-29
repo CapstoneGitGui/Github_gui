@@ -49,7 +49,7 @@ class LocalGit extends Component<Props> {
   viewCommits = async (evt, branch) => {
     const options = {
       repo: `${this.state.folderPath}`,
-      number: 30,
+      number: 5000,
       branch,
       fields: ['hash', 'abbrevHash', 'subject', 'authorName', 'authorDateRel']
     };
@@ -63,6 +63,7 @@ class LocalGit extends Component<Props> {
   render() {
     return (
       <div>
+        <div id="drag">Drop Project Here</div>
         <Button color="blue" onClick={this.selectFolder}>
           Select folder
         </Button>
