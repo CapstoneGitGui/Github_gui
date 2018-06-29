@@ -1,11 +1,11 @@
-import React from 'react'
+import React from 'react';
 import { connect } from 'react-redux';
-import Commit from './Commit'
+import Commit from './Commit';
 
 class CommitsList extends React.Component {
   renderCommits() {
     let isMaster = false;
-    let output = [];
+    const output = { output: [], master: [] };
     const { masterCommits, branchCommits } = this.props;
 
     const masterShas = masterCommits.map(commit => {
@@ -13,15 +13,17 @@ class CommitsList extends React.Component {
     });
     for (let i = 0; i < branchCommits.length; i++) {
       if (!masterShas.includes(branchCommits[i].sha)) {
-        output.push(branchCommits[i]);
+        output.output.push(branchCommits[i]);
+      } else {
+        output.master.push(branchCommits[i]);
       }
     }
     if (this.props.selectedBranch.name === 'master') {
-      output = masterCommits;
+      output.output = masterCommits;
       isMaster = true;
     }
     if (this.isClosedBranch()) {
-      output = branchCommits;
+      output.output = branchCommits;
     }
 
     // return output.map(commit => {
@@ -40,7 +42,7 @@ class CommitsList extends React.Component {
 
     return (
       <div className="commits-inner">
-        {output.map(commit => {
+        {output.output.map(commit => {
           return (
             <Commit
               key={commit.sha}
@@ -53,35 +55,10 @@ class CommitsList extends React.Component {
             />
           );
         })}
-       
-        {isMaster || this.isClosedBranch() ? null : this.renderMasterCommits()} 
-      </div>
-    );
-  }
 
-  renderMasterCommits() {
-    return (
-      <div>
-        <div
-          style={{
-            color: 'black',
-          }}
-        >
-          Master
-        </div>
-        {this.props.masterCommits.map(commit => {
-          return (
-            <Commit 
-              key={commit.sha}
-              sha={commit.sha}
-              name={commit.committer.login}
-              message={commit.commit.message}
-              date={commit.commit.committer.date}
-              avatar={commit.author.avatar_url}
-              commit={commit}
-            />
-          );
-        })}
+        {isMaster || this.isClosedBranch()
+          ? null
+          : renderMasterCommits(output.master)}
       </div>
     );
   }
@@ -98,12 +75,8 @@ class CommitsList extends React.Component {
     }
   }
 
-  render () {
-    return (
-      <div className="commits">
-        { this.renderCommits() }
-      </div>
-    )
+  render() {
+    return <div className="commits">{this.renderCommits()}</div>;
   }
 }
 
@@ -115,4 +88,31 @@ const mapStateToProps = state => ({
   closedBranches: state.closedBranches,
 });
 
-export default connect(mapStateToProps)(CommitsList)
+export default connect(mapStateToProps)(CommitsList);
+
+renderMasterCommits(masterCommits) {
+  return (
+    <div>
+      <div
+        style={{
+          color: 'black',
+        }}
+      >
+        Master
+      </div>
+      {masterCommits.map(commit => {
+        return (
+          <Commit
+            key={commit.sha}
+            sha={commit.sha}
+            name={commit.committer.login}
+            message={commit.commit.message}
+            date={commit.commit.committer.date}
+            avatar={commit.author.avatar_url}
+            commit={commit}
+          />
+        );
+      })}
+    </div>
+  );
+}
