@@ -32,11 +32,11 @@ class CommitTree extends Component {
   }
 
   componentDidMount () {
-    this.getTree(this.props.match.params.sha)
+    this.getTree(this.props.sha)
     .then(commitTree => this.parseTree(commitTree))
 
     this.setState({
-      sha: this.props.match.params.sha
+      sha: this.props.sha
     })
   }
 
