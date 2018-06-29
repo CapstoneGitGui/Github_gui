@@ -29,7 +29,7 @@ class SelectedCommit extends React.Component {
           {
             commit.parents.map(parent => {
               return (
-                <div>
+                <div key={parent.sha}>
                   Parent Hash: {parent.sha}
                 </div>
               )

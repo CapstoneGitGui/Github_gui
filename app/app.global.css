@@ -47,6 +47,7 @@ a:hover {
 
 .app {
   display: flex;
+  background: #fff;
 }
 
 .content {
@@ -106,4 +107,8 @@ header {
 
 .commit-info {
   padding: 15px;
+}
+
+.draggable {
+  -webkit-app-region: drag;
 }
