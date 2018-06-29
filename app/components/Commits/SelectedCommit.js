@@ -3,8 +3,21 @@ import {connect} from 'react-redux'
 import Moment from 'react-moment'
 import Header from '../UI/Header';
 // import {setSelectedCommit} from '../../reducers/selectedCommit'
+import SmoothCollapse from 'react-smooth-collapse'
+import Patches from '../Patch/Patches';
 
 class SelectedCommit extends React.Component {
+
+  state = {
+    expanded: false
+  }
+
+  toggle = () => {
+    this.setState({
+      expanded: !this.state.expanded
+    })
+  }
+
   render () {
     const { commit } = this.props;
     console.log(commit)
@@ -35,6 +48,7 @@ class SelectedCommit extends React.Component {
         </div>
         <div className="commit-info">
           {commit.commit.message}
+          <Patches sha={commit.sha} />
         </div>
       </div>
     )

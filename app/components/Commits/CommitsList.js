@@ -88,9 +88,10 @@ const mapStateToProps = state => ({
   closedBranches: state.closedBranches,
 });
 
+
 export default connect(mapStateToProps)(CommitsList);
 
-renderMasterCommits(masterCommits) {
+const renderMasterCommits = (masterCommits) => {
   return (
     <div>
       <div
@@ -116,3 +117,4 @@ renderMasterCommits(masterCommits) {
     </div>
   );
 }
+
