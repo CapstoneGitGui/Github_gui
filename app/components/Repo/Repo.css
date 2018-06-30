@@ -3,7 +3,10 @@
   align-items: stretch;
   min-height: 100vh;
   background: rgb(34, 37, 43);
+  overflow-y: auto;
+  max-height: 900px;
 }
+
 .Repo .contents {
   align-self: center;
   background-color: rgb(33, 38, 43);

@@ -32,22 +32,22 @@ class CommitTree extends Component {
   }
 
   componentDidMount () {
-    this.getTree(this.props.match.params.sha)
+    this.getTree(this.props.sha)
     .then(commitTree => this.parseTree(commitTree))
 
     this.setState({
-      sha: this.props.match.params.sha
+      sha: this.props.sha
     })
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.state.sha !== nextProps.match.params.sha) {
-      this.getTree(nextProps.match.params.sha).then(commitTree =>
+    if (this.state.sha !== nextProps.sha) {
+      this.getTree(nextProps.sha).then(commitTree =>
         this.parseTree(commitTree)
       );
 
       this.setState({
-        sha: nextProps.match.params.sha,
+        sha: nextProps.sha,
       });
     }
   }

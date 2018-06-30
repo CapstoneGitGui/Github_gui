@@ -24,16 +24,15 @@ import {
   hopscotch,
   pojoaque,
   vs,
-  xcode,
   xonokai
 } from 'react-syntax-highlighter/styles/prism'
 
-export default class RenderedContent extends Component {
+export default class RenderedCode extends Component {
   constructor (props) {
     super(props)
     this.state = {
       lineNumbers: true,
-      currentStyle: { name: 'xcode', style: xcode },
+      currentStyle: { name: 'solarizedlight', style: solarizedlight },
       styles: [
         { name: 'coy', style: coy },
         { name: 'dark', style: dark },
@@ -60,7 +59,6 @@ export default class RenderedContent extends Component {
         { name: 'hopscotch', style: hopscotch },
         { name: 'pojoaque', style: pojoaque },
         { name: 'vs', style: vs },
-        { name: 'xcode', style: xcode },
         { name: 'xonokai', style: xonokai }
       ]
     }
@@ -118,3 +116,21 @@ export default class RenderedContent extends Component {
     }
   }
 }
+
+// copied xcode
+// .hljs-addition {
+//   background-color: #baeeba;
+// }
+
+// .hljs-deletion {
+//   background-color: #ffc8bd;
+// }
+
+// autilier ligh og
+// .hljs-deletion {
+//   background-color: #ca4949;
+// }
+
+// .hljs-addition {
+//   background-color: #4b8b8b;
+// }

@@ -3,8 +3,30 @@ import {connect} from 'react-redux'
 import Moment from 'react-moment'
 import Header from '../UI/Header';
 // import {setSelectedCommit} from '../../reducers/selectedCommit'
+import SmoothCollapse from 'react-smooth-collapse'
+import Patches from '../Patch/Patches'
+import CommitDetails from './CommitDetails'
+import { SegmentedControl, SegmentedControlItem, Text } from 'react-desktop/macOs';
+import CommitTree from '../Repo/CommitTree';
 
 class SelectedCommit extends React.Component {
+  constructor() {
+    super();
+    this.state = { isTree: false }
+  }
+
+  handleButtonTrue = () => {
+    this.setState({
+      isTree: true
+    })
+  }
+
+  handleButtonFalse = () => {
+    this.setState({
+      isTree: false
+    })
+  }
+
   render () {
     const { commit } = this.props;
     console.log(commit)
@@ -13,28 +35,14 @@ class SelectedCommit extends React.Component {
         <div className="commit-info-header">
           <Header>
             <div className="code muted">{commit.sha.substr(0,8)}</div>
+            <button type='button' onClick={this.handleButtonFalse}>Changeset</button>
+            <button type='button' onClick={this.handleButtonTrue} >Tree</button>
           </Header>
-        </div>
-        <div className="commit-meta-data">
-          <div>{`Author: ${commit.commit.author.name} <${commit.commit.author.email}>`}</div>
-          <div>Author Date: <Moment format="MMM D, YYYY HH:mm">{commit.commit.author.date}</Moment></div>
-          <div>Committer: {commit.commit.author.name}</div>
-          <div>Committer Date: {commit.commit.author.name}</div>
-          <div>Refs: {commit.commit.author.name}</div>
-          <div>Commit Hash: {commit.sha}</div>
           {
-            commit.parents.map(parent => {
-              return (
-                <div key={parent.sha}>
-                  Parent Hash: {parent.sha}
-                </div>
-              )
-            })
+            this.state.isTree?
+            (<CommitTree sha={commit.sha}/>):
+            (<CommitDetails commit={commit} />)
           }
-          <div>Tree Hash: {commit.commit.tree.sha}</div>
-        </div>
-        <div className="commit-info">
-          {commit.commit.message}
         </div>
       </div>
     )
