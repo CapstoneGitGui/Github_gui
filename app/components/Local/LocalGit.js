@@ -3,6 +3,12 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router';
 import { ipcRenderer } from 'electron';
 import { Button } from 'react-desktop/macOs';
+import ContentWrapper from '../UI/ContentWrapper';
+import CommitsList from '../Commits/CommitsList';
+import SelectedCommit from '../Commits/SelectedCommit';
+import Column from '../UI/Column';
+import LocalWork from './LocalWork';
+import git from 'simple-git';
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -22,7 +28,8 @@ class LocalGit extends Component<Props> {
   state = {
     folderPath: '',
     branches: [],
-    commits: []
+    commits: [],
+    branch: ''
   };
 
   selectFolder = () => {
@@ -38,39 +45,66 @@ class LocalGit extends Component<Props> {
           files.forEach(file => {
             branches.push(file);
           });
+
           this.setState({ branches });
         });
         this.setState({ folderPath });
-        console.log(folderPath);
       }
     );
   };
 
-  viewCommits = async (evt, branch) => {
+  selectBranch = async (evt, branch) => {
+    this.setState({ branch });
+    this.viewCommits(branch);
+  };
+
+  viewCommits = async branch => {
     const options = {
       repo: `${this.state.folderPath}`,
       number: 5000,
       branch,
-      fields: ['hash', 'abbrevHash', 'subject', 'authorName', 'authorDateRel']
+      fields: [
+        'hash',
+        'abbrevHash',
+        'subject',
+        'parentHashes',
+        'authorName',
+        'authorDateRel'
+      ]
     };
-    console.log(options.repo);
     gitlog(options, async (error, commits) => {
       console.log(commits);
       this.setState({ commits });
     });
   };
 
+  addChanges = async () => {
+    // console.log(this.state.folderPath[0]);
+
+    git('/Users/DK/graceShopper/fellowship-of-shoppers').add('./*');
+  };
+
+  commit = async () => {
+    git('/Users/DK/graceShopper/fellowship-of-shoppers').commit('hello');
+  };
+
   render() {
+    // const watcher = chokidar.watch(`${this.state.folderPath}/.git/objects`, {
+    //   persistent: true
+    // });
+
     return (
       <div>
         <div id="drag">Drop Project Here</div>
         <Button color="blue" onClick={this.selectFolder}>
           Select folder
         </Button>
+        <Button onClick={this.addChanges}>Add</Button>
+        <Button onClick={this.makeCommit}>Commit</Button>
         <ul>
           {this.state.branches.map(branch => (
-            <li className="text">
-              <Button onClick={evt => this.viewCommits(evt, branch)}>
+            <li key={branch} className="text">
+              <Button onClick={evt => this.selectBranch(evt, branch)}>
                 {branch}
               </Button>
             </li>
@@ -81,6 +115,18 @@ class LocalGit extends Component<Props> {
             <div className="text">{commit.subject}</div>
           ))}
         </div>
+        {/* <div>
+          {this.state.branch ? (
+            <ContentWrapper>
+              <Column className="right">
+                <LocalWork />
+              </Column>
+              <Column className="left">
+                <div>{this.state.commits.map(commit => commit.subject)}</div>
+              </Column>
+            </ContentWrapper>
+          ) : null}
+        </div> */}
       </div>
     );
   }

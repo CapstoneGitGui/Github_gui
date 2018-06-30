@@ -47,10 +47,7 @@ a:hover {
 
 .app {
   display: flex;
-<<<<<<< HEAD
-=======
   background: #fff;
->>>>>>> 3d5f345c39c01686eeabf7542133bda833b9eda4
 }
 
 .content {
@@ -60,10 +57,6 @@ a:hover {
 }
 
 .main-content {
-<<<<<<< HEAD
-  padding: 30px;
-=======
->>>>>>> 3d5f345c39c01686eeabf7542133bda833b9eda4
 }
 
 header {
@@ -128,5 +121,5 @@ header {
 }
 
 .muted {
-  color: rgb(168, 168, 168)
+  color: rgb(168, 168, 168);
 }

@@ -201,6 +201,7 @@
   },
   "dependencies": {
     "art": "^0.10.2",
+    "aws-sdk": "^2.266.1",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "chokidar": "^2.0.4",
@@ -239,6 +240,7 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
     "sequelize": "^4.38.0",
+    "simple-git": "1.96.0",
     "source-map-support": "^0.5.6"
   },
   "devEngines": {

@@ -45,16 +45,17 @@
           var credential = error.credential;
         });
     })
-    document.getElementById('drag').ondragstart = (event) => {
-      event.preventDefault()
-      ipcRenderer.send('ondragstart', '/path/to/item')
-    }
+    // document.getElementById('drag').ondragstart = (event) => {
+    //   event.preventDefault()
+    //   ipcRenderer.send('ondragstart', '/path/to/item')
+    // }
   </script>
 
 </head>
 
 <body>
   <div id="root"></div>
+
   <script>
     {
       const scripts = [];

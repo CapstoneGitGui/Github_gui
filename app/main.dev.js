@@ -6,13 +6,13 @@ let mainWindow = null;
 let authWindow;
 
 function parseQuery(queryString) {
-  var query = {};
-  var pairs = (queryString[0] === '?'
+  let query = {};
+  let pairs = (queryString[0] === '?'
     ? queryString.substr(1)
     : queryString
   ).split('&');
-  for (var i = 0; i < pairs.length; i++) {
-    var pair = pairs[i].split('=');
+  for (let i = 0; i < pairs.length; i++) {
+    let pair = pairs[i].split('=');
     query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
   }
   return query;
@@ -67,7 +67,7 @@ app.on('ready', async () => {
     show: false,
     width: 1024,
     height: 728,
-    frame: false,
+    frame: false
   });
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
@@ -95,12 +95,9 @@ process.env.GITHUB_CLIENT_SECRET = '9067dcb77f4aad174472cc1a62b2d3b16908f520';
 process.env.GITHUB_CALLBACK = 'http://localhost:1212/auth/github/callback';
 
 const githubUrl = 'https://github.com/login/oauth/authorize?';
-let authUrl =
-  githubUrl +
-  'client_id=' +
-  process.env.GITHUB_CLIENT_ID +
-  '&scope=' +
-  process.env.GITHUB_CLIENT_SECRET;
+const authUrl = `${githubUrl}client_id=${process.env.GITHUB_CLIENT_ID}&scope=${
+  process.env.GITHUB_CLIENT_SECRET
+}`;
 
 // Github Oauth Form Window
 ipcMain.on('oauth:form', data => {
@@ -116,7 +113,7 @@ ipcMain.on('oauth:form', data => {
       .post('https://github.com/login/oauth/access_token', {
         client_id: process.env.GITHUB_CLIENT_ID,
         client_secret: process.env.GITHUB_CLIENT_SECRET,
-        code: code
+        code
       })
       .then(res => {
         console.log(res);
@@ -127,9 +124,9 @@ ipcMain.on('oauth:form', data => {
   }
 
   function handleCallback(url) {
-    var raw_code = /code=([^&]*)/.exec(url) || null;
-    var code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
-    var error = /\?error=(.+)$/.exec(url);
+    let raw_code = /code=([^&]*)/.exec(url) || null;
+    let code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
+    let error = /\?error=(.+)$/.exec(url);
 
     if (code || error) {
       // Close the browser if code found or error
@@ -159,6 +156,7 @@ ipcMain.on('oauth:form', data => {
 });
 
 ipcMain.on('ondragstart', (event, filePath) => {
+  console.log('EVENT DRAG');
   event.sender.startDrag({
     file: filePath,
     icon: '/path/to/icon.png'
