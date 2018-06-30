@@ -30,8 +30,10 @@ export default class CommitDetails extends React.Component {
         <div>Tree Hash: {commit.commit.tree.sha}</div>
         </div>
         <div className="commit-info">
-        {commit.commit.message}
-        <Patches sha={commit.sha} />
+          <div className="commit-info-message">
+            {commit.commit.message}
+          </div>
+          <Patches sha={commit.sha} />
         </div>
       </div>
     )
