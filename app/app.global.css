@@ -110,7 +110,6 @@ header {
 }
 
 .commit-info {
-  padding: 15px;
   overflow: scroll;
   height: 60vh;
 }
@@ -125,6 +124,30 @@ header {
 
 .muted {
   color: rgb(168, 168, 168);
+}
+
+.patch {
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.patch-toggle {
+  padding: 10px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.patch-toggle .blue {
+  color: rgb(0,200,249)
+}
+
+.commit-info-message {
+  padding: 10px;
+}
+
+.patches-info {
+  padding: 10px;
+  font-size: 11px;
+  border-bottom: 1px solid #dcdcdc;
 }
 
 /*
