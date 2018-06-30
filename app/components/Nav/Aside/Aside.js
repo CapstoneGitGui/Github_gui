@@ -6,6 +6,10 @@ import { fetchOpenBranches } from '../../../reducers/openBranches';
 import { fetchClosedBranches } from '../../../reducers/closedBranches';
 
 class Aside extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.selectedRepo !== this.props.selectedRepo ||
@@ -62,6 +66,12 @@ class Aside extends React.Component {
     ));
   }
 
+  renderLocalBranches() {
+    return this.props.localBranches.map(branch => (
+      <NavItem path="/localBranch" name={branch} isBranc />
+    ));
+  }
+
   render() {
     const { selectedRepo } = this.props;
 
@@ -70,7 +80,7 @@ class Aside extends React.Component {
         <div className={styles.menu_group}>
           <div className={styles.menu}>Workspace</div>
           <NavItem path="/" name="Login Page (Temp)" />
-          <NavItem path="/LocalGit" name="Local Workspace" />
+          <NavItem path="/localGit" name="Local Workspace" />
           <NavItem path="/repos" name="Repositories" />
           <NavItem
             path={`/repos/${selectedRepo}/working-copy`}
@@ -93,6 +103,12 @@ class Aside extends React.Component {
           <div className={styles.menu_group}>
             <div className={styles.menu}>Closed Branches</div>
             {this.renderClosedBranches()}
+          </div>
+        ) : null}
+        {this.props.localBranches ? (
+          <div className={styles.menu_group}>
+            <div className={styles.menu}>Local Branches</div>
+            {this.renderLocalBranches()}
           </div>
         ) : null}
       </aside>

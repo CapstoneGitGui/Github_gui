@@ -7,8 +7,8 @@ import ContentWrapper from '../UI/ContentWrapper';
 import CommitsList from '../Commits/CommitsList';
 import SelectedCommit from '../Commits/SelectedCommit';
 import Column from '../UI/Column';
-import LocalWork from './LocalWork';
 import git from 'simple-git';
+import Aside from '../Nav/Aside/Aside.js';
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -31,7 +31,6 @@ class LocalGit extends Component<Props> {
     commits: [],
     branch: ''
   };
-
   selectFolder = () => {
     dialog.showOpenDialog(
       {
@@ -39,13 +38,11 @@ class LocalGit extends Component<Props> {
         properties: ['openDirectory']
       },
       async folderPath => {
-        // folderPaths is an array that contains all the selected paths
         await fs.readdir(`${folderPath}/.git/refs/heads`, (err, files) => {
           const branches = [];
           files.forEach(file => {
             branches.push(file);
           });
-
           this.setState({ branches });
         });
         this.setState({ folderPath });
@@ -99,36 +96,24 @@ class LocalGit extends Component<Props> {
         </Button>
         <Button onClick={this.addChanges}>Add</Button>
         <Button onClick={this.commit}>Commit</Button>
-        <ul>
-          {this.state.branches.map(branch => (
-            <li key={branch} className="text">
-              <Button onClick={evt => this.selectBranch(evt, branch)}>
-                {branch}
-              </Button>
-            </li>
-          ))}
-        </ul>
+
         <div className="text">
           {this.state.commits.map(commit => (
-            <div className="text">{commit.subject}</div>
+            <div key={commit.hash} className="text">
+              {commit.subject}
+            </div>
           ))}
         </div>
-        {/* <div>
-          {this.state.branch ? (
-            <ContentWrapper>
-              <Column className="right">
-                <LocalWork />
-              </Column>
-              <Column className="left">
-                <div>{this.state.commits.map(commit => commit.subject)}</div>
-              </Column>
-            </ContentWrapper>
-          ) : null}
-        </div> */}
+
+        {this.state.folderPath ? (
+          <Aside localBranches={this.state.branches} />
+        ) : null}
       </div>
     );
   }
 }
+
+export default LocalGit;
 
 // await fs.readFile(
 //   `${this.state.folderPath}/.git/refs/heads/${branch}`,
@@ -170,5 +155,3 @@ class LocalGit extends Component<Props> {
 //     }
 //   }
 // );
-
-export default LocalGit;

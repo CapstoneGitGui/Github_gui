@@ -8,12 +8,14 @@ import CommitTreePage from './containers/CommitTreePage';
 import RepoRoutes from './containers/RepoRoutes';
 import BarChart from './components/Commits/BarChart';
 import LocalGitPage from './containers/LocalGit';
+import LocalBranch from './containers/LocalBranchPage';
 
 export default () => (
   <App>
     <Switch>
       <Route path="/barChart" component={BarChart} />
       <Route path="/localGit" component={LocalGitPage} />
+      <Route path="/localBranch" component={LocalBranch} />
       <Route path="/repos" component={RepoRoutes} />
       <Route path="/home" component={HomePage} />
       <Route path="/" component={LoginPage} />
