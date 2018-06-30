@@ -41,13 +41,13 @@ class CommitTree extends Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    if (this.state.sha !== nextProps.match.params.sha) {
-      this.getTree(nextProps.match.params.sha).then(commitTree =>
+    if (this.state.sha !== nextProps.sha) {
+      this.getTree(nextProps.sha).then(commitTree =>
         this.parseTree(commitTree)
       );
 
       this.setState({
-        sha: nextProps.match.params.sha,
+        sha: nextProps.sha,
       });
     }
   }
