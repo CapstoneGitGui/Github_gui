@@ -9,6 +9,7 @@ import SelectedCommit from '../Commits/SelectedCommit';
 import Column from '../UI/Column';
 import git from 'simple-git';
 import Aside from '../Nav/Aside/Aside.js';
+import chokidar from 'chokidar';
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -31,6 +32,20 @@ class LocalGit extends Component<Props> {
     commits: [],
     branch: ''
   };
+
+  watch = () => {
+    console.log(typeof this.state.folderPath);
+    console.log('TTTTTTT ', this.state.folderPath);
+    const watcher = chokidar.watch(this.state.folderPath[0], {
+      ignored: /[\/\\]\./,
+      persistent: true
+    });
+
+    watcher.on('change', path => {
+      console.log(`${path}file has been changed`);
+    });
+  };
+
   selectFolder = () => {
     dialog.showOpenDialog(
       {
@@ -46,6 +61,7 @@ class LocalGit extends Component<Props> {
           this.setState({ branches });
         });
         this.setState({ folderPath });
+        this.watch();
       }
     );
   };
@@ -76,7 +92,9 @@ class LocalGit extends Component<Props> {
   };
 
   addChanges = async () => {
-    git(this.state.folderPath[0]).add('./*');
+    git(this.state.folderPath[0]).add('./*', el => {
+      console.log(el);
+    });
   };
 
   commit = async () => {
@@ -96,7 +114,6 @@ class LocalGit extends Component<Props> {
         </Button>
         <Button onClick={this.addChanges}>Add</Button>
         <Button onClick={this.commit}>Commit</Button>
-
         <div className="text">
           {this.state.commits.map(commit => (
             <div key={commit.hash} className="text">
