@@ -79,13 +79,11 @@ class LocalGit extends Component<Props> {
   };
 
   addChanges = async () => {
-    // console.log(this.state.folderPath[0]);
-
-    git('/Users/DK/graceShopper/fellowship-of-shoppers').add('./*');
+    git(this.state.folderPath[0]).add('./*');
   };
 
   commit = async () => {
-    git('/Users/DK/graceShopper/fellowship-of-shoppers').commit('hello');
+    git(this.state.folderPath[0]).commit('cool');
   };
 
   render() {
@@ -100,7 +98,7 @@ class LocalGit extends Component<Props> {
           Select folder
         </Button>
         <Button onClick={this.addChanges}>Add</Button>
-        <Button onClick={this.makeCommit}>Commit</Button>
+        <Button onClick={this.commit}>Commit</Button>
         <ul>
           {this.state.branches.map(branch => (
             <li key={branch} className="text">
