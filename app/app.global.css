@@ -76,6 +76,14 @@ header {
   line-height: 100px;
 }
 
+.column.right {
+  flex-shrink: 0;
+  width: 350px;
+  background: #fff;
+  border-right: 1px solid #dcdcdc;
+  height: 100vh;
+}
+
 .column.left {
   flex: 1;
   display: flex;
@@ -137,7 +145,7 @@ header {
 }
 
 .patch-toggle .blue {
-  color: rgb(0,200,249)
+  color: rgb(0, 200, 249);
 }
 
 .commit-info-message {
