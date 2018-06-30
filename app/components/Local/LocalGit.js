@@ -30,7 +30,8 @@ class LocalGit extends Component<Props> {
     folderPath: '',
     branches: [],
     commits: [],
-    branch: ''
+    branch: '',
+    changedFiles: []
   };
 
   watch = () => {
@@ -42,6 +43,7 @@ class LocalGit extends Component<Props> {
     });
 
     watcher.on('change', path => {
+      this.setState({ changedFiles: [...this.state.changedFiles, path] });
       console.log(`${path}file has been changed`);
     });
   };
@@ -121,7 +123,9 @@ class LocalGit extends Component<Props> {
             </div>
           ))}
         </div>
-
+        <ul>
+          {this.state.changedFiles.map(file => <li>{file}</li>)}
+        </ul>
         {this.state.folderPath ? (
           <Aside localBranches={this.state.branches} />
         ) : null}
