@@ -18,10 +18,8 @@ class Patches extends Component {
       filesArray: [],
       sha: '',
       expanded: false,
-      selectedFile: {
-        expanded: false,
-        sha: ''
-      }
+      additions: 0,
+      deletions: 0,
     };
     this.getChangedFiles = this.getChangedFiles.bind(this);
   }
@@ -35,8 +33,8 @@ class Patches extends Component {
       this.getChangedFiles(nextProps.sha)
 
       this.setState({
-        sha: nextProps.sha,
-      });
+        additions: nextProps.file
+      })
     }
   }
 
@@ -46,16 +44,19 @@ class Patches extends Component {
     if (githubToken) url += `?access_token=${githubToken}`;
     const filesArray = await axios.get(url)
     this.setState({
-      filesArray: filesArray.data.files
+      filesArray: filesArray.data.files,
+      additions: filesArray.data.files.map(file => file.additions).reduce((a,b) => a + b),
+      deletions: filesArray.data.files.map(file => file.deletions).reduce((a,b) => a + b),
     })
   }
 
   renderCollapse () {
     const { filesArray } = this.state;
 
-    return filesArray.map(file => {
+    return filesArray.map((file, index) => {
       return (
         <Collapse 
+          key={index}
           length={filesArray.length}
           filename={file.filename} 
           sha={file.sha} 
@@ -66,12 +67,12 @@ class Patches extends Component {
   }
 
   render () {
-    const {filesArray} = this.state;
+    const {filesArray, additions, deletions} = this.state;
 
     return (
       <div className="patches">
         <div className="patches-info muted">
-          Showing {filesArray.length} changed files
+          Showing {filesArray.length} changed files with {additions} additions and {deletions} deletions
         </div>
         { this.renderCollapse() }
       </div>
