@@ -200,9 +200,11 @@
   },
   "dependencies": {
     "art": "^0.10.2",
+    "aws-sdk": "^2.266.1",
     "axios": "^0.18.0",
     "babel-loader": "^7.1.4",
     "body-parser": "^1.18.3",
+    "chokidar": "^2.0.4",
     "compression": "^1.7.2",
     "connect-session-sequelize": "^5.2.1",
     "d3": "^5.5.0",
@@ -212,6 +214,7 @@
     "electron-oauth-helper": "^2.0.3",
     "express-session": "^1.15.6",
     "font-awesome": "^4.7.0",
+    "gitlog": "^3.1.2",
     "history": "^4.7.2",
     "marked": "^0.4.0",
     "morgan": "^1.9.0",
@@ -239,6 +242,7 @@
     "redux": "^4.0.0",
     "redux-thunk": "^2.2.0",
     "sequelize": "^4.38.0",
+    "simple-git": "1.96.0",
     "source-map-support": "^0.5.6"
   },
   "devEngines": {

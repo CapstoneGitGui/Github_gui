@@ -1,10 +1,10 @@
 // @flow
 import React, { Component } from 'react';
-import axios from 'axios'
+import axios from 'axios';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styles from './Home.css';
-import { push } from 'react-router-redux'
+import { push } from 'react-router-redux';
 
 import { ipcRenderer } from 'electron';
 import { Button } from 'react-desktop/macOs';
@@ -14,24 +14,24 @@ import { configureStore } from '../store/configureStore';
 
 const store = configureStore();
 
-type Props = {};
+// type Props = {};
 
 class Home extends Component<Props> {
   props: Props;
   // type Props = {};
-  
+
   state = {
     data: [],
     dataHash: {},
-    value: '',
+    value: ''
   };
 
   onLogout = () => {
-    this.props.logout()
-    localStorage.removeItem('token')
-    localStorage.removeItem('username')
-    store.dispatch(push('/'))
-  } 
+    this.props.logout();
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    store.dispatch(push('/'));
+  };
 
   renderCommits = async () => {
     const dataHash = {};
@@ -61,35 +61,35 @@ class Home extends Component<Props> {
   };
 
   createChild = node => {
-    node.parents.forEach(el => {
-      return el;
+    node.parents.forEach(el => el);
+  };
+
+  handleChange = e => {
+    this.setState({
+      value: e.target.value
     });
   };
 
-  handleChange = (e) => {
-    this.setState({
-      value: e.target.value
-    })
-  }
-
-  handleSubmit = (e) => {
-    e.preventDefault()
+  handleSubmit = e => {
+    e.preventDefault();
     axios
       .post('https://gitgui-55ad0.firebaseio.com/repos.json', {
         name: this.state.value
       })
       .then(res => {
-        console.log(res)
+        console.log(res);
       })
-      .catch(err => console.log(err))
-  }
+      .catch(err => console.log(err));
+  };
 
   render() {
     const { data } = this.state;
     return (
       <div>
         <div className={styles.container} data-tid="container">
-          <Button color='blue' onClick={this.onLogout}>Logout</Button>
+          <Button color="blue" onClick={this.onLogout}>
+            Logout
+          </Button>
           <ul>
             {data.map(commit => {
               return <li>{commit.sha}</li>;
@@ -98,8 +98,8 @@ class Home extends Component<Props> {
           {}
           <button onClick={this.renderCommits}>Render Commits</button>
           <form onSubmit={this.handleSubmit}>
-            <input type='text' onChange={this.handleChange} />
-            <button type='submit'>Submit</button>
+            <input type="text" onChange={this.handleChange} />
+            <button type="submit">Submit</button>
           </form>
         </div>
       </div>
@@ -110,6 +110,6 @@ class Home extends Component<Props> {
 export default connect(
   null,
   {
-    logout,
+    logout
   }
 )(Home);
