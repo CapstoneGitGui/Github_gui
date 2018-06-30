@@ -50,21 +50,30 @@ class Patches extends Component {
     })
   }
 
+  renderCollapse () {
+    const { filesArray } = this.state;
+
+    return filesArray.map(file => {
+      return (
+        <Collapse 
+          length={filesArray.length}
+          filename={file.filename} 
+          sha={file.sha} 
+          patch={file.patch} 
+        />
+      )
+    })
+  }
+
   render () {
-    // const { language } = this.state;
-    console.log(this.state)
+    const {filesArray} = this.state;
+
     return (
-      <div>
-        {
-          this.state.filesArray.map(file => {
-              return (
-                <div className='patches'>
-                      <Collapse filename={file.filename} sha={file.sha} patch={file.patch} />
-                </div>
-              )
-            }
-          )
-        }
+      <div className="patches">
+        <div className="patches-info muted">
+          Showing {filesArray.length} changed files
+        </div>
+        { this.renderCollapse() }
       </div>
     )
   }

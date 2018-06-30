@@ -16,15 +16,25 @@ class Collapse extends Component {
     })
   }
 
-  render () {
+  renderSmoothCollapse () {
     return (
-      <div>
-      <h4 onClick={this.toggle} id={this.props.sha}>{this.props.filename}</h4>
-      <SmoothCollapse className={this.props.sha} expanded={this.state.expanded} >
+      <SmoothCollapse expanded={this.state.expanded} >
         <Highlight className='diff'>
           {this.props.patch}
         </Highlight>
       </SmoothCollapse>
+    )
+  }
+
+  render () {
+    const { sha, length } = this.props;
+
+    return (
+      <div className="patch" id={sha}>
+        <div className="patch-toggle" onClick={this.toggle}>
+          <span className="blue">modified</span> <span className="muted">{this.props.filename}</span>
+        </div>
+        { this.renderSmoothCollapse() }
       </div>
     )
   }
