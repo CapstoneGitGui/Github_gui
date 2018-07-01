@@ -10,6 +10,7 @@ import Column from '../UI/Column';
 import git from 'simple-git';
 import Aside from '../Nav/Aside/Aside.js';
 import chokidar from 'chokidar';
+import { fetchLocalBranches } from '../../reducers/localBranches'
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -49,18 +50,21 @@ class LocalGit extends Component<Props> {
   };
 
   selectFolder = () => {
+    const {fetchLocalBranches} = this.props;
     dialog.showOpenDialog(
       {
         title: 'Select a folder',
         properties: ['openDirectory']
       },
       async folderPath => {
+        console.log(folderPath)
         await fs.readdir(`${folderPath}/.git/refs/heads`, (err, files) => {
           const branches = [];
           files.forEach(file => {
             branches.push(file);
           });
           this.setState({ branches });
+          fetchLocalBranches(branches)
         });
         this.setState({ folderPath });
         this.watch();
@@ -103,7 +107,17 @@ class LocalGit extends Component<Props> {
     git(this.state.folderPath[0]).commit('cool');
   };
 
+  listRemote = () => {
+    git(this.state.folderPath[0]).listRemote(['--get-url'], (err, data) => {
+      if (!err) {
+          console.log('Remote url for repository at ' + __dirname + ':');
+          console.log(data);
+      }
+  });
+  }
+
   render() {
+    const { folderPath } = this.state;
     // const watcher = chokidar.watch(`${this.state.folderPath}/.git/objects`, {
     //   persistent: true
     // });
@@ -113,6 +127,9 @@ class LocalGit extends Component<Props> {
         <div id="drag">Drop Project Here</div>
         <Button color="blue" onClick={this.selectFolder}>
           Select folder
+        </Button>
+        <Button color="blue" onClick={this.listRemote}>
+          List remote
         </Button>
         <Button onClick={this.addChanges}>Add</Button>
         <Button onClick={this.commit}>Commit</Button>
@@ -124,15 +141,14 @@ class LocalGit extends Component<Props> {
           ))}
         </div>
         <ul>{this.state.changedFiles.map(file => <li>{file}</li>)}</ul>
-        {this.state.folderPath ? (
-          <Aside localBranches={this.state.branches} />
-        ) : null}
       </div>
     );
   }
 }
 
-export default LocalGit;
+export default connect(null, {
+  fetchLocalBranches,
+})(LocalGit)
 
 // await fs.readFile(
 //   `${this.state.folderPath}/.git/refs/heads/${branch}`,
