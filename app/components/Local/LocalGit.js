@@ -32,7 +32,8 @@ class LocalGit extends Component<Props> {
     branches: [],
     commits: [],
     branch: '',
-    changedFiles: []
+    changedFiles: [],
+    changedFilesLock: []
   };
 
   watch = () => {
@@ -103,7 +104,8 @@ class LocalGit extends Component<Props> {
 
   changedFiles = async () => {
     git(this.state.folderPath[0]).diffSummary((err, data) => {
-      console.log('DATA', data);
+      console.log(data);
+      this.setState({ changedFilesLock: data.files });
     });
   };
 
@@ -147,7 +149,13 @@ class LocalGit extends Component<Props> {
           ))}
         </div>
         <Button onClick={this.changedFiles}>Changed Files</Button>
-        <ul>{this.state.changedFiles.map(file => <li>{file}</li>)}</ul>
+        {this.state.changedFilesLock ? (
+          <ul>
+            {this.state.changedFilesLock.map(file => (
+              <li className="text">{file.file}</li>
+            ))}
+          </ul>
+        ) : null}
       </div>
     );
   }
