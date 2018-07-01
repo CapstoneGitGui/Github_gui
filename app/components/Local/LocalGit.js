@@ -10,7 +10,7 @@ import Column from '../UI/Column';
 import git from 'simple-git';
 import Aside from '../Nav/Aside/Aside.js';
 import chokidar from 'chokidar';
-import { fetchLocalBranches } from '../../reducers/localBranches'
+import { fetchLocalBranches } from '../../reducers/localBranches';
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -36,8 +36,6 @@ class LocalGit extends Component<Props> {
   };
 
   watch = () => {
-    console.log(typeof this.state.folderPath);
-    console.log('TTTTTTT ', this.state.folderPath);
     const watcher = chokidar.watch(this.state.folderPath[0], {
       ignored: /[\/\\]\./,
       persistent: true
@@ -50,21 +48,21 @@ class LocalGit extends Component<Props> {
   };
 
   selectFolder = () => {
-    const {fetchLocalBranches} = this.props;
+    const { fetchLocalBranches } = this.props;
     dialog.showOpenDialog(
       {
         title: 'Select a folder',
         properties: ['openDirectory']
       },
       async folderPath => {
-        console.log(folderPath)
+        console.log(folderPath);
         await fs.readdir(`${folderPath}/.git/refs/heads`, (err, files) => {
           const branches = [];
           files.forEach(file => {
             branches.push(file);
           });
           this.setState({ branches });
-          fetchLocalBranches(branches)
+          fetchLocalBranches(branches);
         });
         this.setState({ folderPath });
         this.watch();
@@ -103,18 +101,25 @@ class LocalGit extends Component<Props> {
     });
   };
 
+  changedFiles = async () => {
+    git(this.state.folderPath[0]).diffSummary((err, data) => {
+      console.log('DATA', data);
+    });
+  };
+
   commit = async () => {
     git(this.state.folderPath[0]).commit('cool');
   };
 
   listRemote = () => {
-    git(this.state.folderPath[0]).listRemote(['--get-url'], (err, data) => {
+    const chosenDirectory = this.state.folderPath[0];
+    git(chosenDirectory).listRemote(['--get-url'], (err, data) => {
       if (!err) {
-          console.log('Remote url for repository at ' + __dirname + ':');
-          console.log(data);
+        console.log(`Remote url for repository at ${chosenDirectory}:`);
+        console.log(data);
       }
-  });
-  }
+    });
+  };
 
   render() {
     const { folderPath } = this.state;
@@ -133,6 +138,7 @@ class LocalGit extends Component<Props> {
         </Button>
         <Button onClick={this.addChanges}>Add</Button>
         <Button onClick={this.commit}>Commit</Button>
+
         <div className="text">
           {this.state.commits.map(commit => (
             <div key={commit.hash} className="text">
@@ -140,15 +146,19 @@ class LocalGit extends Component<Props> {
             </div>
           ))}
         </div>
+        <Button onClick={this.changedFiles}>Changed Files</Button>
         <ul>{this.state.changedFiles.map(file => <li>{file}</li>)}</ul>
       </div>
     );
   }
 }
 
-export default connect(null, {
-  fetchLocalBranches,
-})(LocalGit)
+export default connect(
+  null,
+  {
+    fetchLocalBranches
+  }
+)(LocalGit);
 
 // await fs.readFile(
 //   `${this.state.folderPath}/.git/refs/heads/${branch}`,
