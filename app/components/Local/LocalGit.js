@@ -6,12 +6,15 @@ import { Button } from 'react-desktop/macOs';
 import ContentWrapper from '../UI/ContentWrapper';
 import CommitsList from '../Commits/CommitsList';
 import SelectedCommit from '../Commits/SelectedCommit';
+import Header from '../UI/Header';
 import Column from '../UI/Column';
 import git from 'simple-git';
 import Aside from '../Nav/Aside/Aside.js';
-import chokidar from 'chokidar';
+// import chokidar from 'chokidar';
 import { fetchLocalBranches } from '../../reducers/localBranches';
 import { selectLocalRepo } from '../../reducers/localRepo';
+import SplitPane from 'react-split-pane';
+import _ from 'lodash';
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -33,20 +36,27 @@ class LocalGit extends Component<Props> {
     commits: [],
     branch: '',
     changedFiles: [],
-    changedFilesLock: []
+    modified: [],
+    staged: [],
+    commitMessage: '',
+    added: false
   };
 
-  watch = () => {
-    const watcher = chokidar.watch(this.props.selectedRepo, {
-      ignored: /[\/\\]\./,
-      persistent: true
-    });
-
-    watcher.on('change', path => {
-      this.setState({ changedFiles: [...this.state.changedFiles, path] });
-      console.log(`${path} file has been changed`);
-    });
+  componentDidMount = () => {
+    this.changedFiles();
   };
+
+  // watch = () => {
+  //   const watcher = chokidar.watch(this.props.selectedRepo, {
+  //     ignored: /[\/\\]\./,
+  //     persistent: true
+  //   });
+
+  //   watcher.on('change', path => {
+  //     this.setState({ changedFiles: [...this.state.changedFiles, path] });
+  //     console.log(`${path} file has been changed`);
+  //   });
+  // };
 
   selectFolder = () => {
     const { fetchLocalBranches, selectLocalRepo } = this.props;
@@ -66,7 +76,8 @@ class LocalGit extends Component<Props> {
           fetchLocalBranches(branches);
         });
         selectLocalRepo(folderPath[0]);
-        this.watch();
+        this.changedFiles();
+        // this.watch();
       }
     );
   };
@@ -98,19 +109,22 @@ class LocalGit extends Component<Props> {
 
   addChanges = async () => {
     git(this.props.selectedRepo).add('./*', el => {
-      console.log(el);
+      this.setState({ added: true });
+      this.changedFiles();
     });
   };
 
   changedFiles = async () => {
-    git(this.props.selectedRepo).diffSummary((err, data) => {
-      console.log(data);
-      this.setState({ changedFilesLock: data.files });
+    // if (this.props.selectedRepo) {
+    git(this.props.selectedRepo).status((err, data) => {
+      console.log(data.modified, data.staged);
+      this.setState({ modified: data.modified, staged: data.staged });
     });
+    // }
   };
 
-  commit = async () => {
-    git(this.props.selectedRepo).commit('cool');
+  commit = async msg => {
+    git(this.props.selectedRepo).commit(msg);
   };
 
   listRemote = () => {
@@ -123,44 +137,98 @@ class LocalGit extends Component<Props> {
     });
   };
 
+  handleChange = evt => {
+    this.setState({ commitMessage: evt.target.value });
+  };
+
+  commitChange = async evt => {
+    evt.preventDefault();
+    this.commit(this.state.commitMessage);
+    this.setState({ modified: [], staged: [], commitMessage: '' });
+  };
+
   render() {
     const { folderPath } = this.state;
     // const watcher = chokidar.watch(`${this.state.folderPath}/.git/objects`, {
     //   persistent: true
     // });
-
-    console.log(this.props);
-
+    console.log(this.state);
     return (
-      <div>
-        <div id="drag">Drop Project Here</div>
-        <Button color="blue" onClick={this.selectFolder}>
-          Select folder
-        </Button>
-        <Button color="blue" onClick={this.listRemote}>
-          List remote
-        </Button>
-        <Button onClick={this.addChanges}>Add</Button>
-        <Button onClick={this.commit}>Commit</Button>
-
-        <div className="text">
-          {this.state.commits.map(commit => (
-            <div key={commit.hash} className="text">
-              {commit.subject}
+      <ContentWrapper>
+        <Column className="right">
+          <Header>Hello</Header>
+          <Button color="blue" onClick={this.selectFolder}>
+            Select folder
+          </Button>
+          <form onSubmit={this.commitChange}>
+            <div>
+              <label htmlFor="msg">Message:</label>
+              <input
+                type="text"
+                name="msg"
+                onChange={this.handleChange}
+                value={this.state.commitMessage}
+              />
             </div>
-          ))}
-        </div>
-        <Button onClick={this.changedFiles}>Changed Files</Button>
-        {this.state.changedFilesLock ? (
+
+            {this.state.added ? <div>Files have been Staged</div> : null}
+            <Button onClick={this.addChanges}>Stage Changes</Button>
+            <Button type="submit">Commit</Button>
+          </form>
+          <h3>Modified Files</h3>
           <ul>
-            {this.state.changedFilesLock.map(file => (
-              <li key={file.file} className="text">
-                {file.file}
+            {this.state.modified.map(file => {
+              if (!this.state.staged.includes(file)) {
+                return (
+                  <li key={file} className="text">
+                    {file}
+                  </li>
+                );
+              }
+            })}
+          </ul>
+          <h3>Staged</h3>
+          <ul>
+            {this.state.staged.map(file => (
+              <li key={file} className="text">
+                {file}
               </li>
             ))}
           </ul>
-        ) : null}
-      </div>
+          <ul />
+        </Column>
+        <Column className="left">Hello</Column>
+      </ContentWrapper>
+
+      // <div>
+      //   <div id="drag">Drop Project Here</div>
+      //   <Button color="blue" onClick={this.selectFolder}>
+      //     Select folder
+      //   </Button>
+      //   <Button color="blue" onClick={this.listRemote}>
+      //     List remote
+      //   </Button>
+      //   <Button onClick={this.addChanges}>Add</Button>
+      //   <Button onClick={this.commit}>Commit</Button>
+
+      //   <div className="text">
+      //     {this.state.commits.map(commit => (
+      //       <div key={commit.hash} className="text">
+      //         {commit.subject}
+      //       </div>
+      //     ))}
+      //   </div>
+      //   <Button onClick={this.changedFiles}>Changed Files</Button>
+      //   {this.state.modified ? (
+      //     <ul>
+      //       {this.state.modified.map(file => (
+      //         <li key={file.file} className="text">
+      //           {file.file}
+      //         </li>
+      //       ))}
+      //     </ul>
+      //   ) : null}
+      // </div>
     );
   }
 }
