@@ -60,7 +60,7 @@ class CommitTree extends Component {
     // } = this.props
     let url = `https://api.github.com/repos/${this.props.userName}/${
       this.props.repo
-    }/git/trees/${sha}?recursive=1&access_token=${githubToken}`;
+    }/git/trees/${sha}?recursive=1&access_token=${this.state.githubToken}`;
     // if (githubToken) url += `&access_token=${githubToken}`
     return axios
       .get(url)
@@ -72,7 +72,8 @@ class CommitTree extends Component {
     // const {
     //   user: { githubToken }
     // } = this.props
-    if (githubToken) url += `?access_token=${githubToken}`;
+    if (this.state.githubToken)
+      url += `?access_token=${this.state.githubToken}`;
     return axios
       .get(url)
       .then(res => res.data.content)
