@@ -1,6 +1,7 @@
 const SELECT_LOCAL_REPO = 'SELECT_LOCAL_REPO';
 
 export const selectLocalRepo = dir => dispatch => {
+  console.log(dir);
   dispatch({
     type: SELECT_LOCAL_REPO,
     payload: dir
