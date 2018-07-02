@@ -15,6 +15,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "chokidar": "^2.0.4",
     "firebase": "^5.1.0"
   }
 }

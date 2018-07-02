@@ -5,11 +5,19 @@ import { setSelectedBranch } from '../../../reducers/selectedBranch';
 import { fetchBranchCommits } from '../../../reducers/branchCommits';
 import { connect } from 'react-redux';
 import { fetchMasterCommits } from '../../../reducers/masterCommits';
+import { setIsLocal } from '../../../reducers/isLocal';
+import { fetchOpenBranches } from '../../../reducers/openBranches';
 
 class NavItem extends React.Component {
   handleClick = () => {
+    if (this.props.isLocalRepo) {
+      this.props.setIsLocal(true)
+      this.props.fetchOpenBranches(this.props.currentUser, this.props.name, localStorage.getItem('token') )
+    }
     if (this.props.isRepo) {
       // this.props.setSelectedRepo(this.props.name);
+      this.props.setIsLocal(false)
+
     } else if (this.props.isBranch) {
       const token = localStorage.getItem('token');
       this.props.setSelectedBranch(this.props.branch);
@@ -56,5 +64,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { setSelectedRepo, setSelectedBranch, fetchBranchCommits, fetchMasterCommits }
+  { setSelectedRepo, setSelectedBranch, fetchBranchCommits, fetchMasterCommits, setIsLocal, fetchOpenBranches }
 )(NavItem);
