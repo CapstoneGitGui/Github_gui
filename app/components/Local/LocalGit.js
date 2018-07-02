@@ -14,6 +14,7 @@ import chokidar from 'chokidar';
 import { fetchLocalBranches } from '../../reducers/localBranches';
 import { selectLocalRepo } from '../../reducers/localRepo';
 import SplitPane from 'react-split-pane';
+import _ from 'lodash';
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -73,6 +74,7 @@ class LocalGit extends Component<Props> {
           fetchLocalBranches(branches);
         });
         selectLocalRepo(folderPath[0]);
+        this.changedFiles();
         this.watch();
       }
     );
@@ -110,10 +112,12 @@ class LocalGit extends Component<Props> {
   };
 
   changedFiles = async () => {
-    git(this.props.selectedRepo).diffSummary((err, data) => {
-      console.log(data);
-      this.setState({ changedFilesLock: data.files });
-    });
+    if (this.props.selectedRepo) {
+      git(this.props.selectedRepo).diffSummary((err, data) => {
+        console.log(data);
+        this.setState({ changedFilesLock: data.files });
+      });
+    }
   };
 
   commit = async msg => {
@@ -167,7 +171,9 @@ class LocalGit extends Component<Props> {
                 onChange={this.handleChange}
               />
             </div>
-            <Button onClick={this.changedFiles}>Changed Files</Button>
+            {this.props.selectedRepo ? (
+              <Button onClick={this.changedFiles}>Changed Files</Button>
+            ) : null}
             <Button onClick={this.addChanges}>Stage Changes</Button>
             <Button type="submit">Commit</Button>
           </form>

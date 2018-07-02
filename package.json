@@ -216,6 +216,7 @@
     "font-awesome": "^4.7.0",
     "gitlog": "^3.1.2",
     "history": "^4.7.2",
+    "lodash": "^4.17.10",
     "marked": "^0.4.0",
     "morgan": "^1.9.0",
     "passport": "^0.4.0",
