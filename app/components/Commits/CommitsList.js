@@ -43,14 +43,15 @@ class CommitsList extends React.Component {
     return (
       <div className="commits-inner">
         {output.output.map(commit => {
+          console.log('yo yo yo', commit.commit.author.name);
           return (
             <Commit
               key={commit.sha}
               sha={commit.sha}
-              name={commit.committer.login}
+              name={commit.commit.author.name}
               message={commit.commit.message}
               date={commit.commit.committer.date}
-              avatar={commit.author.avatar_url}
+              avatar={commit.author && commit.author.avatar_url}
               commit={commit}
             />
           );
@@ -88,10 +89,9 @@ const mapStateToProps = state => ({
   closedBranches: state.closedBranches,
 });
 
-
 export default connect(mapStateToProps)(CommitsList);
 
-const renderMasterCommits = (masterCommits) => {
+const renderMasterCommits = masterCommits => {
   return (
     <div>
       <div
@@ -106,15 +106,14 @@ const renderMasterCommits = (masterCommits) => {
           <Commit
             key={commit.sha}
             sha={commit.sha}
-            name={commit.committer.login}
+            name={commit.commit.author.name}
             message={commit.commit.message}
             date={commit.commit.committer.date}
-            avatar={commit.author.avatar_url}
+            avatar={commit.author && commit.author.avatar_url}
             commit={commit}
           />
         );
       })}
     </div>
   );
-}
-
+};
