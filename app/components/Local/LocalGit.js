@@ -36,7 +36,8 @@ class LocalGit extends Component<Props> {
     commits: [],
     branch: '',
     changedFiles: [],
-    changedFilesLock: [],
+    modified: [],
+    staged: [],
     commitMessage: '',
     added: false
   };
@@ -113,16 +114,17 @@ class LocalGit extends Component<Props> {
   };
 
   changedFiles = async () => {
-    if (this.props.selectedRepo) {
-      git(this.props.selectedRepo).diffSummary((err, data) => {
-        console.log(data);
-        this.setState({ changedFilesLock: data.files });
-      });
-    }
+    // if (this.props.selectedRepo) {
+    git(this.props.selectedRepo).status((err, data) => {
+      console.log(data.modified, data.staged);
+      this.setState({ modified: data.modified, staged: data.staged });
+    });
+    // }
   };
 
   commit = async msg => {
     git(this.props.selectedRepo).commit(msg);
+    this.setState({ modified: [] });
   };
 
   listRemote = () => {
@@ -149,7 +151,7 @@ class LocalGit extends Component<Props> {
     // const watcher = chokidar.watch(`${this.state.folderPath}/.git/objects`, {
     //   persistent: true
     // });
-
+    console.log(this.state);
     return (
       <ContentWrapper>
         <Column className="right">
@@ -175,15 +177,14 @@ class LocalGit extends Component<Props> {
             <Button onClick={this.addChanges}>Stage Changes</Button>
             <Button type="submit">Commit</Button>
           </form>
-          {this.state.changedFilesLock ? (
-            <ul>
-              {this.state.changedFilesLock.map(file => (
-                <li key={file.file} className="text">
-                  {file.file}
-                </li>
-              ))}
-            </ul>
-          ) : null}
+
+          <ul>
+            {this.state.modified.map(file => (
+              <li key={file} className="text">
+                {file}
+              </li>
+            ))}
+          </ul>
         </Column>
         <Column className="left">Hello</Column>
       </ContentWrapper>
@@ -207,9 +208,9 @@ class LocalGit extends Component<Props> {
       //     ))}
       //   </div>
       //   <Button onClick={this.changedFiles}>Changed Files</Button>
-      //   {this.state.changedFilesLock ? (
+      //   {this.state.modified ? (
       //     <ul>
-      //       {this.state.changedFilesLock.map(file => (
+      //       {this.state.modified.map(file => (
       //         <li key={file.file} className="text">
       //           {file.file}
       //         </li>
