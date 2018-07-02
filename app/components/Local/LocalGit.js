@@ -37,7 +37,8 @@ class LocalGit extends Component<Props> {
     branch: '',
     changedFiles: [],
     changedFilesLock: [],
-    commitMessage: ''
+    commitMessage: '',
+    added: false
   };
 
   componentDidMount = () => {
@@ -107,7 +108,7 @@ class LocalGit extends Component<Props> {
 
   addChanges = async () => {
     git(this.props.selectedRepo).add('./*', el => {
-      console.log(el);
+      this.setState({ added: true });
     });
   };
 
@@ -149,8 +150,6 @@ class LocalGit extends Component<Props> {
     //   persistent: true
     // });
 
-    console.log(this.props);
-
     return (
       <ContentWrapper>
         <Column className="right">
@@ -171,9 +170,8 @@ class LocalGit extends Component<Props> {
                 onChange={this.handleChange}
               />
             </div>
-            {this.props.selectedRepo ? (
-              <Button onClick={this.changedFiles}>Changed Files</Button>
-            ) : null}
+
+            {this.state.added ? <div>Files have been Staged</div> : null}
             <Button onClick={this.addChanges}>Stage Changes</Button>
             <Button type="submit">Commit</Button>
           </form>
