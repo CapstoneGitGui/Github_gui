@@ -43,7 +43,6 @@ class CommitsList extends React.Component {
     return (
       <div className="commits-inner">
         {output.output.map(commit => {
-          console.log('yo yo yo', commit.commit.author.name);
           return (
             <Commit
               key={commit.sha}
