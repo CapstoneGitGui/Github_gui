@@ -11,6 +11,7 @@ import git from 'simple-git';
 import Aside from '../Nav/Aside/Aside.js';
 import chokidar from 'chokidar';
 import { fetchLocalBranches } from '../../reducers/localBranches';
+import { selectLocalRepo } from '../../reducers/localRepo';
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -65,7 +66,7 @@ class LocalGit extends Component<Props> {
           this.setState({ branches });
           fetchLocalBranches(branches);
         });
-        this.setState({ folderPath });
+        selectLocalRepo(folderPath[0]);
         this.watch();
       }
     );
@@ -161,11 +162,15 @@ class LocalGit extends Component<Props> {
   }
 }
 
+const mapSTP = state => ({
+  selectedRepo: state.selectedRepo
+});
+
+const mapDTP = { fetchLocalBranches, selectLocalRepo };
+
 export default connect(
-  null,
-  {
-    fetchLocalBranches
-  }
+  mapSTP,
+  mapDTP
 )(LocalGit);
 
 // await fs.readFile(

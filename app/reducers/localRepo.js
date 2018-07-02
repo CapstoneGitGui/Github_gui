@@ -1,17 +1,17 @@
-const FETCH_LOCAL_BRANCHES = 'FETCH_LOCAL_BRANCHES';
+const SELECT_LOCAL_REPO = 'SELECT_LOCAL_REPO';
 
-export const fetchLocalBranches = branches => dispatch => {
-    dispatch({
-      type: FETCH_LOCAL_BRANCHES,
-      payload: branches
-    });
-  };
+export const selectLocalRepo = dir => dispatch => {
+  dispatch({
+    type: SELECT_LOCAL_REPO,
+    payload: dir
+  });
+};
 
-const initialState = [];
+const initialState = '';
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_LOCAL_BRANCHES:
+    case SELECT_LOCAL_REPO:
       return action.payload;
     default:
       return state;
