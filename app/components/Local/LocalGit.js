@@ -110,6 +110,7 @@ class LocalGit extends Component<Props> {
   addChanges = async () => {
     git(this.props.selectedRepo).add('./*', el => {
       this.setState({ added: true });
+      this.changedFiles();
     });
   };
 
