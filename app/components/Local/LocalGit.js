@@ -10,7 +10,7 @@ import Header from '../UI/Header';
 import Column from '../UI/Column';
 import git from 'simple-git';
 import Aside from '../Nav/Aside/Aside.js';
-import chokidar from 'chokidar';
+// import chokidar from 'chokidar';
 import { fetchLocalBranches } from '../../reducers/localBranches';
 import { selectLocalRepo } from '../../reducers/localRepo';
 import SplitPane from 'react-split-pane';
@@ -46,17 +46,17 @@ class LocalGit extends Component<Props> {
     this.changedFiles();
   };
 
-  watch = () => {
-    const watcher = chokidar.watch(this.props.selectedRepo, {
-      ignored: /[\/\\]\./,
-      persistent: true
-    });
+  // watch = () => {
+  //   const watcher = chokidar.watch(this.props.selectedRepo, {
+  //     ignored: /[\/\\]\./,
+  //     persistent: true
+  //   });
 
-    watcher.on('change', path => {
-      this.setState({ changedFiles: [...this.state.changedFiles, path] });
-      console.log(`${path} file has been changed`);
-    });
-  };
+  //   watcher.on('change', path => {
+  //     this.setState({ changedFiles: [...this.state.changedFiles, path] });
+  //     console.log(`${path} file has been changed`);
+  //   });
+  // };
 
   selectFolder = () => {
     const { fetchLocalBranches, selectLocalRepo } = this.props;
@@ -77,7 +77,7 @@ class LocalGit extends Component<Props> {
         });
         selectLocalRepo(folderPath[0]);
         this.changedFiles();
-        this.watch();
+        // this.watch();
       }
     );
   };
@@ -125,7 +125,6 @@ class LocalGit extends Component<Props> {
 
   commit = async msg => {
     git(this.props.selectedRepo).commit(msg);
-    this.setState({ modified: [] });
   };
 
   listRemote = () => {
@@ -145,6 +144,7 @@ class LocalGit extends Component<Props> {
   commitChange = async evt => {
     evt.preventDefault();
     this.commit(this.state.commitMessage);
+    this.setState({ modified: [], staged: [], commitMessage: '' });
   };
 
   render() {
@@ -160,17 +160,14 @@ class LocalGit extends Component<Props> {
           <Button color="blue" onClick={this.selectFolder}>
             Select folder
           </Button>
-          <form
-            action="/my-handling-form-page"
-            method="post"
-            onSubmit={this.commitChange}
-          >
+          <form onSubmit={this.commitChange}>
             <div>
               <label htmlFor="msg">Message:</label>
-              <textarea
-                id="msg"
-                name="user_message"
+              <input
+                type="text"
+                name="msg"
                 onChange={this.handleChange}
+                value={this.state.commitMessage}
               />
             </div>
 
