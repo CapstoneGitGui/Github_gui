@@ -263,3 +263,7 @@ XCode style (c) Angel Garcia <angelgarcia.mail@gmail.com>
   overflow-y: auto;
   max-height: 900px;
 }
+
+button {
+  cursor: pointer !important;
+}

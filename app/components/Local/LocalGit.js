@@ -116,6 +116,12 @@ class LocalGit extends Component<Props> {
   });
   }
 
+  diff = () => {
+    git(this.state.folderPath[0]).diffSummary(((err, data) => {
+      console.log(data)
+    }))
+  }
+
   render() {
     const { folderPath } = this.state;
     // const watcher = chokidar.watch(`${this.state.folderPath}/.git/objects`, {
@@ -130,6 +136,9 @@ class LocalGit extends Component<Props> {
         </Button>
         <Button color="blue" onClick={this.listRemote}>
           List remote
+        </Button>
+        <Button color="blue" onClick={this.diff}>
+          Diff
         </Button>
         <Button onClick={this.addChanges}>Add</Button>
         <Button onClick={this.commit}>Commit</Button>
