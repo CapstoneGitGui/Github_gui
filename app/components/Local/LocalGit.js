@@ -177,14 +177,27 @@ class LocalGit extends Component<Props> {
             <Button onClick={this.addChanges}>Stage Changes</Button>
             <Button type="submit">Commit</Button>
           </form>
-
+          <h3>Modified Files</h3>
           <ul>
-            {this.state.modified.map(file => (
+            {this.state.modified.map(file => {
+              if (!this.state.staged.includes(file)) {
+                return (
+                  <li key={file} className="text">
+                    {file}
+                  </li>
+                );
+              }
+            })}
+          </ul>
+          <h3>Staged</h3>
+          <ul>
+            {this.state.staged.map(file => (
               <li key={file} className="text">
                 {file}
               </li>
             ))}
           </ul>
+          <ul />
         </Column>
         <Column className="left">Hello</Column>
       </ContentWrapper>
