@@ -1,8 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Commit from './Commit';
+import SmoothCollapse from 'react-smooth-collapse';
 
 class CommitsList extends React.Component {
+  state = {
+    expanded: false,
+  };
+
   renderCommits() {
     let isMaster = false;
     const output = { output: [], master: [] };
@@ -25,7 +30,6 @@ class CommitsList extends React.Component {
     if (this.isClosedBranch()) {
       output.output = branchCommits;
     }
-
     // return output.map(commit => {
     //   return (
     //     <Commit
@@ -58,7 +62,7 @@ class CommitsList extends React.Component {
 
         {isMaster || this.isClosedBranch()
           ? null
-          : renderMasterCommits(output.master)}
+          : this.renderMasterCommits(output.master)}
       </div>
     );
   }
@@ -74,6 +78,42 @@ class CommitsList extends React.Component {
       }
     }
   }
+  toggle = () => {
+    this.setState({
+      expanded: !this.state.expanded,
+    });
+  };
+
+  renderMasterCommits = masterCommits => {
+    return (
+      <div>
+        <div
+          style={{
+            color: 'black',
+          }}
+          onClick={this.toggle}
+          className="patch-toggle"
+        >
+          Shared History with Master
+        </div>
+        <SmoothCollapse expanded={this.state.expanded}>
+          {masterCommits.map(commit => {
+            return (
+              <Commit
+                key={commit.sha}
+                sha={commit.sha}
+                name={commit.commit.author.name}
+                message={commit.commit.message}
+                date={commit.commit.committer.date}
+                avatar={commit.author && commit.author.avatar_url}
+                commit={commit}
+              />
+            );
+          })}
+        </SmoothCollapse>
+      </div>
+    );
+  };
 
   render() {
     return <div className="commits">{this.renderCommits()}</div>;
@@ -89,30 +129,3 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps)(CommitsList);
-
-const renderMasterCommits = masterCommits => {
-  return (
-    <div>
-      <div
-        style={{
-          color: 'black',
-        }}
-      >
-        Master
-      </div>
-      {masterCommits.map(commit => {
-        return (
-          <Commit
-            key={commit.sha}
-            sha={commit.sha}
-            name={commit.commit.author.name}
-            message={commit.commit.message}
-            date={commit.commit.committer.date}
-            avatar={commit.author && commit.author.avatar_url}
-            commit={commit}
-          />
-        );
-      })}
-    </div>
-  );
-};
