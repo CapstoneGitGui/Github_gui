@@ -19,6 +19,7 @@ import File from './File';
 import ModifiedFiles from './ModifiedFiles';
 import StagedFiles from './StagedFiles';
 import SyntaxHighlighter from 'react-syntax-highlighter/prism';
+import Highlight from 'react-highlight';
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -190,22 +191,15 @@ class LocalGit extends Component<Props> {
         <Column className="right">
           <Header>Hello</Header>
           {this.renderForm()}
-          <ModifiedFiles modified={modified} staged={staged} />
+          <ModifiedFiles
+            diffView={this.diffView}
+            modified={modified}
+            staged={staged}
+          />
           <StagedFiles diffView={this.diffView} staged={staged} />
         </Column>
         <Column className="left">
-          <SyntaxHighlighter
-            // language={language}
-            // showLineNumbers={this.state.lineNumbers}
-            // style={this.state.currentStyle.style}
-            customStyle={{
-              margin: '0',
-              borderRadius: '0.5em',
-              border: '1px solid whitesmoke'
-            }}
-          >
-            {this.state.diff}
-          </SyntaxHighlighter>
+          <Highlight className="diff">{this.state.diff}</Highlight>
         </Column>
       </ContentWrapper>
     );
