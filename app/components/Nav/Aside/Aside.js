@@ -55,10 +55,12 @@ class Aside extends React.Component {
   }
 
   renderClosedBranches() {
+    const { selectedRepo } = this.props;
+
     return this.props.closedBranches.map(branch => (
       <NavItem
         key={branch.number}
-        path={`/repos/${this.props.selectedRepo}/branches/${branch.name}`}
+        path={`/repos/${selectedRepo}/branches/${branch.name}`}
         name={branch.head.ref}
         isBranch
         branch={branch}
@@ -67,8 +69,16 @@ class Aside extends React.Component {
   }
 
   renderLocalBranches() {
-    return this.props.localBranches.map((branch, index) => (
-      <NavItem key={index} path="/localBranch" name={branch} isBranc />
+    const { selectedRepo, localBranches } = this.props;
+
+    return localBranches.map((branch, index) => (
+      <NavItem 
+        key={index} 
+        path={`/repos/${selectedRepo}/branches/${branch.name}`}
+        name={branch} 
+        isBranch
+        branch={branch}
+      />
     ));
   }
 

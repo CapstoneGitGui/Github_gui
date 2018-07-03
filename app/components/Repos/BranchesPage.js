@@ -5,6 +5,7 @@ import ContentWrapper from '../UI/ContentWrapper';
 import Header from '../UI/Header';
 import CommitsList from '../Commits/CommitsList'
 import SelectedCommit from '../Commits/SelectedCommit'
+import SplitPane from 'react-split-pane'
 
 class BranchesPage extends React.Component {
   renderCommit () {
