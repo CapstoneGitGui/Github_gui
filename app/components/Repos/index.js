@@ -7,6 +7,7 @@ import electron from 'electron'
 import fs from 'fs'
 import { fetchLocalBranches } from '../../reducers/localBranches';
 import { selectLocalRepo } from '../../reducers/localRepo';
+import {setIsLocal} from '../../reducers/isLocal'
 
 const {dialog} = electron.remote
 
@@ -75,6 +76,7 @@ class RepoList extends Component {
           fetchLocalBranches(branches);
         });
         selectLocalRepo(folderPath[0]);
+        this.props.setIsLocal(true)
       }
     );
   };
@@ -120,5 +122,6 @@ export default connect(
     addRepo,
     selectLocalRepo,
     fetchLocalBranches,
+    setIsLocal,
   }
 )(RepoList);
