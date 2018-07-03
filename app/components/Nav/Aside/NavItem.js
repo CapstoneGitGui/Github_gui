@@ -13,7 +13,7 @@ const token = localStorage.getItem('token')
 
 class NavItem extends React.Component {
   handleClick = () => {
-    const { 
+    const {
       isLocalRepo,
       currentUser,
       name,
@@ -31,7 +31,7 @@ class NavItem extends React.Component {
       this.props.setIsLocal(false)
 
     } else if (isBranch) {
-      this.props.fetchLocalCommits(this.props.branch, this.props.localRepo)
+      // this.props.fetchLocalCommits(this.props.branch, this.props.localRepo)
       this.props.setSelectedBranch(this.props.branch);
       this.props.fetchBranchCommits(
         token,
@@ -78,12 +78,12 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { 
-    setSelectedRepo, 
-    setSelectedBranch, 
-    fetchBranchCommits, 
-    fetchMasterCommits, 
-    setIsLocal, 
+  {
+    setSelectedRepo,
+    setSelectedBranch,
+    fetchBranchCommits,
+    fetchMasterCommits,
+    setIsLocal,
     fetchOpenBranches,
     fetchLocalCommits,
   }

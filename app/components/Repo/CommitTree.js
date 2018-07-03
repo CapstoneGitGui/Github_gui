@@ -8,6 +8,7 @@ import './Repo.css';
 import Tree from '../Tree/Tree';
 import RenderedContent from './RenderedContent';
 import getFileType from './filename';
+import git from 'simple-git';
 
 class CommitTree extends Component {
   constructor(props) {
@@ -31,6 +32,8 @@ class CommitTree extends Component {
   }
 
   componentDidMount() {
+
+    git(this.props.selectedRepo).catFile([])
     this.getTree(this.props.sha).then(commitTree => this.parseTree(commitTree));
 
     this.setState({
@@ -87,7 +90,7 @@ class CommitTree extends Component {
       toggled: 'true',
       children: [],
     };
-    console.log(commitTree.tree);
+    console.log(commitTree);
     // first place all folders in right spot
     commitTree.tree.filter(node => node.type === 'tree').forEach(node => {
       let splitpath = node.path.replace(/^\/|\/$/g, '').split('/');
