@@ -177,53 +177,17 @@ class LocalGit extends Component<Props> {
 
   render() {
     const { folderPath, staged, modified } = this.state;
-    // const watcher = chokidar.watch(`${this.state.folderPath}/.git/objects`, {
-    //   persistent: true
-    // });
 
     return (
       <ContentWrapper>
         <Column className="right">
           <Header>Hello</Header>
-          <Button color="blue" onClick={this.selectFolder}>
-            Select folder
-          </Button>
           {this.renderForm()}
           <ModifiedFiles modified={modified} staged={staged} />
           <StagedFiles staged={staged} />
         </Column>
         <Column className="left">Hello</Column>
       </ContentWrapper>
-
-      // <div>
-      //   <div id="drag">Drop Project Here</div>
-      //   <Button color="blue" onClick={this.selectFolder}>
-      //     Select folder
-      //   </Button>
-      //   <Button color="blue" onClick={this.listRemote}>
-      //     List remote
-      //   </Button>
-      //   <Button onClick={this.addChanges}>Add</Button>
-      //   <Button onClick={this.commit}>Commit</Button>
-
-      //   <div className="text">
-      //     {this.state.commits.map(commit => (
-      //       <div key={commit.hash} className="text">
-      //         {commit.subject}
-      //       </div>
-      //     ))}
-      //   </div>
-      //   <Button onClick={this.changedFiles}>Changed Files</Button>
-      //   {this.state.modified ? (
-      //     <ul>
-      //       {this.state.modified.map(file => (
-      //         <li key={file.file} className="text">
-      //           {file.file}
-      //         </li>
-      //       ))}
-      //     </ul>
-      //   ) : null}
-      // </div>
     );
   }
 }
@@ -239,44 +203,3 @@ export default connect(
     fetchLocalBranches
   }
 )(LocalGit);
-
-// await fs.readFile(
-//   `${this.state.folderPath}/.git/refs/heads/${branch}`,
-//   async (err, file) => {
-//     if (err) throw err;
-//     const fileSHA = file.toString().slice(2, -1);
-//     const fileSUB = file.toString().slice(0, 2);
-//     await fs.readFile(
-//       `${this.state.folderPath}/.git/objects/${fileSUB}/${fileSHA}`,
-//       (err, file) => {
-//         if (err) throw err;
-//         const buffer = Buffer.from(file, 'base64');
-//         zlib.unzip(buffer, (err, buffer) => {
-//           if (!err) {
-//             const leadCommit = buffer.toString().split(' ');
-//             console.log(leadCommit);
-//             this.viewCommits(leadCommit);
-//           } else {
-//             console.log(err);
-//           }
-//         });
-//       }
-//     );
-//   }
-// );
-
-// dialog.showOpenDialog(
-//   {
-//     title: 'Select a folder',
-//     properties: ['openDirectory']
-//   },
-//   folderPaths => {
-//     // folderPaths is an array that contains all the selected paths
-//     if (fileNames === undefined) {
-//       console.log('No destination folder selected');
-//       return;
-//     } else {
-//       console.log(folderPaths);
-//     }
-//   }
-// );
