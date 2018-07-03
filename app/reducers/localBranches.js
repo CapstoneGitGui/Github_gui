@@ -1,12 +1,10 @@
 const FETCH_LOCAL_BRANCHES = 'FETCH_LOCAL_BRANCHES';
 
-export const fetchLocalBranches = (branches) => {
-  return dispatch => {
-    dispatch({
-      type: FETCH_LOCAL_BRANCHES,
-      payload: branches
-    })
-  }
+export const fetchLocalBranches = branches => dispatch => {
+  dispatch({
+    type: FETCH_LOCAL_BRANCHES,
+    payload: branches
+  });
 };
 
 const initialState = [];

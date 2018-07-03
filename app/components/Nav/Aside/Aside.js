@@ -105,7 +105,7 @@ class Aside extends React.Component {
             {this.renderClosedBranches()}
           </div>
         ) : null}
-        {this.props.localBranches ? (
+        {this.props.localBranches && this.props.isLocal ? (
           <div className={styles.menu_group}>
             <div className={styles.menu}>Local Branches</div>
             {this.renderLocalBranches()}
@@ -126,6 +126,7 @@ const mapStateToProps = state => ({
   masterCommits: state.masterCommits,
   selectedBranch: state.selectedBranch,
   localBranches: state.localBranches,
+  isLocal: state.isLocal
 });
 
 export default connect(

@@ -1,16 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { Redirect } from 'react-router';
 import { ipcRenderer } from 'electron';
-import { Button } from 'react-desktop/macOs';
+import { Button, TextInput } from 'react-desktop/macOs';
 import ContentWrapper from '../UI/ContentWrapper';
 import CommitsList from '../Commits/CommitsList';
 import SelectedCommit from '../Commits/SelectedCommit';
+import Header from '../UI/Header';
 import Column from '../UI/Column';
 import git from 'simple-git';
 import Aside from '../Nav/Aside/Aside.js';
-import chokidar from 'chokidar';
-import { fetchLocalBranches } from '../../reducers/localBranches'
+// import chokidar from 'chokidar';
+import { fetchLocalBranches } from '../../reducers/localBranches';
+import { selectLocalRepo } from '../../reducers/localRepo';
+import SplitPane from 'react-split-pane';
+import File from './File'
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -28,46 +33,52 @@ class LocalGit extends Component<Props> {
   props: Props;
 
   state = {
-    folderPath: '',
     branches: [],
     commits: [],
     branch: '',
-    changedFiles: []
+    changedFiles: [],
+    modified: [],
+    staged: [],
+    commitMessage: '',
+    added: false
   };
 
-  watch = () => {
-    console.log(typeof this.state.folderPath);
-    console.log('TTTTTTT ', this.state.folderPath);
-    const watcher = chokidar.watch(this.state.folderPath[0], {
-      ignored: /[\/\\]\./,
-      persistent: true
-    });
-
-    watcher.on('change', path => {
-      this.setState({ changedFiles: [...this.state.changedFiles, path] });
-      console.log(`${path} file has been changed`);
-    });
+  componentDidMount = () => {
+    this.changedFiles();
   };
+
+  // watch = () => {
+  //   const watcher = chokidar.watch(this.props.selectedRepo, {
+  //     ignored: /[\/\\]\./,
+  //     persistent: true
+  //   });
+
+  //   watcher.on('change', path => {
+  //     this.setState({ changedFiles: [...this.state.changedFiles, path] });
+  //     console.log(`${path} file has been changed`);
+  //   });
+  // };
 
   selectFolder = () => {
-    const {fetchLocalBranches} = this.props;
+    const { fetchLocalBranches, selectLocalRepo } = this.props;
+
     dialog.showOpenDialog(
       {
         title: 'Select a folder',
         properties: ['openDirectory']
       },
       async folderPath => {
-        console.log(folderPath)
         await fs.readdir(`${folderPath}/.git/refs/heads`, (err, files) => {
           const branches = [];
           files.forEach(file => {
             branches.push(file);
           });
           this.setState({ branches });
-          fetchLocalBranches(branches)
+          fetchLocalBranches(branches);
         });
-        this.setState({ folderPath });
-        this.watch();
+        selectLocalRepo(folderPath[0]);
+        this.changedFiles();
+        // this.watch();
       }
     );
   };
@@ -98,23 +109,44 @@ class LocalGit extends Component<Props> {
   };
 
   addChanges = async () => {
-    git(this.state.folderPath[0]).add('./*', el => {
-      console.log(el);
+    git(this.props.selectedRepo).add('./*', el => {
+      this.setState({ added: true });
+      this.changedFiles();
     });
   };
 
-  commit = async () => {
-    git(this.state.folderPath[0]).commit('cool');
+  changedFiles = async () => {
+    // if (this.props.selectedRepo) {
+    git(this.props.selectedRepo).status((err, data) => {
+      console.log(data.modified, data.staged);
+      this.setState({ modified: data.modified, staged: data.staged });
+    });
+    // }
+  };
+
+  commit = async msg => {
+    git(this.props.selectedRepo).commit(msg);
   };
 
   listRemote = () => {
-    git(this.state.folderPath[0]).listRemote(['--get-url'], (err, data) => {
+    const chosenDirectory = this.props.selectedRepo;
+    git(chosenDirectory).listRemote(['--get-url'], (err, data) => {
       if (!err) {
-          console.log('Remote url for repository at ' + __dirname + ':');
-          console.log(data);
+        console.log(`Remote url for repository at ${chosenDirectory}:`);
+        console.log(data);
       }
-  });
-  }
+    });
+  };
+
+  handleChange = evt => {
+    this.setState({ commitMessage: evt.target.value });
+  };
+
+  commitChange = async evt => {
+    evt.preventDefault();
+    this.commit(this.state.commitMessage);
+    this.setState({ modified: [], staged: [], commitMessage: '' });
+  };
 
   diff = () => {
     git(this.state.folderPath[0]).diffSummary(((err, data) => {
@@ -122,42 +154,107 @@ class LocalGit extends Component<Props> {
     }))
   }
 
+  renderForm () {
+    return (
+      <div className="commit-form">
+        <form onSubmit={this.commitChange}>
+          <div>
+            <label htmlFor="msg">Message:</label>
+            <TextInput
+              placeholder="Commit Message"
+              value={this.state.commitMessage}
+              onChange={this.handleChange}
+            />
+          </div>
+
+          {this.state.added ? <div>Files have been Staged</div> : null}
+          <div className="form-buttons">
+            <Button onClick={this.addChanges}>Stage Changes</Button>
+            <Button type="submit">Commit</Button>
+          </div>
+        </form>
+      </div>
+    )
+  }
+
   render() {
-    const { folderPath } = this.state;
+    const { folderPath, staged, modified } = this.state;
     // const watcher = chokidar.watch(`${this.state.folderPath}/.git/objects`, {
     //   persistent: true
     // });
 
     return (
-      <div>
-        <div id="drag">Drop Project Here</div>
-        <Button color="blue" onClick={this.selectFolder}>
-          Select folder
-        </Button>
-        <Button color="blue" onClick={this.listRemote}>
-          List remote
-        </Button>
-        <Button color="blue" onClick={this.diff}>
-          Diff
-        </Button>
-        <Button onClick={this.addChanges}>Add</Button>
-        <Button onClick={this.commit}>Commit</Button>
-        <div className="text">
-          {this.state.commits.map(commit => (
-            <div key={commit.hash} className="text">
-              {commit.subject}
-            </div>
-          ))}
-        </div>
-        <ul>{this.state.changedFiles.map(file => <li>{file}</li>)}</ul>
-      </div>
+      <ContentWrapper>
+        <Column className="right">
+          <Header>Hello</Header>
+          <Button color="blue" onClick={this.selectFolder}>
+            Select folder
+          </Button>
+          {this.renderForm()}
+          <div className='files-info muted'>Modified Files</div>
+          <div>
+            {modified.map((file, index) => {
+              if (!staged.includes(file)) {
+                return (
+                  <File key={index} name={file} />
+                );
+              }
+            })}
+          </div>
+          <div className='files-info muted'>Staged</div>
+          <div>
+            {staged.map((file, index) => (
+              <File key={index} name={file} />
+            ))}
+          </div>
+        </Column>
+        <Column className="left">Hello</Column>
+      </ContentWrapper>
+
+      // <div>
+      //   <div id="drag">Drop Project Here</div>
+      //   <Button color="blue" onClick={this.selectFolder}>
+      //     Select folder
+      //   </Button>
+      //   <Button color="blue" onClick={this.listRemote}>
+      //     List remote
+      //   </Button>
+      //   <Button onClick={this.addChanges}>Add</Button>
+      //   <Button onClick={this.commit}>Commit</Button>
+
+      //   <div className="text">
+      //     {this.state.commits.map(commit => (
+      //       <div key={commit.hash} className="text">
+      //         {commit.subject}
+      //       </div>
+      //     ))}
+      //   </div>
+      //   <Button onClick={this.changedFiles}>Changed Files</Button>
+      //   {this.state.modified ? (
+      //     <ul>
+      //       {this.state.modified.map(file => (
+      //         <li key={file.file} className="text">
+      //           {file.file}
+      //         </li>
+      //       ))}
+      //     </ul>
+      //   ) : null}
+      // </div>
     );
   }
 }
 
-export default connect(null, {
-  fetchLocalBranches,
-})(LocalGit)
+const mapSTP = state => ({
+  selectedRepo: state.localRepo
+});
+
+export default connect(
+  mapSTP,
+  {
+    selectLocalRepo,
+    fetchLocalBranches
+  }
+)(LocalGit);
 
 // await fs.readFile(
 //   `${this.state.folderPath}/.git/refs/heads/${branch}`,

@@ -12,7 +12,10 @@ export const fetchOpenBranches = (userName, repo, token) => {
         .then(branches => {
           dispatch({ type: FETCH_OPEN_BRANCHES, branches: branches.data });
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+          dispatch({ type: FETCH_OPEN_BRANCHES, branches: []});
+          console.log(err)
+        });
     }
   };
 };

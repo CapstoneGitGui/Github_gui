@@ -28,6 +28,21 @@ class ReposSidebar extends React.Component {
     }
   }
 
+  renderLocalRepos() {
+    const localRepoArr = this.props.localRepo.split('/');
+    console.log('yo yo yo', localRepoArr);
+    const repo = localRepoArr[localRepoArr.length - 1];
+
+    return repo.length ? (
+      <NavItem
+        key={repo}
+        path={`/repos/${repo}`}
+        name={`${repo}`}
+        isLocalRepo={true}
+      />
+    ) : null;
+  }
+
   renderRepos() {
     const { repos } = this.props;
 
@@ -47,8 +62,12 @@ class ReposSidebar extends React.Component {
     return (
       <aside className={styles.aside}>
         <div className={styles.menu_group}>
-          <div className={styles.menu}>Repos</div>
+          <div className={styles.menu}>Remote Repos</div>
           {this.renderRepos()}
+        </div>
+        <div className={styles.menu_group}>
+          <div className={styles.menu}>Local Repos</div>
+          {this.renderLocalRepos()}
         </div>
       </aside>
     );
@@ -62,6 +81,7 @@ const mapStateToProps = state => ({
   currentBranches: state.openBranches,
   closedBranches: state.closedBranches,
   branchCommits: state.branchCommits,
+  localRepo: state.localRepo,
 });
 
 export default connect(

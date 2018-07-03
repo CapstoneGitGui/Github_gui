@@ -91,6 +91,11 @@ header {
   flex-grow: 2;
 }
 
+.file {
+  padding: 5px 10px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
 .commit {
   padding: 10px;
   border-bottom: 1px solid #dcdcdc;
@@ -101,6 +106,7 @@ header {
   height: 90vh;
 }
 
+.file-header,
 .commit-header {
   display: flex;
   justify-content: space-between;
@@ -156,6 +162,23 @@ header {
   padding: 10px;
   font-size: 11px;
   border-bottom: 1px solid #dcdcdc;
+}
+
+.files-info {
+  padding: 29px 10px 10px;
+  font-size: 11px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.commit-form {
+  padding: 15px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.commit-form .form-buttons {
+  padding: 10px 0 0 0;
+  display: flex;
+  justify-content: space-between;
 }
 
 /*
