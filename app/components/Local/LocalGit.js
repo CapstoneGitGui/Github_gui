@@ -15,9 +15,10 @@ import Aside from '../Nav/Aside/Aside.js';
 import { fetchLocalBranches } from '../../reducers/localBranches';
 import { selectLocalRepo } from '../../reducers/localRepo';
 import SplitPane from 'react-split-pane';
-import File from './File'
-import ModifiedFiles from './ModifiedFiles'
-import StagedFiles from './StagedFiles'
+import File from './File';
+import ModifiedFiles from './ModifiedFiles';
+import StagedFiles from './StagedFiles';
+import SyntaxHighlighter from 'react-syntax-highlighter/prism';
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -42,7 +43,8 @@ class LocalGit extends Component<Props> {
     modified: [],
     staged: [],
     commitMessage: '',
-    added: false
+    added: false,
+    diff: ''
   };
 
   componentDidMount = () => {
@@ -118,12 +120,11 @@ class LocalGit extends Component<Props> {
   };
 
   changedFiles = async () => {
-    // if (this.props.selectedRepo) {
-    git(this.props.selectedRepo).status((err, data) => {
-      console.log(data.modified, data.staged);
-      this.setState({ modified: data.modified, staged: data.staged });
-    });
-    // }
+    if (this.props.selectedRepo) {
+      git(this.props.selectedRepo).status((err, data) => {
+        this.setState({ modified: data.modified, staged: data.staged });
+      });
+    }
   };
 
   commit = async msg => {
@@ -151,12 +152,18 @@ class LocalGit extends Component<Props> {
   };
 
   diff = () => {
-    git(this.state.folderPath[0]).diffSummary(((err, data) => {
-      console.log(data)
-    }))
-  }
+    git(this.props.selectedRepo).diffSummary((err, data) => {
+      console.log(data);
+    });
+  };
 
-  renderForm () {
+  diffView = () => {
+    git(this.props.selectedRepo).diff((err, data) => {
+      this.setState({ diff: data });
+    });
+  };
+
+  renderForm() {
     return (
       <div className="commit-form">
         <form onSubmit={this.commitChange}>
@@ -172,7 +179,7 @@ class LocalGit extends Component<Props> {
           </div>
         </form>
       </div>
-    )
+    );
   }
 
   render() {
@@ -184,9 +191,22 @@ class LocalGit extends Component<Props> {
           <Header>Hello</Header>
           {this.renderForm()}
           <ModifiedFiles modified={modified} staged={staged} />
-          <StagedFiles staged={staged} />
+          <StagedFiles diffView={this.diffView} staged={staged} />
         </Column>
-        <Column className="left">Hello</Column>
+        <Column className="left">
+          <SyntaxHighlighter
+            // language={language}
+            // showLineNumbers={this.state.lineNumbers}
+            // style={this.state.currentStyle.style}
+            customStyle={{
+              margin: '0',
+              borderRadius: '0.5em',
+              border: '1px solid whitesmoke'
+            }}
+          >
+            {this.state.diff}
+          </SyntaxHighlighter>
+        </Column>
       </ContentWrapper>
     );
   }
