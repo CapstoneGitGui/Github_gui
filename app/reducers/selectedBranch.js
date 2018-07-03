@@ -13,6 +13,10 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_BRANCH:
       return action.branch;
+    case 'RESET_REPO':
+      return initialState;
+    case 'SET_IS_LOCAL':
+      return initialState;
     default:
       return state;
   }
