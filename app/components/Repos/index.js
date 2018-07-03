@@ -2,6 +2,13 @@
 import React, { Component } from 'react';
 import { addRepo } from '../../reducers/repos';
 import { connect } from 'react-redux';
+import { Button } from 'react-desktop/macOs';
+import electron from 'electron'
+import fs from 'fs'
+import { fetchLocalBranches } from '../../reducers/localBranches';
+import { selectLocalRepo } from '../../reducers/localRepo';
+
+const {dialog} = electron.remote
 
 class RepoList extends Component {
   state = {
@@ -51,10 +58,33 @@ class RepoList extends Component {
       .catch(err => console.log(err));
   };
 
+  selectFolder = () => {
+    const { fetchLocalBranches, selectLocalRepo } = this.props;
+
+    dialog.showOpenDialog(
+      {
+        title: 'Select a folder',
+        properties: ['openDirectory']
+      },
+      async folderPath => {
+        await fs.readdir(`${folderPath}/.git/refs/heads`, (err, files) => {
+          const branches = [];
+          files.forEach(file => {
+            branches.push(file);
+          });
+          fetchLocalBranches(branches);
+        });
+        selectLocalRepo(folderPath[0]);
+      }
+    );
+  };
+
   render() {
-    console.log(this.state.value);
     return (
       <div>
+        <Button color="blue" onClick={this.selectFolder}>
+          Select folder
+        </Button>
         <form onSubmit={this.handleSubmit}>
           <input type="text" onChange={this.handleInputChange} />
           <button type="submit">Submit</button>
@@ -86,5 +116,9 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { addRepo }
+  { 
+    addRepo,
+    selectLocalRepo,
+    fetchLocalBranches,
+  }
 )(RepoList);
