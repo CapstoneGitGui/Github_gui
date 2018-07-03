@@ -95,7 +95,7 @@ class LocalGit extends Component<Props> {
 
   viewCommits = async branch => {
     const options = {
-      repo: `${this.state.folderPath}`,
+      repo: `${this.props.selectedRepo}`,
       number: 5000,
       branch,
       fields: [
@@ -158,8 +158,9 @@ class LocalGit extends Component<Props> {
     });
   };
 
-  diffView = () => {
-    git(this.props.selectedRepo).diff((err, data) => {
+  diffView = (evt, name) => {
+    console.log(evt.target);
+    git(this.props.selectedRepo).diff([name], (err, data) => {
       this.setState({ diff: data });
     });
   };
