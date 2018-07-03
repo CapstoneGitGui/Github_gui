@@ -1,25 +1,37 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
 import { setSelectedRepo } from '../../../reducers/selectedRepo';
 import { setSelectedBranch } from '../../../reducers/selectedBranch';
 import { fetchBranchCommits } from '../../../reducers/branchCommits';
-import { connect } from 'react-redux';
 import { fetchMasterCommits } from '../../../reducers/masterCommits';
 import { setIsLocal } from '../../../reducers/isLocal';
 import { fetchOpenBranches } from '../../../reducers/openBranches';
+import { fetchLocalCommits } from '../../../reducers/localCommits'
+
+const token = localStorage.getItem('token')
 
 class NavItem extends React.Component {
   handleClick = () => {
-    if (this.props.isLocalRepo) {
+    const { 
+      isLocalRepo,
+      currentUser,
+      name,
+      isRepo,
+      isBranch,
+    } = this.props;
+
+    if (isLocalRepo) {
       this.props.setIsLocal(true)
-      this.props.fetchOpenBranches(this.props.currentUser, this.props.name, localStorage.getItem('token') )
+      this.props.fetchOpenBranches(currentUser, name, token )
     }
-    if (this.props.isRepo) {
+
+    if (isRepo) {
       // this.props.setSelectedRepo(this.props.name);
       this.props.setIsLocal(false)
 
-    } else if (this.props.isBranch) {
-      const token = localStorage.getItem('token');
+    } else if (isBranch) {
+      this.props.fetchLocalCommits(this.props.branch, this.props.localRepo)
       this.props.setSelectedBranch(this.props.branch);
       this.props.fetchBranchCommits(
         token,
@@ -60,9 +72,19 @@ const mapStateToProps = state => ({
   selectedRepo: state.selectedRepo,
   openBranches: state.openBranches,
   masterCommits: state.masterCommits,
+  localRepo: state.localRepo,
+  // isLocalRepo: state.isLocal,
 });
 
 export default connect(
   mapStateToProps,
-  { setSelectedRepo, setSelectedBranch, fetchBranchCommits, fetchMasterCommits, setIsLocal, fetchOpenBranches }
+  { 
+    setSelectedRepo, 
+    setSelectedBranch, 
+    fetchBranchCommits, 
+    fetchMasterCommits, 
+    setIsLocal, 
+    fetchOpenBranches,
+    fetchLocalCommits,
+  }
 )(NavItem);
