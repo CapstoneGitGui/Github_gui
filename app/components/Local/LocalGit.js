@@ -16,6 +16,8 @@ import { fetchLocalBranches } from '../../reducers/localBranches';
 import { selectLocalRepo } from '../../reducers/localRepo';
 import SplitPane from 'react-split-pane';
 import File from './File'
+import ModifiedFiles from './ModifiedFiles'
+import StagedFiles from './StagedFiles'
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -158,15 +160,11 @@ class LocalGit extends Component<Props> {
     return (
       <div className="commit-form">
         <form onSubmit={this.commitChange}>
-          <div>
-            <label htmlFor="msg">Message:</label>
-            <TextInput
-              placeholder="Commit Message"
-              value={this.state.commitMessage}
-              onChange={this.handleChange}
-            />
-          </div>
-
+          <TextInput
+            placeholder="Commit Message"
+            value={this.state.commitMessage}
+            onChange={this.handleChange}
+          />
           {this.state.added ? <div>Files have been Staged</div> : null}
           <div className="form-buttons">
             <Button onClick={this.addChanges}>Stage Changes</Button>
@@ -191,22 +189,8 @@ class LocalGit extends Component<Props> {
             Select folder
           </Button>
           {this.renderForm()}
-          <div className='files-info muted'>Modified Files</div>
-          <div>
-            {modified.map((file, index) => {
-              if (!staged.includes(file)) {
-                return (
-                  <File key={index} name={file} />
-                );
-              }
-            })}
-          </div>
-          <div className='files-info muted'>Staged</div>
-          <div>
-            {staged.map((file, index) => (
-              <File key={index} name={file} />
-            ))}
-          </div>
+          <ModifiedFiles modified={modified} staged={staged} />
+          <StagedFiles staged={staged} />
         </Column>
         <Column className="left">Hello</Column>
       </ContentWrapper>
