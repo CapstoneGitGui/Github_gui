@@ -1,5 +1,12 @@
 import React from 'react'
-import { TitleBar, Toolbar, SearchField } from 'react-desktop/macOs';
+import { 
+  TitleBar, 
+  Toolbar, 
+  SearchField, 
+  ToolbarNav, 
+  ToolbarNavItem,
+  Button,
+} from 'react-desktop/macOs';
 
 class HeaderBar extends React.Component {
   render () {
@@ -13,6 +20,11 @@ class HeaderBar extends React.Component {
           onMaximizeClick={() => console.log('Mazimize window')}
         >
           <Toolbar height="50" horizontalAlignment="right">
+            <div>
+              <Button onClick={this.selectFolder}>
+                +
+              </Button>
+            </div>
             <SearchField
               placeholder="Search"
               defaultValue=""

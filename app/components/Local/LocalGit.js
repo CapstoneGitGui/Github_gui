@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash';
 import { Redirect } from 'react-router';
 import { ipcRenderer } from 'electron';
-import { Button } from 'react-desktop/macOs';
+import { Button, TextInput } from 'react-desktop/macOs';
 import ContentWrapper from '../UI/ContentWrapper';
 import CommitsList from '../Commits/CommitsList';
 import SelectedCommit from '../Commits/SelectedCommit';
@@ -14,7 +15,7 @@ import Aside from '../Nav/Aside/Aside.js';
 import { fetchLocalBranches } from '../../reducers/localBranches';
 import { selectLocalRepo } from '../../reducers/localRepo';
 import SplitPane from 'react-split-pane';
-import _ from 'lodash';
+import File from './File'
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
@@ -147,12 +148,41 @@ class LocalGit extends Component<Props> {
     this.setState({ modified: [], staged: [], commitMessage: '' });
   };
 
+  diff = () => {
+    git(this.state.folderPath[0]).diffSummary(((err, data) => {
+      console.log(data)
+    }))
+  }
+
+  renderForm () {
+    return (
+      <div className="commit-form">
+        <form onSubmit={this.commitChange}>
+          <div>
+            <label htmlFor="msg">Message:</label>
+            <TextInput
+              placeholder="Commit Message"
+              value={this.state.commitMessage}
+              onChange={this.handleChange}
+            />
+          </div>
+
+          {this.state.added ? <div>Files have been Staged</div> : null}
+          <div className="form-buttons">
+            <Button onClick={this.addChanges}>Stage Changes</Button>
+            <Button type="submit">Commit</Button>
+          </div>
+        </form>
+      </div>
+    )
+  }
+
   render() {
-    const { folderPath } = this.state;
+    const { folderPath, staged, modified } = this.state;
     // const watcher = chokidar.watch(`${this.state.folderPath}/.git/objects`, {
     //   persistent: true
     // });
-    console.log(this.state);
+
     return (
       <ContentWrapper>
         <Column className="right">
@@ -160,42 +190,23 @@ class LocalGit extends Component<Props> {
           <Button color="blue" onClick={this.selectFolder}>
             Select folder
           </Button>
-          <form onSubmit={this.commitChange}>
-            <div>
-              <label htmlFor="msg">Message:</label>
-              <input
-                type="text"
-                name="msg"
-                onChange={this.handleChange}
-                value={this.state.commitMessage}
-              />
-            </div>
-
-            {this.state.added ? <div>Files have been Staged</div> : null}
-            <Button onClick={this.addChanges}>Stage Changes</Button>
-            <Button type="submit">Commit</Button>
-          </form>
-          <h3>Modified Files</h3>
-          <ul>
-            {this.state.modified.map(file => {
-              if (!this.state.staged.includes(file)) {
+          {this.renderForm()}
+          <div className='files-info muted'>Modified Files</div>
+          <div>
+            {modified.map((file, index) => {
+              if (!staged.includes(file)) {
                 return (
-                  <li key={file} className="text">
-                    {file}
-                  </li>
+                  <File key={index} name={file} />
                 );
               }
             })}
-          </ul>
-          <h3>Staged</h3>
-          <ul>
-            {this.state.staged.map(file => (
-              <li key={file} className="text">
-                {file}
-              </li>
+          </div>
+          <div className='files-info muted'>Staged</div>
+          <div>
+            {staged.map((file, index) => (
+              <File key={index} name={file} />
             ))}
-          </ul>
-          <ul />
+          </div>
         </Column>
         <Column className="left">Hello</Column>
       </ContentWrapper>
