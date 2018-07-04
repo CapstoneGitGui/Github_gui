@@ -46,10 +46,15 @@ class LocalGit extends Component<Props> {
     commitMessage: '',
     added: false,
     diff: '',
-    allDiffs: []
+    allDiffs: [],
+    currentBranch: ''
   };
 
   componentDidMount = () => {
+    git(this.props.selectedRepo).branch((err, branches) => {
+      this.setState({ currentBranch: branches.current });
+    });
+
     this.changedFiles();
   };
 
@@ -160,6 +165,12 @@ class LocalGit extends Component<Props> {
     });
   };
 
+  branch = () => {
+    git(this.props.selectedRepo).branch((err, branches) => {
+      this.setState({ currentBranch: branches.current });
+    });
+  };
+
   renderForm() {
     return (
       <div className="commit-form">
@@ -169,9 +180,8 @@ class LocalGit extends Component<Props> {
             value={this.state.commitMessage}
             onChange={this.handleChange}
           />
-          {this.state.added ? <div>Files have been Staged</div> : null}
           <div className="form-buttons">
-            <Button onClick={this.addChanges}>Stage Changes</Button>
+            <Button onClick={this.addChanges}>Stage</Button>
             <Button type="submit">Commit</Button>
           </div>
         </form>
@@ -185,7 +195,7 @@ class LocalGit extends Component<Props> {
     return (
       <ContentWrapper>
         <Column className="right">
-          <Header>Hello</Header>
+          <Header>Workshop - {this.state.currentBranch}</Header>
           {this.renderForm()}
           <ModifiedFiles
             staged={staged}
@@ -195,6 +205,7 @@ class LocalGit extends Component<Props> {
           <StagedFiles diffView={this.diffView} staged={staged} />
         </Column>
         <Column className="left">
+          <Header>File Changes</Header>
           <Highlight className="diff">{this.state.diff}</Highlight>
         </Column>
       </ContentWrapper>
