@@ -136,9 +136,13 @@ class CommitsList extends React.Component {
   };
 
   render() {
-    const {isLocal} = this.props;
+    const {isLocalBranch} = this.props;
 
-    return <div className="commits">{isLocal ? this.renderLocalCommits() : this.renderCommits()}</div>;
+    return (
+      <div className="commits">
+        {isLocalBranch ? this.renderLocalCommits() : this.renderCommits()}
+      </div>
+    );
   }
 }
 
@@ -149,7 +153,7 @@ const mapStateToProps = state => ({
   selectedRepo: state.selectedRepo,
   closedBranches: state.closedBranches,
   localCommits: state.localCommits,
-  isLocal: state.isLocal,
+  isLocalBranch: state.isLocalBranch,
 });
 
 export default connect(mapStateToProps)(CommitsList);

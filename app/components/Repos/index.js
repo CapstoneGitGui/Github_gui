@@ -93,9 +93,9 @@ class RepoList extends Component {
         </form>
         <form onChange={this.handleInputChange} onSubmit={this.handleSubmit}>
           {this.state.repos.length
-            ? this.state.repos.map(repo => {
+            ? this.state.repos.map((repo, index) => {
                 return (
-                  <div>
+                  <div key={index}>
                     <label key={repo.name} htmlFor={repo.name}>
                       {repo.name}
                     </label>

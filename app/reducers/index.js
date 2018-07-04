@@ -13,6 +13,7 @@ import selectedCommit from './selectedCommit';
 import localBranches from './localBranches';
 import localRepo from './localRepo';
 import isLocal from './isLocal';
+import isLocalBranch from './isLocalBranch';
 import localCommits from './localCommits';
 
 const rootReducer = combineReducers({
@@ -29,6 +30,7 @@ const rootReducer = combineReducers({
   localBranches,
   localRepo,
   isLocal,
+  isLocalBranch,
   localCommits,
 });
 
