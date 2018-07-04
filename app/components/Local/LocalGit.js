@@ -153,15 +153,9 @@ class LocalGit extends Component<Props> {
     }
   };
 
-  diff = async name => {
-    let fileChanges;
-    await git(this.props.selectedRepo).diff([name], async (err, data) => {
-      fileChanges = data;
-    });
-  };
-
-  diffView = name => {
-    git(this.props.selectedRepo).diff(['--staged', name], (err, data) => {
+  diffView = (boolean, name) => {
+    const fileType = boolean ? [name] : ['--staged', name];
+    git(this.props.selectedRepo).diff(fileType, (err, data) => {
       this.setState({ diff: data });
     });
   };
@@ -194,9 +188,9 @@ class LocalGit extends Component<Props> {
           <Header>Hello</Header>
           {this.renderForm()}
           <ModifiedFiles
+            staged={staged}
             diffView={this.diffView}
             modified={modified}
-            staged={staged}
           />
           <StagedFiles diffView={this.diffView} staged={staged} />
         </Column>
