@@ -77,6 +77,7 @@ class Aside extends React.Component {
         path={`/repos/${selectedRepo}/branches/${branch.name}`}
         name={branch} 
         isBranch
+        isLocalBranch
         branch={branch}
       />
     ));

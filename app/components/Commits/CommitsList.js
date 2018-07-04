@@ -11,8 +11,8 @@ class CommitsList extends React.Component {
   renderCommits() {
     let isMaster = false;
     const output = { output: [], master: [] };
-    const { 
-      masterCommits, 
+    const {
+      masterCommits,
       branchCommits,
       localCommits,
     } = this.props;
@@ -35,7 +35,7 @@ class CommitsList extends React.Component {
     if (this.isClosedBranch()) {
       output.output = branchCommits;
     }
-    
+
     return (
       <div className="commits-inner">
         {output.output.map(commit => {
@@ -99,6 +99,7 @@ class CommitsList extends React.Component {
           date={commit.committerDate}
           // avatar={commit.author && commit.author.avatar_url}
           commit={commit}
+          local={true}
         />
       )
     })

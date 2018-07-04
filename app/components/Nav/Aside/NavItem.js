@@ -19,6 +19,8 @@ class NavItem extends React.Component {
       name,
       isRepo,
       isBranch,
+      localRepo,
+      isLocalBranch,
     } = this.props;
 
     if (isLocalRepo) {
@@ -31,8 +33,12 @@ class NavItem extends React.Component {
       this.props.setIsLocal(false)
 
     } else if (isBranch) {
-      // this.props.fetchLocalCommits(this.props.branch, this.props.localRepo)
+      if (isLocalBranch) {
+        this.props.fetchLocalCommits(this.props.branch, this.props.localRepo)
+      }
+      console.log(this.props.branch)
       this.props.setSelectedBranch(this.props.branch);
+
       this.props.fetchBranchCommits(
         token,
         this.props.branch,

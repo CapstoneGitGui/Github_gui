@@ -5,7 +5,10 @@ import {setSelectedCommit} from '../../reducers/selectedCommit'
 
 class Commit extends React.Component {
   handleClick = (commit) => {
+    console.log(this.props.local)
+    if(!this.props.local){
     this.props.setSelectedCommit(commit)
+    }
   }
 
   render () {
