@@ -7,17 +7,26 @@ import { connect } from 'react-redux';
 import { fetchMasterCommits } from '../../../reducers/masterCommits';
 import { setIsLocal } from '../../../reducers/isLocal';
 import { fetchOpenBranches } from '../../../reducers/openBranches';
+import { fetchCommitActivity } from '../../../reducers/commitActivity';
 
 class NavItem extends React.Component {
   handleClick = () => {
     if (this.props.isLocalRepo) {
-      this.props.setIsLocal(true)
-      this.props.fetchOpenBranches(this.props.currentUser, this.props.name, localStorage.getItem('token') )
-    }
-    if (this.props.isRepo) {
+      this.props.setIsLocal(true);
+      this.props.fetchOpenBranches(
+        this.props.currentUser,
+        this.props.name,
+        localStorage.getItem('token')
+      );
+    } else if (this.props.isRepo) {
+      const token = localStorage.getItem('token');
       // this.props.setSelectedRepo(this.props.name);
-      this.props.setIsLocal(false)
-
+      this.props.setIsLocal(false);
+      this.props.fetchCommitActivity(
+        this.props.currentUser,
+        this.props.selectedRepo,
+        token
+      );
     } else if (this.props.isBranch) {
       const token = localStorage.getItem('token');
       this.props.setSelectedBranch(this.props.branch);
@@ -60,9 +69,18 @@ const mapStateToProps = state => ({
   selectedRepo: state.selectedRepo,
   openBranches: state.openBranches,
   masterCommits: state.masterCommits,
+  fetchCommitActivity: state.fetchCommitActivity,
 });
 
 export default connect(
   mapStateToProps,
-  { setSelectedRepo, setSelectedBranch, fetchBranchCommits, fetchMasterCommits, setIsLocal, fetchOpenBranches }
+  {
+    setSelectedRepo,
+    setSelectedBranch,
+    fetchBranchCommits,
+    fetchMasterCommits,
+    setIsLocal,
+    fetchOpenBranches,
+    fetchCommitActivity,
+  }
 )(NavItem);

@@ -13,6 +13,7 @@ import selectedCommit from './selectedCommit';
 import localBranches from './localBranches';
 import localRepo from './localRepo';
 import isLocal from './isLocal';
+import commitActivity from './commitActivity';
 
 const rootReducer = combineReducers({
   router,
@@ -27,7 +28,8 @@ const rootReducer = combineReducers({
   selectedCommit,
   localBranches,
   localRepo,
-  isLocal
+  isLocal,
+  commitActivity,
 });
 
 export default rootReducer;
