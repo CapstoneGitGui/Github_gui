@@ -7,6 +7,7 @@ import { fetchBranchCommits } from '../../../reducers/branchCommits';
 import { fetchMasterCommits } from '../../../reducers/masterCommits';
 import { setIsLocal } from '../../../reducers/isLocal';
 import { fetchOpenBranches } from '../../../reducers/openBranches';
+import { fetchCommitActivity } from '../../../reducers/commitActivity';
 import { fetchLocalCommits } from '../../../reducers/localCommits'
 import {setIsLocalBranch} from '../../../reducers/isLocalBranch'
 
@@ -32,13 +33,17 @@ class NavItem extends React.Component {
     if (isRepo) {
       // this.props.setSelectedRepo(this.props.name);
       this.props.setIsLocal(false)
+      this.props.fetchCommitActivity(
+        currentUser,
+        this.props.selectedRepo,
+        token
+      );
 
     } else if (isBranch) {
       if (isLocalBranch) {
         this.props.fetchLocalCommits(this.props.branch, this.props.localRepo)
         this.props.setIsLocalBranch(true)
       }
-      
       this.props.setSelectedBranch(this.props.branch);
       this.props.fetchBranchCommits(
         token,
@@ -80,6 +85,7 @@ const mapStateToProps = state => ({
   selectedRepo: state.selectedRepo,
   openBranches: state.openBranches,
   masterCommits: state.masterCommits,
+  fetchCommitActivity: state.fetchCommitActivity,
   localRepo: state.localRepo,
   // isLocalRepo: state.isLocal,
 });
@@ -95,5 +101,6 @@ export default connect(
     fetchOpenBranches,
     fetchLocalCommits,
     setIsLocalBranch,
+    fetchCommitActivity,
   }
 )(NavItem);
