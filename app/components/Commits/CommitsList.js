@@ -11,7 +11,11 @@ class CommitsList extends React.Component {
   renderCommits() {
     let isMaster = false;
     const output = { output: [], master: [] };
-    const { masterCommits, branchCommits } = this.props;
+    const { 
+      masterCommits, 
+      branchCommits,
+      localCommits,
+    } = this.props;
 
     const masterShas = masterCommits.map(commit => {
       return commit.sha;
@@ -23,6 +27,7 @@ class CommitsList extends React.Component {
         output.master.push(branchCommits[i]);
       }
     }
+
     if (this.props.selectedBranch.name === 'master') {
       output.output = masterCommits;
       isMaster = true;
@@ -30,20 +35,7 @@ class CommitsList extends React.Component {
     if (this.isClosedBranch()) {
       output.output = branchCommits;
     }
-    // return output.map(commit => {
-    //   return (
-    //     <Commit
-    //       key={commit.sha}
-    //       sha={commit.sha}
-    //       name={commit.committer.login}
-    //       message={commit.commit.message}
-    //       date={commit.commit.committer.date}
-    //       avatar={commit.author.avatar_url}
-    //     />
-    //     {isMaster || this.isClosedBranch() ? null : this.renderMasterCommits()}
-    //   )
-    // })
-
+    
     return (
       <div className="commits-inner">
         {output.output.map(commit => {
@@ -78,11 +70,39 @@ class CommitsList extends React.Component {
       }
     }
   }
+
   toggle = () => {
     this.setState({
       expanded: !this.state.expanded,
     });
   };
+
+  renderLocalCommits = () => {
+    return this.props.localCommits.map(commit => {
+      commit.commit = {}
+      commit.commit.author = {}
+      commit.commit.tree= {}
+      commit.commit.author.name = commit.authorName
+      commit.commit.author.email = commit.committerEmail
+      commit.commit.author.date = commit.committerDate
+      commit.sha = commit.hash
+      commit.commit.tree.sha = commit.treeHash
+      commit.commit.message = commit.subject
+      commit.parents = commit.parentHashes.split(' ')
+
+      return (
+        <Commit
+          key={commit.sha}
+          sha={commit.sha}
+          name={commit.authorName}
+          message={commit.subject}
+          date={commit.committerDate}
+          // avatar={commit.author && commit.author.avatar_url}
+          commit={commit}
+        />
+      )
+    })
+  }
 
   renderMasterCommits = masterCommits => {
     return (
@@ -116,7 +136,13 @@ class CommitsList extends React.Component {
   };
 
   render() {
-    return <div className="commits">{this.renderCommits()}</div>;
+    const {isLocalBranch} = this.props;
+
+    return (
+      <div className="commits">
+        {isLocalBranch ? this.renderLocalCommits() : this.renderCommits()}
+      </div>
+    );
   }
 }
 
@@ -126,6 +152,8 @@ const mapStateToProps = state => ({
   selectedBranch: state.selectedBranch,
   selectedRepo: state.selectedRepo,
   closedBranches: state.closedBranches,
+  localCommits: state.localCommits,
+  isLocalBranch: state.isLocalBranch,
 });
 
 export default connect(mapStateToProps)(CommitsList);

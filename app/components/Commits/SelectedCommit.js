@@ -29,7 +29,7 @@ class SelectedCommit extends React.Component {
 
   render () {
     const { commit } = this.props;
-    console.log(commit)
+
     return (
       <div className="commit-single-content">
         <div className="commit-info-header">
