@@ -5,7 +5,7 @@ class File extends React.Component {
     const { name } = this.props;
 
     return (
-      <div className="file" onClick={evt => this.props.diffView(evt, name)}>
+      <div className="file" onClick={evt => this.props.diffView(name)}>
         <div className="file-header">
           <div className="file-header-committer">{name}</div>
         </div>

@@ -11,9 +11,7 @@ class ModifiedFiles extends React.Component {
         <div className="changed-files">
           {modified.map((file, index) => {
             if (!staged.includes(file)) {
-              return (
-                <File diffView={this.props.diffView} key={index} name={file} />
-              );
+              return <File diffView={diffView} key={index} name={file} />;
             }
           })}
         </div>

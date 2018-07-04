@@ -10,7 +10,7 @@ class StagedFiles extends React.Component {
         <div className="files-info muted">Staged</div>
         <div className="changed-files">
           {staged.map((file, index) => (
-            <File diffView={this.props.diffView} key={index} name={file} />
+            <File diffView={diffView} key={index} name={file} />
           ))}
         </div>
       </div>

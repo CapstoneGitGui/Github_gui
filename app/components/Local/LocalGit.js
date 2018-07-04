@@ -45,7 +45,8 @@ class LocalGit extends Component<Props> {
     staged: [],
     commitMessage: '',
     added: false,
-    diff: ''
+    diff: '',
+    allDiffs: []
   };
 
   componentDidMount = () => {
@@ -120,14 +121,6 @@ class LocalGit extends Component<Props> {
     });
   };
 
-  changedFiles = async () => {
-    if (this.props.selectedRepo) {
-      git(this.props.selectedRepo).status((err, data) => {
-        this.setState({ modified: data.modified, staged: data.staged });
-      });
-    }
-  };
-
   commit = async msg => {
     git(this.props.selectedRepo).commit(msg);
   };
@@ -152,15 +145,23 @@ class LocalGit extends Component<Props> {
     this.setState({ modified: [], staged: [], commitMessage: '' });
   };
 
-  diff = () => {
-    git(this.props.selectedRepo).diffSummary((err, data) => {
-      console.log(data);
+  changedFiles = async () => {
+    if (this.props.selectedRepo) {
+      git(this.props.selectedRepo).status((err, data) => {
+        this.setState({ modified: data.modified, staged: data.staged });
+      });
+    }
+  };
+
+  diff = async name => {
+    let fileChanges;
+    await git(this.props.selectedRepo).diff([name], async (err, data) => {
+      fileChanges = data;
     });
   };
 
-  diffView = (evt, name) => {
-    console.log(evt.target);
-    git(this.props.selectedRepo).diff([name], (err, data) => {
+  diffView = name => {
+    git(this.props.selectedRepo).diff(['--staged', name], (err, data) => {
       this.setState({ diff: data });
     });
   };
