@@ -73,10 +73,10 @@ class Aside extends React.Component {
     const { selectedRepo, localBranches } = this.props;
 
     return localBranches.map((branch, index) => (
-      <NavItem 
-        key={index} 
+      <NavItem
+        key={index}
         path={`/repos/${selectedRepo}/branches/${branch.name}`}
-        name={branch} 
+        name={branch}
         isBranch
         isLocalBranch
         branch={branch}
@@ -138,7 +138,7 @@ const mapStateToProps = state => ({
   masterCommits: state.masterCommits,
   selectedBranch: state.selectedBranch,
   localBranches: state.localBranches,
-  isLocal: state.isLocal
+  isLocal: state.isLocal,
 });
 
 export default connect(

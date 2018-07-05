@@ -76,9 +76,33 @@ class NavItem extends React.Component {
         <NavLink to={`/commit/${this.props.sha}`}>{this.props.name}</NavLink>
       );
     }
+    if (this.props.isBranch && !this.props.breadcrumb) {
+      return (
+        <NavLink to={this.props.path} onClick={this.handleClick}>
+          <i className="fas fa-code-branch" />
+          {`    ${this.props.name}`}
+        </NavLink>
+      );
+    }
+    if (this.props.breadcrumb && this.props.isRepo) {
+      return (
+        <NavLink to={this.props.path} onClick={this.handleClick}>
+          <i className="far fa-folder" />
+          {`    ${this.props.name}`}
+        </NavLink>
+      );
+    }
+    if (this.props.repository) {
+      return (
+        <NavLink to={this.props.path} onClick={this.handleClick}>
+          <i className="far fa-hdd" />
+          {`    ${this.props.name}`}
+        </NavLink>
+      );
+    }
     return (
       <NavLink to={this.props.path} onClick={this.handleClick}>
-        {this.props.name}
+        {`    ${this.props.name}`}
       </NavLink>
     );
   }
