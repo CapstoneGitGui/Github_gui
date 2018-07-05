@@ -8,14 +8,15 @@ import { fetchMasterCommits } from '../../../reducers/masterCommits';
 import { setIsLocal } from '../../../reducers/isLocal';
 import { fetchOpenBranches } from '../../../reducers/openBranches';
 import { fetchCommitActivity } from '../../../reducers/commitActivity';
-import { fetchLocalCommits } from '../../../reducers/localCommits'
-import {setIsLocalBranch} from '../../../reducers/isLocalBranch'
+import { fetchLocalCommits } from '../../../reducers/localCommits';
+import { setIsLocalBranch } from '../../../reducers/isLocalBranch';
+import { resetSelectedRepo } from '../../../reducers/selectedRepo';
 
-const token = localStorage.getItem('token')
+const token = localStorage.getItem('token');
 
 class NavItem extends React.Component {
   handleClick = () => {
-    const { 
+    const {
       isLocalRepo,
       currentUser,
       name,
@@ -23,26 +24,29 @@ class NavItem extends React.Component {
       isBranch,
       localRepo,
       isLocalBranch,
+      repository,
     } = this.props;
 
     if (isLocalRepo) {
-      this.props.setIsLocal(true)
-      this.props.fetchOpenBranches(currentUser, name, token )
+      this.props.setIsLocal(true);
+      this.props.fetchOpenBranches(currentUser, name, token);
+    }
+    if (repository) {
+      this.props.resetSelectedRepo();
     }
 
     if (isRepo) {
       // this.props.setSelectedRepo(this.props.name);
-      this.props.setIsLocal(false)
+      this.props.setIsLocal(false);
       this.props.fetchCommitActivity(
         currentUser,
         this.props.selectedRepo,
         token
       );
-
     } else if (isBranch) {
       if (isLocalBranch) {
-        this.props.fetchLocalCommits(this.props.branch, this.props.localRepo)
-        this.props.setIsLocalBranch(true)
+        this.props.fetchLocalCommits(this.props.branch, this.props.localRepo);
+        this.props.setIsLocalBranch(true);
       }
       this.props.setSelectedBranch(this.props.branch);
       this.props.fetchBranchCommits(
@@ -51,7 +55,7 @@ class NavItem extends React.Component {
         this.props.currentUser,
         this.props.selectedRepo
       );
-      this.props.setIsLocalBranch(false)
+      this.props.setIsLocalBranch(false);
       if (!this.props.masterCommits.length && this.props.openBranches.length) {
         const master = this.props.openBranches.filter(branch => {
           return branch.name === 'master';
@@ -72,9 +76,59 @@ class NavItem extends React.Component {
         <NavLink to={`/commit/${this.props.sha}`}>{this.props.name}</NavLink>
       );
     }
+    if (this.props.isBranch && !this.props.breadcrumb) {
+      return (
+        <NavLink to={this.props.path} onClick={this.handleClick}>
+          <i className="fas fa-code-branch" />
+          {`    ${this.props.name}`}
+        </NavLink>
+      );
+    }
+    if (this.props.breadcrumb && this.props.isRepo) {
+      return (
+        <NavLink to={this.props.path} onClick={this.handleClick}>
+          <i className="far fa-folder" />
+          {`    ${this.props.name}`}
+        </NavLink>
+      );
+    }
+    if (this.props.repository) {
+      return (
+        <NavLink to={this.props.path} onClick={this.handleClick}>
+          <i className="far fa-hdd" />
+          {`    ${this.props.name}`}
+        </NavLink>
+      );
+    }
+    if (this.props.login) {
+      return (
+        <NavLink to={this.props.path} onClick={this.handleClick}>
+          <i className="fas fa-id-badge" />
+          {`    ${this.props.name}`}
+        </NavLink>
+      );
+    }
+
+    if (this.props.local) {
+      return (
+        <NavLink to={this.props.path} onClick={this.handleClick}>
+          <i className="far fa-folder" />
+          {`    ${this.props.name}`}
+        </NavLink>
+      );
+    }
+
+    if (this.props.barchart) {
+      return (
+        <NavLink to={this.props.path} onClick={this.handleClick}>
+          <i class="far fa-chart-bar" />
+          {`    ${this.props.name}`}
+        </NavLink>
+      );
+    }
     return (
       <NavLink to={this.props.path} onClick={this.handleClick}>
-        {this.props.name}
+        {`    ${this.props.name}`}
       </NavLink>
     );
   }
@@ -92,15 +146,16 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { 
-    setSelectedRepo, 
-    setSelectedBranch, 
-    fetchBranchCommits, 
-    fetchMasterCommits, 
-    setIsLocal, 
+  {
+    setSelectedRepo,
+    setSelectedBranch,
+    fetchBranchCommits,
+    fetchMasterCommits,
+    setIsLocal,
     fetchOpenBranches,
     fetchLocalCommits,
     setIsLocalBranch,
     fetchCommitActivity,
+    resetSelectedRepo,
   }
 )(NavItem);
