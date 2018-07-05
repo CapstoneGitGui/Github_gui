@@ -42,15 +42,19 @@ class LocalGit extends Component<Props> {
     diff: '',
     allDiffs: [],
     currentBranch: '',
-    remote: ''
+    remote: '',
+    err: false
   };
 
   componentDidMount = async () => {
     await this.changedFiles();
-    await this.listRemote();
     await git(this.props.selectedRepo).branch((err, branches) => {
-      this.setState({ currentBranch: branches.current });
+      this.setState({
+        currentBranch: branches.current,
+        branches: branches.all
+      });
     });
+    await this.listRemote();
   };
 
   selectFolder = () => {
@@ -177,6 +181,17 @@ class LocalGit extends Component<Props> {
 
   pull = () => {};
 
+  checkout = evt => {
+    git(this.props.selectedRepo).checkout(
+      [`${evt.target.value}`],
+      (err, data) => {
+        if (err) this.setState({ err: true });
+        else this.setState({ err: false });
+      }
+    );
+    this.setState({ currentBranch: evt.target.value });
+  };
+
   renderForm() {
     return (
       <div className="commit-form">
@@ -216,6 +231,13 @@ class LocalGit extends Component<Props> {
                 <Button id="pull" onClick={this.pull}>
                   &darr;
                 </Button>
+                <select onChange={this.checkout}>
+                  <option selected="selected">Checkout Branch</option>
+                  {this.state.branches.map(branch => (
+                    <option value={branch}>{branch}</option>
+                  ))}
+                </select>
+                {this.state.err ? <div>&#x2718;</div> : null}
               </div>
             </div>
           </Header>
