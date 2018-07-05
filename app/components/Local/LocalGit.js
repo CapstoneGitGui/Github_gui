@@ -15,21 +15,17 @@ import Aside from '../Nav/Aside/Aside.js';
 import { fetchLocalBranches } from '../../reducers/localBranches';
 import { selectLocalRepo } from '../../reducers/localRepo';
 import SplitPane from 'react-split-pane';
-import File from './File'
-import ModifiedFiles from './ModifiedFiles'
-import StagedFiles from './StagedFiles'
+import File from './File';
+import ModifiedFiles from './ModifiedFiles';
+import StagedFiles from './StagedFiles';
+import SyntaxHighlighter from 'react-syntax-highlighter/prism';
+import Highlight from 'react-highlight';
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
 const fs = require('fs');
 const zlib = require('zlib');
 const gitlog = require('gitlog');
-
-// https://www.npmjs.com/package/simple-git
-// https://www.npmjs.com/package/js-git
-// chokidar
-// https://www.npmjs.com/package/nodegit
-// https://www.npmjs.com/package/git-utils
 
 class LocalGit extends Component<Props> {
   props: Props;
@@ -42,24 +38,20 @@ class LocalGit extends Component<Props> {
     modified: [],
     staged: [],
     commitMessage: '',
-    added: false
+    added: false,
+    diff: '',
+    allDiffs: [],
+    currentBranch: '',
+    remote: ''
   };
 
   componentDidMount = () => {
+    git(this.props.selectedRepo).branch((err, branches) => {
+      this.setState({ currentBranch: branches.current });
+    });
+    this.listRemote();
     this.changedFiles();
   };
-
-  // watch = () => {
-  //   const watcher = chokidar.watch(this.props.selectedRepo, {
-  //     ignored: /[\/\\]\./,
-  //     persistent: true
-  //   });
-
-  //   watcher.on('change', path => {
-  //     this.setState({ changedFiles: [...this.state.changedFiles, path] });
-  //     console.log(`${path} file has been changed`);
-  //   });
-  // };
 
   selectFolder = () => {
     const { fetchLocalBranches, selectLocalRepo } = this.props;
@@ -85,6 +77,18 @@ class LocalGit extends Component<Props> {
     );
   };
 
+  // watch = () => {
+  //   const watcher = chokidar.watch(this.props.selectedRepo, {
+  //     ignored: /[\/\\]\./,
+  //     persistent: true
+  //   });
+
+  //   watcher.on('change', path => {
+  //     this.setState({ changedFiles: [...this.state.changedFiles, path] });
+  //     console.log(`${path} file has been changed`);
+  //   });
+  // };
+
   selectBranch = async (evt, branch) => {
     this.setState({ branch });
     this.viewCommits(branch);
@@ -92,7 +96,7 @@ class LocalGit extends Component<Props> {
 
   viewCommits = async branch => {
     const options = {
-      repo: `${this.state.folderPath}`,
+      repo: `${this.props.selectedRepo}`,
       number: 5000,
       branch,
       fields: [
@@ -110,30 +114,11 @@ class LocalGit extends Component<Props> {
     });
   };
 
-  addChanges = async () => {
-    git(this.props.selectedRepo).add('./*', el => {
-      this.setState({ added: true });
-      this.changedFiles();
-    });
-  };
-
-  changedFiles = async () => {
-    // if (this.props.selectedRepo) {
-    git(this.props.selectedRepo).status((err, data) => {
-      console.log(data.modified, data.staged);
-      this.setState({ modified: data.modified, staged: data.staged });
-    });
-    // }
-  };
-
-  commit = async msg => {
-    git(this.props.selectedRepo).commit(msg);
-  };
-
   listRemote = () => {
     const chosenDirectory = this.props.selectedRepo;
     git(chosenDirectory).listRemote(['--get-url'], (err, data) => {
       if (!err) {
+        this.setState({ remote: data });
         console.log(`Remote url for repository at ${chosenDirectory}:`);
         console.log(data);
       }
@@ -150,13 +135,47 @@ class LocalGit extends Component<Props> {
     this.setState({ modified: [], staged: [], commitMessage: '' });
   };
 
-  diff = () => {
-    git(this.state.folderPath[0]).diffSummary(((err, data) => {
-      console.log(data)
-    }))
-  }
+  changedFiles = async () => {
+    if (this.props.selectedRepo) {
+      git(this.props.selectedRepo).status((err, data) => {
+        this.setState({ modified: data.modified, staged: data.staged });
+      });
+    }
+  };
 
-  renderForm () {
+  diffView = (boolean, name) => {
+    const fileType = boolean ? [name] : ['--staged', name];
+    git(this.props.selectedRepo).diff(fileType, (err, data) => {
+      this.setState({ diff: data });
+    });
+  };
+
+  branch = () => {
+    git(this.props.selectedRepo).branch((err, branches) => {
+      this.setState({ currentBranch: branches.current });
+    });
+  };
+
+  addChanges = async () => {
+    git(this.props.selectedRepo).add('./*', el => {
+      this.setState({ added: true });
+      this.changedFiles();
+    });
+  };
+
+  commit = async msg => {
+    git(this.props.selectedRepo).commit(msg);
+  };
+
+  push = () => {
+    git(this.props.selectedRepo).push([
+      '-u',
+      'origin',
+      `${this.state.currentBranch}`
+    ]);
+  };
+
+  renderForm() {
     return (
       <div className="commit-form">
         <form onSubmit={this.commitChange}>
@@ -165,14 +184,13 @@ class LocalGit extends Component<Props> {
             value={this.state.commitMessage}
             onChange={this.handleChange}
           />
-          {this.state.added ? <div>Files have been Staged</div> : null}
           <div className="form-buttons">
-            <Button onClick={this.addChanges}>Stage Changes</Button>
+            <Button onClick={this.addChanges}>Stage</Button>
             <Button type="submit">Commit</Button>
           </div>
         </form>
       </div>
-    )
+    );
   }
 
   render() {
@@ -181,12 +199,36 @@ class LocalGit extends Component<Props> {
     return (
       <ContentWrapper>
         <Column className="right">
-          <Header>Hello</Header>
+          <Header>
+            <div className="flex space-between">
+              <div className="align-self-center">
+                Branch
+                {this.props.selectedRepo
+                  ? `:  ${this.state.currentBranch}`
+                  : null}
+              </div>
+              <div className="button-groups">
+                <Button id="push" onClick={this.push}>
+                  &uarr;
+                </Button>
+                <Button id="pull" onClick={this.pull}>
+                  &darr;
+                </Button>
+              </div>
+            </div>
+          </Header>
           {this.renderForm()}
-          <ModifiedFiles modified={modified} staged={staged} />
-          <StagedFiles staged={staged} />
+          <ModifiedFiles
+            staged={staged}
+            diffView={this.diffView}
+            modified={modified}
+          />
+          <StagedFiles diffView={this.diffView} staged={staged} />
         </Column>
-        <Column className="left">Hello</Column>
+        <Column className="left">
+          <Header>File Changes</Header>
+          <Highlight className="diff">{this.state.diff}</Highlight>
+        </Column>
       </ContentWrapper>
     );
   }
