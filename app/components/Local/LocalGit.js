@@ -180,7 +180,9 @@ class LocalGit extends Component<Props> {
     ]);
   };
 
-  pull = () => {};
+  pull = () => {
+    git(this.props.selectedRepo).pull('origin', 'master');
+  };
 
   checkout = evt => {
     git(this.props.selectedRepo).checkout(
