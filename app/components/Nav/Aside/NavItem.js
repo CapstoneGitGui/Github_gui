@@ -100,6 +100,32 @@ class NavItem extends React.Component {
         </NavLink>
       );
     }
+    if (this.props.login) {
+      return (
+        <NavLink to={this.props.path} onClick={this.handleClick}>
+          <i className="fas fa-id-badge" />
+          {`    ${this.props.name}`}
+        </NavLink>
+      );
+    }
+
+    if (this.props.local) {
+      return (
+        <NavLink to={this.props.path} onClick={this.handleClick}>
+          <i className="far fa-folder" />
+          {`    ${this.props.name}`}
+        </NavLink>
+      );
+    }
+
+    if (this.props.barchart) {
+      return (
+        <NavLink to={this.props.path} onClick={this.handleClick}>
+          <i class="far fa-chart-bar" />
+          {`    ${this.props.name}`}
+        </NavLink>
+      );
+    }
     return (
       <NavLink to={this.props.path} onClick={this.handleClick}>
         {`    ${this.props.name}`}
