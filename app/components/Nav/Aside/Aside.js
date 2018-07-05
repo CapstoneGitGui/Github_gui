@@ -1,5 +1,6 @@
 import React from 'react';
 import NavItem from './NavItem';
+import NavItemLocal from './NavItemLocal';
 import styles from './Aside.css';
 import { connect } from 'react-redux';
 import { fetchOpenBranches } from '../../../reducers/openBranches';

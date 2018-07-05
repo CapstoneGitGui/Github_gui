@@ -14,17 +14,20 @@ class SingleRepoPage extends Component {
     setSelectedRepo(params.id);
   }
 
-  componentWillUnmount() {
-    this.props.resetSelectedRepo()
-  }
+  // componentWillUnmount() {
+  //   this.props.resetSelectedRepo()
+  // }
 
   render() {
-    const { openBranches, match: {params} } = this.props
+    const {
+      openBranches,
+      match: { params },
+    } = this.props;
     return (
       <div className="app">
-        <SingleRepo 
+        <SingleRepo
           match={this.props.match}
-          name={params.id} 
+          name={params.id}
           openBranches={openBranches}
         />
       </div>
@@ -32,13 +35,16 @@ class SingleRepoPage extends Component {
   }
 }
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
   return {
-    openBranches: state.openBranches
-  }
+    openBranches: state.openBranches,
+  };
 }
 
-export default connect(mapStateToProps, { 
-  setSelectedRepo, 
-  resetSelectedRepo 
-})(SingleRepoPage)
+export default connect(
+  mapStateToProps,
+  {
+    setSelectedRepo,
+    resetSelectedRepo,
+  }
+)(SingleRepoPage);
