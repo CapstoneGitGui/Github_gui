@@ -4,15 +4,16 @@ import axios from 'axios';
 
 let mainWindow = null;
 let authWindow;
+let pullWindow;
 
 function parseQuery(queryString) {
-  let query = {};
-  let pairs = (queryString[0] === '?'
+  const query = {};
+  const pairs = (queryString[0] === '?'
     ? queryString.substr(1)
     : queryString
   ).split('&');
   for (let i = 0; i < pairs.length; i++) {
-    let pair = pairs[i].split('=');
+    const pair = pairs[i].split('=');
     query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
   }
   return query;
@@ -124,9 +125,9 @@ ipcMain.on('oauth:form', data => {
   }
 
   function handleCallback(url) {
-    let raw_code = /code=([^&]*)/.exec(url) || null;
-    let code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
-    let error = /\?error=(.+)$/.exec(url);
+    const raw_code = /code=([^&]*)/.exec(url) || null;
+    const code = raw_code && raw_code.length > 1 ? raw_code[1] : null;
+    const error = /\?error=(.+)$/.exec(url);
 
     if (code || error) {
       // Close the browser if code found or error

@@ -45,12 +45,12 @@ class LocalGit extends Component<Props> {
     remote: ''
   };
 
-  componentDidMount = () => {
-    git(this.props.selectedRepo).branch((err, branches) => {
+  componentDidMount = async () => {
+    await this.changedFiles();
+    await this.listRemote();
+    await git(this.props.selectedRepo).branch((err, branches) => {
       this.setState({ currentBranch: branches.current });
     });
-    this.listRemote();
-    this.changedFiles();
   };
 
   selectFolder = () => {
@@ -135,7 +135,7 @@ class LocalGit extends Component<Props> {
     this.setState({ modified: [], staged: [], commitMessage: '' });
   };
 
-  changedFiles = async () => {
+  changedFiles = () => {
     if (this.props.selectedRepo) {
       git(this.props.selectedRepo).status((err, data) => {
         this.setState({ modified: data.modified, staged: data.staged });
@@ -174,6 +174,8 @@ class LocalGit extends Component<Props> {
       `${this.state.currentBranch}`
     ]);
   };
+
+  pull = () => {};
 
   renderForm() {
     return (
