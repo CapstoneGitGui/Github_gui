@@ -186,6 +186,18 @@ header {
   justify-content: space-between;
 }
 
+.flex {
+  display: flex;
+}
+
+.align-self-center {
+  align-self: center;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
 /*
 
 XCode style (c) Angel Garcia <angelgarcia.mail@gmail.com>
@@ -311,7 +323,24 @@ input:invalid {
   color: rgb(0, 0, 0);
 }
 
-#branch {
-  height: 50px;
-  width: 70px;
+.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+#push:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
 }

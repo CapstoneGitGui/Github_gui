@@ -200,9 +200,22 @@ class LocalGit extends Component<Props> {
       <ContentWrapper>
         <Column className="right">
           <Header>
-            Branch
-            {this.props.selectedRepo ? `:  ${this.state.currentBranch}` : null}
-            <Button onClick={this.push}>&#8679;</Button>
+            <div className="flex space-between">
+              <div className="align-self-center">
+                Branch
+                {this.props.selectedRepo
+                  ? `:  ${this.state.currentBranch}`
+                  : null}
+              </div>
+              <div className="button-groups">
+                <Button id="push" onClick={this.push}>
+                  &uarr;
+                </Button>
+                <Button id="pull" onClick={this.pull}>
+                  &darr;
+                </Button>
+              </div>
+            </div>
           </Header>
           {this.renderForm()}
           <ModifiedFiles
