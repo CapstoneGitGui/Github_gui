@@ -10,6 +10,7 @@ import { fetchOpenBranches } from '../../../reducers/openBranches';
 import { fetchCommitActivity } from '../../../reducers/commitActivity';
 import { fetchLocalCommits } from '../../../reducers/localCommits';
 import { setIsLocalBranch } from '../../../reducers/isLocalBranch';
+import { resetSelectedRepo } from '../../../reducers/selectedRepo';
 
 const token = localStorage.getItem('token');
 
@@ -23,11 +24,15 @@ class NavItem extends React.Component {
       isBranch,
       localRepo,
       isLocalBranch,
+      repository,
     } = this.props;
 
     if (isLocalRepo) {
       this.props.setIsLocal(true);
       this.props.fetchOpenBranches(currentUser, name, token);
+    }
+    if (repository) {
+      this.props.resetSelectedRepo();
     }
 
     if (isRepo) {
@@ -101,5 +106,6 @@ export default connect(
     fetchLocalCommits,
     setIsLocalBranch,
     fetchCommitActivity,
+    resetSelectedRepo,
   }
 )(NavItem);
