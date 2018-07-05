@@ -19,12 +19,12 @@ class CommitsPerPerson extends Component {
 
   componentWillMount() {
     let data = [0, 0, 0, 0];
-    console.log(this.props.commitActivity);
     if (this.props.commitActivity.length) {
       data = this.props.commitActivity[this.props.commitActivity.length - 1]
         .days;
     }
-    console.log('data', data);
+
+    console.log(this.props.commitActivity)
 
     // const data = [0, 19, 2, 4, 5, 6, 7];
     const days = [
@@ -148,7 +148,6 @@ class CommitsPerPerson extends Component {
   // };
 
   render() {
-    console.log(this.props.commitActivity);
     return (
       <div>
         <br />
