@@ -71,6 +71,8 @@ class Aside extends React.Component {
     ));
   }
 
+  // dhfdhatah
+
   renderLocalBranches() {
     const { selectedRepo, localBranches } = this.props;
 
