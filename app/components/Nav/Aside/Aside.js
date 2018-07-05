@@ -73,10 +73,10 @@ class Aside extends React.Component {
     const { selectedRepo, localBranches } = this.props;
 
     return localBranches.map((branch, index) => (
-      <NavItem 
-        key={index} 
+      <NavItem
+        key={index}
         path={`/repos/${selectedRepo}/branches/${branch.name}`}
-        name={branch} 
+        name={branch}
         isBranch
         isLocalBranch
         branch={branch}
@@ -93,15 +93,6 @@ class Aside extends React.Component {
           <div className={styles.menu}>Workspace</div>
           <NavItem path="/" name="Login Page (Temp)" />
           <NavItem path="/localGit" name="Local" />
-          <NavItem path="/repos" name="Repositories" />
-          <NavItem
-            path={`/repos/${selectedRepo}/working-copy`}
-            name="Working Copy"
-          />
-          <NavItem path={`/repos/${selectedRepo}/history`} name="History" />
-          <NavItem path={`/repos/${selectedRepo}/stashes`} name="Stashes" />
-          <NavItem path={`/repos/${selectedRepo}/settings`} name="Settings" />
-          <NavItem path="/repos/new" name="Add Repo" />
           <NavItem path="/barchart" name="BarChart" />
         </div>
 
@@ -138,7 +129,7 @@ const mapStateToProps = state => ({
   masterCommits: state.masterCommits,
   selectedBranch: state.selectedBranch,
   localBranches: state.localBranches,
-  isLocal: state.isLocal
+  isLocal: state.isLocal,
 });
 
 export default connect(

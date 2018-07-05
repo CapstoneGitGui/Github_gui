@@ -42,7 +42,7 @@ class LocalGit extends Component<Props> {
     diff: '',
     allDiffs: [],
     currentBranch: '',
-    remote: ''
+    remote: '',
   };
 
   componentDidMount = () => {
@@ -59,7 +59,7 @@ class LocalGit extends Component<Props> {
     dialog.showOpenDialog(
       {
         title: 'Select a folder',
-        properties: ['openDirectory']
+        properties: ['openDirectory'],
       },
       async folderPath => {
         await fs.readdir(`${folderPath}/.git/refs/heads`, (err, files) => {
@@ -105,8 +105,8 @@ class LocalGit extends Component<Props> {
         'subject',
         'parentHashes',
         'authorName',
-        'authorDateRel'
-      ]
+        'authorDateRel',
+      ],
     };
     gitlog(options, async (error, commits) => {
       console.log(commits);
@@ -138,6 +138,7 @@ class LocalGit extends Component<Props> {
   changedFiles = async () => {
     if (this.props.selectedRepo) {
       git(this.props.selectedRepo).status((err, data) => {
+        console.log(data);
         this.setState({ modified: data.modified, staged: data.staged });
       });
     }
@@ -171,7 +172,7 @@ class LocalGit extends Component<Props> {
     git(this.props.selectedRepo).push([
       '-u',
       'origin',
-      `${this.state.currentBranch}`
+      `${this.state.currentBranch}`,
     ]);
   };
 
@@ -239,13 +240,13 @@ class LocalGit extends Component<Props> {
 }
 
 const mapSTP = state => ({
-  selectedRepo: state.localRepo
+  selectedRepo: state.localRepo,
 });
 
 export default connect(
   mapSTP,
   {
     selectLocalRepo,
-    fetchLocalBranches
+    fetchLocalBranches,
   }
 )(LocalGit);

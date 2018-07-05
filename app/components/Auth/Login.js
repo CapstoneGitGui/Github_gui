@@ -26,8 +26,8 @@ class Login extends Component {
     return (
       <div className="flex full-height">
         <div className="login-page align-self-center">
-          <div onClick={this.createWindow} class="btn btn-block btn-social btn-github">
-            <span class="fa fa-github"></span> Sign in with Github
+          <div onClick={this.createWindow} className="btn btn-block btn-social btn-github">
+            <span className="fa fa-github"></span> Sign in with Github
           </div>
         </div>
       </div>
