@@ -8,14 +8,14 @@ import { fetchMasterCommits } from '../../../reducers/masterCommits';
 import { setIsLocal } from '../../../reducers/isLocal';
 import { fetchOpenBranches } from '../../../reducers/openBranches';
 import { fetchCommitActivity } from '../../../reducers/commitActivity';
-import { fetchLocalCommits } from '../../../reducers/localCommits'
-import {setIsLocalBranch} from '../../../reducers/isLocalBranch'
+import { fetchLocalCommits } from '../../../reducers/localCommits';
+import { setIsLocalBranch } from '../../../reducers/isLocalBranch';
 
-const token = localStorage.getItem('token')
+const token = localStorage.getItem('token');
 
 class NavItem extends React.Component {
   handleClick = () => {
-    const { 
+    const {
       isLocalRepo,
       currentUser,
       name,
@@ -26,23 +26,22 @@ class NavItem extends React.Component {
     } = this.props;
 
     if (isLocalRepo) {
-      this.props.setIsLocal(true)
-      this.props.fetchOpenBranches(currentUser, name, token )
+      this.props.setIsLocal(true);
+      this.props.fetchOpenBranches(currentUser, name, token);
     }
 
     if (isRepo) {
       // this.props.setSelectedRepo(this.props.name);
-      this.props.setIsLocal(false)
+      this.props.setIsLocal(false);
       this.props.fetchCommitActivity(
         currentUser,
         this.props.selectedRepo,
         token
       );
-
     } else if (isBranch) {
       if (isLocalBranch) {
-        this.props.fetchLocalCommits(this.props.branch, this.props.localRepo)
-        this.props.setIsLocalBranch(true)
+        this.props.fetchLocalCommits(this.props.branch, this.props.localRepo);
+        this.props.setIsLocalBranch(true);
       }
       this.props.setSelectedBranch(this.props.branch);
       this.props.fetchBranchCommits(
@@ -51,7 +50,7 @@ class NavItem extends React.Component {
         this.props.currentUser,
         this.props.selectedRepo
       );
-      this.props.setIsLocalBranch(false)
+      this.props.setIsLocalBranch(false);
       if (!this.props.masterCommits.length && this.props.openBranches.length) {
         const master = this.props.openBranches.filter(branch => {
           return branch.name === 'master';
@@ -92,12 +91,12 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { 
-    setSelectedRepo, 
-    setSelectedBranch, 
-    fetchBranchCommits, 
-    fetchMasterCommits, 
-    setIsLocal, 
+  {
+    setSelectedRepo,
+    setSelectedBranch,
+    fetchBranchCommits,
+    fetchMasterCommits,
+    setIsLocal,
     fetchOpenBranches,
     fetchLocalCommits,
     setIsLocalBranch,

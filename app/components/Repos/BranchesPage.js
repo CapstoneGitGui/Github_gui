@@ -1,18 +1,28 @@
 import React from 'react';
-import {connect} from 'react-redux'
-import Column from '../UI/Column'
+import { connect } from 'react-redux';
+import Column from '../UI/Column';
 import ContentWrapper from '../UI/ContentWrapper';
 import Header from '../UI/Header';
-import CommitsList from '../Commits/CommitsList'
-import SelectedCommit from '../Commits/SelectedCommit'
-import SplitPane from 'react-split-pane'
+import CommitsList from '../Commits/CommitsList';
+import SelectedCommit from '../Commits/SelectedCommit';
+import SplitPane from 'react-split-pane';
 
 class BranchesPage extends React.Component {
-  renderCommit () {
-    const {selectedCommit} = this.props
+  renderBranchName(selectedBranch) {
+    return selectedBranch.name
+      ? selectedBranch.name
+      : typeof selectedBranch === 'string'
+        ? selectedBranch
+        : !selectedBranch.head
+          ? 'undefined'
+          : selectedBranch.head.ref;
+  }
+
+  renderCommit() {
+    const { selectedCommit } = this.props;
 
     if (Object.keys(selectedCommit).length) {
-      return <SelectedCommit commit={selectedCommit} />
+      return <SelectedCommit commit={selectedCommit} />;
     }
   }
 
@@ -20,28 +30,26 @@ class BranchesPage extends React.Component {
     const {
       match: { params },
       selectedCommit,
-    } = this.props
-
+      selectedBranch,
+    } = this.props;
+    console.log('hey hey', selectedBranch);
     return (
       <ContentWrapper>
-        <Column className='right'>
-          <Header>
-            {params.id}
-          </Header>
+        <Column className="right">
+          <Header>{this.renderBranchName(selectedBranch)}</Header>
           <CommitsList />
         </Column>
-        <Column className='left'>
-          { this.renderCommit() }
-        </Column>
+        <Column className="left">{this.renderCommit()}</Column>
       </ContentWrapper>
     );
   }
 }
 
-function mapStateToProps (state) {
+function mapStateToProps(state) {
   return {
     selectedCommit: state.selectedCommit,
-  }
+    selectedBranch: state.selectedBranch,
+  };
 }
 
-export default connect(mapStateToProps)(BranchesPage)
+export default connect(mapStateToProps)(BranchesPage);
