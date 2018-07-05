@@ -117,7 +117,6 @@ ipcMain.on('oauth:form', data => {
         code
       })
       .then(res => {
-        console.log(res);
         const token = parseQuery(res.data).access_token;
         mainWindow.webContents.send('token:send', token);
       })
