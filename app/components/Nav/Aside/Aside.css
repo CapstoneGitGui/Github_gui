@@ -4,7 +4,8 @@
 	background: rgb(246, 246, 246);
 	border-right: 1px solid #dcdcdc;
 	height: 100vh;
-	padding-top: 15px;
+  padding-top: 15px;
+  z-index: 2;
 }
 
 .aside div a {

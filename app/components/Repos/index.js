@@ -8,6 +8,7 @@ import fs from 'fs'
 import { fetchLocalBranches } from '../../reducers/localBranches';
 import { selectLocalRepo } from '../../reducers/localRepo';
 import {setIsLocal} from '../../reducers/isLocal'
+import RemoteRepoButton from './RemoteRepoButton'
 
 const {dialog} = electron.remote
 
@@ -81,30 +82,32 @@ class RepoList extends Component {
     );
   };
 
+  toggle () {
+    return 'active'
+  }
+
   render() {
     return (
-      <div>
-        <Button color="blue" onClick={this.selectFolder}>
-          Select folder
-        </Button>
-        <form onSubmit={this.handleSubmit}>
+      <div className="padding-30 scroll">
+        {/* <form onSubmit={this.handleSubmit}>
           <input type="text" onChange={this.handleInputChange} />
           <button type="submit">Submit</button>
-        </form>
+        </form> */}
+        <h1>Remote Repos</h1>
         <form onChange={this.handleInputChange} onSubmit={this.handleSubmit}>
+          <div className="btn-group" data-toggle="buttons">
           {this.state.repos.length
             ? this.state.repos.map((repo, index) => {
                 return (
-                  <div key={index}>
-                    <label key={repo.name} htmlFor={repo.name}>
-                      {repo.name}
-                    </label>
-                    <input type="radio" value={repo.name} name="repo" />
-                  </div>
+                  <RemoteRepoButton key={index} name={repo.name} />
                 );
               })
             : this.fetchRepoNames()}
-          <button type="submit">Submit</button>
+          </div>
+          <div className="form-footer">
+            <Button color="blue" type="submit">Choose a Remote Repo</Button>
+            <Button onClick={this.selectFolder} color="blue" type="submit">Choose a Local Repo</Button>
+          </div>
         </form>
       </div>
     );
