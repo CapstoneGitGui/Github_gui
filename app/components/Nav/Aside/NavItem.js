@@ -11,11 +11,12 @@ import { fetchCommitActivity } from '../../../reducers/commitActivity';
 import { fetchLocalCommits } from '../../../reducers/localCommits';
 import { setIsLocalBranch } from '../../../reducers/isLocalBranch';
 import { resetSelectedRepo } from '../../../reducers/selectedRepo';
+import { fetchClosedBranches } from '../../../reducers/closedBranches';
 
 const token = localStorage.getItem('token');
 
 class NavItem extends React.Component {
-  handleClick = () => {
+  handleClick = async () => {
     const {
       isLocalRepo,
       currentUser,
@@ -36,13 +37,12 @@ class NavItem extends React.Component {
     }
 
     if (isRepo) {
-      // this.props.setSelectedRepo(this.props.name);
+      // console.log('we are hererererer');
+      await this.props.setSelectedRepo(this.props.name);
       this.props.setIsLocal(false);
-      this.props.fetchCommitActivity(
-        currentUser,
-        this.props.selectedRepo,
-        token
-      );
+      this.props.fetchCommitActivity(currentUser, this.props.name, token);
+      this.props.fetchOpenBranches(currentUser, name, token);
+      this.props.fetchClosedBranches(currentUser, name, token);
     } else if (isBranch) {
       if (isLocalBranch) {
         this.props.fetchLocalCommits(this.props.branch, this.props.localRepo);
@@ -121,7 +121,7 @@ class NavItem extends React.Component {
     if (this.props.barchart) {
       return (
         <NavLink to={this.props.path} onClick={this.handleClick}>
-          <i class="far fa-chart-bar" />
+          <i className="far fa-chart-bar" />
           {`    ${this.props.name}`}
         </NavLink>
       );
@@ -157,5 +157,6 @@ export default connect(
     setIsLocalBranch,
     fetchCommitActivity,
     resetSelectedRepo,
+    fetchClosedBranches,
   }
 )(NavItem);

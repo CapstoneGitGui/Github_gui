@@ -109,7 +109,6 @@ class LocalGit extends Component<Props> {
       ],
     };
     gitlog(options, async (error, commits) => {
-      console.log(commits);
       this.setState({ commits });
     });
   };
@@ -203,9 +202,9 @@ class LocalGit extends Component<Props> {
           <Header>
             <div className="flex space-between">
               <div className="align-self-center">
-                Branch
+                <i className="fas fa-code-branch" />
                 {this.props.selectedRepo
-                  ? `:  ${this.state.currentBranch}`
+                  ? `  ${this.state.currentBranch}`
                   : null}
               </div>
               <div className="button-groups">
