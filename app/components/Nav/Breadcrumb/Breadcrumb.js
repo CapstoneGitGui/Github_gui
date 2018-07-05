@@ -13,6 +13,8 @@ class Breadcrumb extends React.Component {
           : branch.head.ref;
   }
 
+  //this is a change
+
   render() {
     const pathName = this.props.location.pathname.split('/');
     pathName.shift();
@@ -28,23 +30,41 @@ class Breadcrumb extends React.Component {
               path={`/repos/${repo}`}
               name={`${repo} > `}
               isRepo={true}
+              breadcrumb={true}
             />
-            <span>branches</span>
+            <i className="fas fa-code-branch" />
+            <span> branches</span>
             <NavItem
               path={`/repos/${repo}/branches/${branch.name}`}
               name={` > ${this.renderBranchName(branch)}`}
-              isBranch
+              isBranch={true}
               branch={branch}
+              breadcrumb={true}
             />
           </div>
         ) : repo ? (
           <div>
-            <NavItem path="/repos" name="Repositories > " repository={true} />
-            <NavItem path={`/repos/${repo}`} name={`${repo}`} isRepo={true} />
+            <NavItem
+              path="/repos"
+              name="Repositories > "
+              repository={true}
+              breadcrumb={true}
+            />
+            <NavItem
+              path={`/repos/${repo}`}
+              name={`${repo}`}
+              isRepo={true}
+              breadcrumb={true}
+            />
           </div>
         ) : (
           <div>
-            <NavItem path="/repos" name="Repositories" repository={true} />
+            <NavItem
+              path="/repos"
+              name="Repositories"
+              repository={true}
+              breadcrumb={true}
+            />
           </div>
         )}
       </header>
