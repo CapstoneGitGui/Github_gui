@@ -93,15 +93,6 @@ class Aside extends React.Component {
           <div className={styles.menu}>Workspace</div>
           <NavItem path="/" name="Login Page (Temp)" />
           <NavItem path="/localGit" name="Local" />
-          <NavItem path="/repos" name="Repositories" />
-          <NavItem
-            path={`/repos/${selectedRepo}/working-copy`}
-            name="Working Copy"
-          />
-          <NavItem path={`/repos/${selectedRepo}/history`} name="History" />
-          <NavItem path={`/repos/${selectedRepo}/stashes`} name="Stashes" />
-          <NavItem path={`/repos/${selectedRepo}/settings`} name="Settings" />
-          <NavItem path="/repos/new" name="Add Repo" />
           <NavItem path="/barchart" name="BarChart" />
         </div>
 
