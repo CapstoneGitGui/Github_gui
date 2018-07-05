@@ -113,7 +113,6 @@ class LocalGit extends Component<Props> {
       ]
     };
     gitlog(options, async (error, commits) => {
-      console.log(commits);
       this.setState({ commits });
     });
   };
