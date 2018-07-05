@@ -55,6 +55,8 @@ class Aside extends React.Component {
     ));
   }
 
+  // heheehehe
+
   renderClosedBranches() {
     const { selectedRepo } = this.props;
 
