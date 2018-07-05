@@ -23,7 +23,7 @@ class Breadcrumb extends React.Component {
       <header>
         {Object.keys(branch).length || typeof branch === 'string' ? (
           <div>
-            <NavItem path="/repos" name="Repositories > " />
+            <NavItem path="/repos" name="Repositories > " repository={true} />
             <NavItem
               path={`/repos/${repo}`}
               name={`${repo} > `}
@@ -39,12 +39,12 @@ class Breadcrumb extends React.Component {
           </div>
         ) : repo ? (
           <div>
-            <NavItem path="/repos" name="Repositories > " />
+            <NavItem path="/repos" name="Repositories > " repository={true} />
             <NavItem path={`/repos/${repo}`} name={`${repo}`} isRepo={true} />
           </div>
         ) : (
           <div>
-            <NavItem path="/repos" name="Repositories" />
+            <NavItem path="/repos" name="Repositories" repository={true} />
           </div>
         )}
       </header>
