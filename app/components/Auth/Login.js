@@ -24,9 +24,12 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
-        <Button color='blue' onClick={this.createWindow}>Login with Github</Button>
-        <Button color='blue' onClick={this.logout}>Logout</Button>
+      <div className="flex full-height">
+        <div className="login-page align-self-center">
+          <div onClick={this.createWindow} class="btn btn-block btn-social btn-github">
+            <span class="fa fa-github"></span> Sign in with Github
+          </div>
+        </div>
       </div>
     )
   } 

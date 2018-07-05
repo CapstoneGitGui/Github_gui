@@ -226,7 +226,11 @@ class LocalGit extends Component<Props> {
           <StagedFiles diffView={this.diffView} staged={staged} />
         </Column>
         <Column className="left">
-          <Header>File Changes</Header>
+          <Header className="flex">
+            <div className="align-self-center">
+              File Changes
+            </div>
+          </Header>
           <Highlight className="diff">{this.state.diff}</Highlight>
         </Column>
       </ContentWrapper>

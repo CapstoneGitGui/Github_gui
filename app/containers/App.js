@@ -51,6 +51,8 @@ class App extends React.Component<Props> {
     switch (location.pathname) {
       case '/repos':
         return <ReposSidebar />
+      case '/':
+        return null
       default:
         return <Aside />
     }

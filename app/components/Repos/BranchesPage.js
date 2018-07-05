@@ -25,8 +25,8 @@ class BranchesPage extends React.Component {
     return (
       <ContentWrapper>
         <Column className='right'>
-          <Header>
-            {params.id}
+          <Header className="flex">
+            <div className="align-self-center">{params.id}</div>
           </Header>
           <CommitsList />
         </Column>

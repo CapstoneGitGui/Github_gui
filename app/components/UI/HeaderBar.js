@@ -20,9 +20,6 @@ class HeaderBar extends React.Component {
           onMaximizeClick={() => console.log('Mazimize window')}
         >
           <Toolbar height="50" horizontalAlignment="right">
-            <div>
-              <Button onClick={this.selectFolder}>+</Button>
-            </div>
             <SearchField placeholder="Search" defaultValue="" />
           </Toolbar>
         </TitleBar>
