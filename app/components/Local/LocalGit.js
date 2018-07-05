@@ -43,14 +43,18 @@ class LocalGit extends Component<Props> {
     allDiffs: [],
     currentBranch: '',
     remote: '',
+    err: false
   };
 
-  componentDidMount = () => {
-    git(this.props.selectedRepo).branch((err, branches) => {
-      this.setState({ currentBranch: branches.current });
+  componentDidMount = async () => {
+    await this.changedFiles();
+    await git(this.props.selectedRepo).branch((err, branches) => {
+      this.setState({
+        currentBranch: branches.current,
+        branches: branches.all
+      });
     });
-    this.listRemote();
-    this.changedFiles();
+    await this.listRemote();
   };
 
   selectFolder = () => {
@@ -59,7 +63,7 @@ class LocalGit extends Component<Props> {
     dialog.showOpenDialog(
       {
         title: 'Select a folder',
-        properties: ['openDirectory'],
+        properties: ['openDirectory']
       },
       async folderPath => {
         await fs.readdir(`${folderPath}/.git/refs/heads`, (err, files) => {
@@ -105,8 +109,8 @@ class LocalGit extends Component<Props> {
         'subject',
         'parentHashes',
         'authorName',
-        'authorDateRel',
-      ],
+        'authorDateRel'
+      ]
     };
     gitlog(options, async (error, commits) => {
       console.log(commits);
@@ -135,7 +139,7 @@ class LocalGit extends Component<Props> {
     this.setState({ modified: [], staged: [], commitMessage: '' });
   };
 
-  changedFiles = async () => {
+  changedFiles = () => {
     if (this.props.selectedRepo) {
       git(this.props.selectedRepo).status((err, data) => {
         console.log(data);
@@ -172,8 +176,23 @@ class LocalGit extends Component<Props> {
     git(this.props.selectedRepo).push([
       '-u',
       'origin',
-      `${this.state.currentBranch}`,
+      `${this.state.currentBranch}`
     ]);
+  };
+
+  pull = () => {
+    git(this.props.selectedRepo).pull('origin', 'master');
+  };
+
+  checkout = evt => {
+    git(this.props.selectedRepo).checkout(
+      [`${evt.target.value}`],
+      (err, data) => {
+        if (err) this.setState({ err: true });
+        else this.setState({ err: false });
+      }
+    );
+    this.setState({ currentBranch: evt.target.value });
   };
 
   renderForm() {
@@ -203,9 +222,9 @@ class LocalGit extends Component<Props> {
           <Header>
             <div className="flex space-between">
               <div className="align-self-center">
-                Branch
+                <i className="fas fa-code-branch" />
                 {this.props.selectedRepo
-                  ? `:  ${this.state.currentBranch}`
+                  ? `  ${this.state.currentBranch}`
                   : null}
               </div>
               <div className="button-groups">
@@ -215,6 +234,13 @@ class LocalGit extends Component<Props> {
                 <Button id="pull" onClick={this.pull}>
                   &darr;
                 </Button>
+                <select onChange={this.checkout}>
+                  <option selected="selected">Checkout Branch</option>
+                  {this.state.branches.map(branch => (
+                    <option value={branch}>{branch}</option>
+                  ))}
+                </select>
+                {this.state.err ? <div>&#x2718;</div> : null}
               </div>
             </div>
           </Header>
@@ -228,9 +254,7 @@ class LocalGit extends Component<Props> {
         </Column>
         <Column className="left">
           <Header className="flex">
-            <div className="align-self-center">
-              File Changes
-            </div>
+            <div className="align-self-center">File Changes</div>
           </Header>
           <Highlight className="diff">{this.state.diff}</Highlight>
         </Column>
@@ -240,13 +264,13 @@ class LocalGit extends Component<Props> {
 }
 
 const mapSTP = state => ({
-  selectedRepo: state.localRepo,
+  selectedRepo: state.localRepo
 });
 
 export default connect(
   mapSTP,
   {
     selectLocalRepo,
-    fetchLocalBranches,
+    fetchLocalBranches
   }
 )(LocalGit);
