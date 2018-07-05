@@ -7,17 +7,12 @@ class ModifiedFiles extends React.Component {
 
     return (
       <div className="modified-files">
-        <div className="files-info muted">Modified Files</div>
+        <div className="files-info muted">Modified</div>
         <div className="changed-files">
           {modified.map((file, index) => {
             if (!staged.includes(file)) {
               return (
-                <File
-                  boolean
-                  diffView={diffView}
-                  key={index}
-                  name={file}
-                />
+                <File boolean diffView={diffView} key={index} name={file} />
               );
             }
           })}

@@ -305,3 +305,13 @@ input:invalid {
   content: '✖';
   padding-left: 5px;
 }
+
+#push {
+  padding: 20px;
+  color: rgb(0, 0, 0);
+}
+
+#branch {
+  height: 50px;
+  width: 70px;
+}

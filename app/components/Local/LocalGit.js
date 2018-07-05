@@ -27,12 +27,6 @@ const fs = require('fs');
 const zlib = require('zlib');
 const gitlog = require('gitlog');
 
-// https://www.npmjs.com/package/simple-git
-// https://www.npmjs.com/package/js-git
-// chokidar
-// https://www.npmjs.com/package/nodegit
-// https://www.npmjs.com/package/git-utils
-
 class LocalGit extends Component<Props> {
   props: Props;
 
@@ -47,28 +41,17 @@ class LocalGit extends Component<Props> {
     added: false,
     diff: '',
     allDiffs: [],
-    currentBranch: ''
+    currentBranch: '',
+    remote: ''
   };
 
   componentDidMount = () => {
     git(this.props.selectedRepo).branch((err, branches) => {
       this.setState({ currentBranch: branches.current });
     });
-
+    this.listRemote();
     this.changedFiles();
   };
-
-  // watch = () => {
-  //   const watcher = chokidar.watch(this.props.selectedRepo, {
-  //     ignored: /[\/\\]\./,
-  //     persistent: true
-  //   });
-
-  //   watcher.on('change', path => {
-  //     this.setState({ changedFiles: [...this.state.changedFiles, path] });
-  //     console.log(`${path} file has been changed`);
-  //   });
-  // };
 
   selectFolder = () => {
     const { fetchLocalBranches, selectLocalRepo } = this.props;
@@ -93,6 +76,18 @@ class LocalGit extends Component<Props> {
       }
     );
   };
+
+  // watch = () => {
+  //   const watcher = chokidar.watch(this.props.selectedRepo, {
+  //     ignored: /[\/\\]\./,
+  //     persistent: true
+  //   });
+
+  //   watcher.on('change', path => {
+  //     this.setState({ changedFiles: [...this.state.changedFiles, path] });
+  //     console.log(`${path} file has been changed`);
+  //   });
+  // };
 
   selectBranch = async (evt, branch) => {
     this.setState({ branch });
@@ -119,21 +114,11 @@ class LocalGit extends Component<Props> {
     });
   };
 
-  addChanges = async () => {
-    git(this.props.selectedRepo).add('./*', el => {
-      this.setState({ added: true });
-      this.changedFiles();
-    });
-  };
-
-  commit = async msg => {
-    git(this.props.selectedRepo).commit(msg);
-  };
-
   listRemote = () => {
     const chosenDirectory = this.props.selectedRepo;
     git(chosenDirectory).listRemote(['--get-url'], (err, data) => {
       if (!err) {
+        this.setState({ remote: data });
         console.log(`Remote url for repository at ${chosenDirectory}:`);
         console.log(data);
       }
@@ -171,6 +156,25 @@ class LocalGit extends Component<Props> {
     });
   };
 
+  addChanges = async () => {
+    git(this.props.selectedRepo).add('./*', el => {
+      this.setState({ added: true });
+      this.changedFiles();
+    });
+  };
+
+  commit = async msg => {
+    git(this.props.selectedRepo).commit(msg);
+  };
+
+  push = () => {
+    git(this.props.selectedRepo).push([
+      '-u',
+      'origin',
+      `${this.state.currentBranch}`
+    ]);
+  };
+
   renderForm() {
     return (
       <div className="commit-form">
@@ -195,7 +199,11 @@ class LocalGit extends Component<Props> {
     return (
       <ContentWrapper>
         <Column className="right">
-          <Header>Workshop - {this.state.currentBranch}</Header>
+          <Header>
+            Branch
+            {this.props.selectedRepo ? `:  ${this.state.currentBranch}` : null}
+            <Button onClick={this.push}>&#8679;</Button>
+          </Header>
           {this.renderForm()}
           <ModifiedFiles
             staged={staged}
