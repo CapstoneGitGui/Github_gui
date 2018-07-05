@@ -3,6 +3,16 @@ import { connect } from 'react-redux';
 import NavItem from '../Aside/NavItem';
 
 class Breadcrumb extends React.Component {
+  renderBranchName(branch) {
+    return branch.name
+      ? branch.name
+      : typeof branch === 'string'
+        ? branch
+        : !branch.head
+          ? ''
+          : branch.head.ref;
+  }
+
   render() {
     const pathName = this.props.location.pathname.split('/');
     pathName.shift();
@@ -11,7 +21,7 @@ class Breadcrumb extends React.Component {
 
     return (
       <header>
-        {branch.name ? (
+        {Object.keys(branch).length || typeof branch === 'string' ? (
           <div>
             <NavItem path="/repos" name="Repositories > " />
             <NavItem
@@ -22,7 +32,7 @@ class Breadcrumb extends React.Component {
             <span>branches</span>
             <NavItem
               path={`/repos/${repo}/branches/${branch.name}`}
-              name={` > ${branch.name}`}
+              name={` > ${this.renderBranchName(branch)}`}
               isBranch
               branch={branch}
             />

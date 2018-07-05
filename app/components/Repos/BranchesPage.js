@@ -14,7 +14,7 @@ class BranchesPage extends React.Component {
       : typeof selectedBranch === 'string'
         ? selectedBranch
         : !selectedBranch.head
-          ? 'undefined'
+          ? ''
           : selectedBranch.head.ref;
   }
 
