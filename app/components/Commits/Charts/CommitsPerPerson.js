@@ -26,6 +26,7 @@ class CommitsPerPerson extends Component {
       data = data.days;
     }
 
+
     // const data = [0, 19, 2, 4, 5, 6, 7];
     const days = [
       'Sunday',

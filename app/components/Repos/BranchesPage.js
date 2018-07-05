@@ -36,7 +36,9 @@ class BranchesPage extends React.Component {
     return (
       <ContentWrapper>
         <Column className="right">
-          <Header>{this.renderBranchName(selectedBranch)}</Header>
+          <Header className="flex">
+            <div className="align-self-center">{this.renderBranchName(selectedBranch)}</div>
+          </Header>
           <CommitsList />
         </Column>
         <Column className="left">{this.renderCommit()}</Column>
