@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 import { Redirect } from 'react-router';
 import { ipcRenderer } from 'electron';
-import { Button, TextInput } from 'react-desktop/macOs';
+import { Button, TextInput, Dialog, Window, TitleBar, Text } from 'react-desktop/macOs';
 import ContentWrapper from '../UI/ContentWrapper';
 import CommitsList from '../Commits/CommitsList';
 import SelectedCommit from '../Commits/SelectedCommit';
@@ -11,7 +11,6 @@ import Header from '../UI/Header';
 import Column from '../UI/Column';
 import git from 'simple-git';
 import Aside from '../Nav/Aside/Aside.js';
-// import chokidar from 'chokidar';
 import { fetchLocalBranches } from '../../reducers/localBranches';
 import { selectLocalRepo } from '../../reducers/localRepo';
 import SplitPane from 'react-split-pane';
@@ -20,12 +19,26 @@ import ModifiedFiles from './ModifiedFiles';
 import StagedFiles from './StagedFiles';
 import SyntaxHighlighter from 'react-syntax-highlighter/prism';
 import Highlight from 'react-highlight';
+import Modal from 'react-modal';
 
 const { dialog } = require('electron').remote;
 const shell = require('shelljs');
 const fs = require('fs');
 const zlib = require('zlib');
 const gitlog = require('gitlog');
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
+
+Modal.setAppElement('#root')
 
 class LocalGit extends Component<Props> {
   props: Props;
@@ -43,7 +56,9 @@ class LocalGit extends Component<Props> {
     allDiffs: [],
     currentBranch: '',
     remote: '',
-    err: false
+    err: false,
+    modalIsOpen: false,
+    modalIsOpen2: false,
   };
 
   componentDidMount = async () => {
@@ -177,6 +192,10 @@ class LocalGit extends Component<Props> {
       'origin',
       `${this.state.currentBranch}`
     ]);
+    if (this.state.modalIsOpen) {
+      this.closeModal()
+      this.setState({modalIsOpen2: true})
+    }
   };
 
   pull = () => {
@@ -212,9 +231,26 @@ class LocalGit extends Component<Props> {
     );
   }
 
+  openModal = () => {
+    this.setState({modalIsOpen: true});
+  }
+ 
+  afterOpenModal = () => {
+    // references are now sync'd and can be accessed.
+    this.subtitle.style.color = '#f00';
+  }
+ 
+  closeModal = () => {
+    this.setState({modalIsOpen: false});
+
+    if (this.state.modalIsOpen2) {
+      this.setState({modalIsOpen2: false})
+    }
+  }
+
   render() {
     const { folderPath, staged, modified } = this.state;
-
+    console.log(this.state)
     return (
       <ContentWrapper>
         <Column className="right">
@@ -227,7 +263,7 @@ class LocalGit extends Component<Props> {
                   : null}
               </div>
               <div className="button-groups">
-                <Button id="push" onClick={this.push}>
+                <Button id="push" onClick={this.openModal}>
                   &uarr;
                 </Button>
                 <Button id="pull" onClick={this.pull}>
@@ -257,6 +293,38 @@ class LocalGit extends Component<Props> {
           </Header>
           <Highlight className="diff">{this.state.diff}</Highlight>
         </Column>
+        <Modal
+          isOpen={this.state.modalIsOpen}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <h2 ref={subtitle => this.subtitle = subtitle}></h2>
+          <Dialog
+            title="Are you sure you want to push?"
+            message="You are about to push to your remote branch."
+            buttons={[
+              <Button onClick={this.closeModal}>Cancel</Button>,
+              <Button color="blue" onClick={this.push}>Submit</Button>,
+            ]}
+          />
+        </Modal>
+        <Modal
+          isOpen={this.state.modalIsOpen2}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <h2 ref={subtitle => this.subtitle = subtitle}></h2>
+          <Dialog
+            title="Successfully pushed!"
+            buttons={[
+              <Button color="blue" onClick={this.closeModal}>Ok</Button>,
+            ]}
+          />
+        </Modal>
       </ContentWrapper>
     );
   }

@@ -29,6 +29,9 @@ class Login extends Component {
           <div onClick={this.createWindow} className="btn btn-block btn-social btn-github">
             <span className="fa fa-github"></span> Sign in with Github
           </div>
+          <div onClick={this.logout} className="btn btn-block btn-social btn-github">
+            <span className="fa fa-github"></span> Logout
+          </div>
         </div>
       </div>
     )
