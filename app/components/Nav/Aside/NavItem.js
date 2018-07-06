@@ -13,10 +13,9 @@ import { setIsLocalBranch } from '../../../reducers/isLocalBranch';
 import { resetSelectedRepo } from '../../../reducers/selectedRepo';
 import { fetchClosedBranches } from '../../../reducers/closedBranches';
 
-const token = localStorage.getItem('token');
-
 class NavItem extends React.Component {
   handleClick = async () => {
+    const token = localStorage.getItem('token');
     const {
       isLocalRepo,
       currentUser,

@@ -11,13 +11,11 @@ import CommitsPage from '../../containers/CommitsPage';
 import CommitTreePage from '../../containers/CommitTreePage';
 import WorkingCopy from './WorkingCopy';
 
-const token = localStorage.getItem('token');
-
 class SingleRepo extends Component {
   render() {
     const {
       name,
-      match: { url }
+      match: { url },
     } = this.props;
 
     return (

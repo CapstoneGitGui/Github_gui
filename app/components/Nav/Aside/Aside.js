@@ -71,7 +71,7 @@ class Aside extends React.Component {
     ));
   }
 
-  // dhfdhatah
+  // hehehehe
 
   renderLocalBranches() {
     const { selectedRepo, localBranches } = this.props;

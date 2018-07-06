@@ -2,11 +2,9 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import Highlight from 'react-highlight';
-import SmoothCollapse from 'react-smooth-collapse'
+import SmoothCollapse from 'react-smooth-collapse';
 import RenderedCode from './RenderedCode';
 import Collapse from './SmoothCollapse';
-
-const githubToken = localStorage.getItem('token');
 
 class Patches extends Component {
   constructor(props) {
@@ -24,59 +22,66 @@ class Patches extends Component {
     this.getChangedFiles = this.getChangedFiles.bind(this);
   }
 
-  componentDidMount () {
-    this.getChangedFiles(this.props.sha)
+  componentDidMount() {
+    this.getChangedFiles(this.props.sha);
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.state.sha !== nextProps.sha) {
-      this.getChangedFiles(nextProps.sha)
+      this.getChangedFiles(nextProps.sha);
 
       this.setState({
-        additions: nextProps.file
-      })
+        additions: nextProps.file,
+      });
     }
   }
 
-  async getChangedFiles (sha) {
+  async getChangedFiles(sha) {
+    const githubToken = localStorage.getItem('token');
     let url = `https://api.github.com/repos/${this.props.userName}/${
-      this.props.repo}/commits/${sha}`
+      this.props.repo
+    }/commits/${sha}`;
     if (githubToken) url += `?access_token=${githubToken}`;
-    const filesArray = await axios.get(url)
+    const filesArray = await axios.get(url);
     this.setState({
       filesArray: filesArray.data.files,
-      additions: filesArray.data.files.map(file => file.additions).reduce((a,b) => a + b),
-      deletions: filesArray.data.files.map(file => file.deletions).reduce((a,b) => a + b),
-    })
+      additions: filesArray.data.files
+        .map(file => file.additions)
+        .reduce((a, b) => a + b),
+      deletions: filesArray.data.files
+        .map(file => file.deletions)
+        .reduce((a, b) => a + b),
+    });
   }
 
-  renderCollapse () {
+  renderCollapse() {
     const { filesArray } = this.state;
 
     return filesArray.map((file, index) => {
       return (
-        <Collapse 
+        <Collapse
           key={index}
           length={filesArray.length}
-          filename={file.filename} 
-          sha={file.sha} 
-          patch={file.patch} 
+          filename={file.filename}
+          sha={file.sha}
+          patch={file.patch}
         />
-      )
-    })
+      );
+    });
   }
 
-  render () {
-    const {filesArray, additions, deletions} = this.state;
+  render() {
+    const { filesArray, additions, deletions } = this.state;
 
     return (
       <div className="patches">
         <div className="patches-info muted">
-          Showing {filesArray.length} changed files with {additions} additions and {deletions} deletions
+          Showing {filesArray.length} changed files with {additions} additions
+          and {deletions} deletions
         </div>
-        { this.renderCollapse() }
+        {this.renderCollapse()}
       </div>
-    )
+    );
   }
 }
 
