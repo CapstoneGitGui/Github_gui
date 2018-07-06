@@ -6,7 +6,7 @@ import CommitsOverYear from './CommitsOverYear';
 
 const Charts = () => {
   return (
-    <div>
+    <div className='padding-30'>
       <BarChart />
       <CommitsPerPerson />
       <CommitsOverYear />

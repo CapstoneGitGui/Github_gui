@@ -169,8 +169,8 @@ class LocalGit extends Component<Props> {
     });
   };
 
-  branch = () => {
-    git(this.props.selectedRepo).branch((err, branches) => {
+  branch = async() => {
+    await git(this.props.selectedRepo).branch((err, branches) => {
       this.setState({ currentBranch: branches.current });
     });
   };
@@ -184,6 +184,7 @@ class LocalGit extends Component<Props> {
 
   commit = async msg => {
     git(this.props.selectedRepo).commit(msg);
+    this.setState({ diff: ' '});
   };
 
   push = () => {
@@ -234,12 +235,12 @@ class LocalGit extends Component<Props> {
   openModal = () => {
     this.setState({modalIsOpen: true});
   }
- 
+
   afterOpenModal = () => {
     // references are now sync'd and can be accessed.
     this.subtitle.style.color = '#f00';
   }
- 
+
   closeModal = () => {
     this.setState({modalIsOpen: false});
 
@@ -269,7 +270,7 @@ class LocalGit extends Component<Props> {
                 <Button id="pull" onClick={this.pull}>
                   &darr;
                 </Button>
-                <select onChange={this.checkout}>
+                <select style={{width: '125px'}} onChange={this.checkout}>
                   <option selected="selected">Checkout Branch</option>
                   {this.state.branches.map(branch => (
                     <option value={branch}>{branch}</option>
